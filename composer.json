@@ -1,0 +1,19 @@
+{
+    "name": "pergaud/gestion-taches-scrum",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "BTS SIO",
+            "email": "btssio@pergaud.fr"
+        }
+    ],
+    "require": {
+        "doctrine/orm": "^3.3",
+        "symfony/cache": "^7.1"
+    }
+}
