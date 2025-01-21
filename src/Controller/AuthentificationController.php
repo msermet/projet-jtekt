@@ -16,8 +16,6 @@ class AuthentificationController extends AbstractController {
         $this->entityManager = $entityManager;
     }
 
-
-
     public function creationcompte(): void
     {
         if (session_status() === PHP_SESSION_NONE) {

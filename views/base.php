@@ -51,6 +51,9 @@ if (session_status() === PHP_SESSION_NONE) {
                 <ul class="navbar-nav ms-auto">
                     <?php if (isset($_SESSION['id_user'])): ?>
                         <li class="nav-item">
+                            <a class="fw-semibold btn btn-outline-secondary me-4" href="/ajouterproduit">Ajouter un produit</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="fw-semibold btn btn-secondary" href="/deconnexion">Déconnexion</a>
                         </li>
                     <?php else: ?>
