@@ -11,120 +11,54 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <title>test</title>
-    <link href="/assets/img/Gaudper.png" rel="icon">
-    <style>
-        #footer {
-            background-color: lightgrey;
-        }
-        .prenom {
-            color: midnightblue;
-        }
-    </style>
 </head>
 
-<body>
-<!--<header id="header">-->
-<!--    <nav class="navbar navbar-expand-lg navbar-light">-->
-<!--        <div class="container">-->
-<!--            <img id="logo" src="" width="3%" alt="">-->
-<!--            <a class="navbar-brand text-dark ms-2 fw-semibold" href="/">test</a>-->
-<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--                <span class="navbar-toggler-icon"></span>-->
-<!--            </button>-->
-<!--            <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--                <ul class="navbar-nav ms-auto">-->
-<!--                    --><?php //if (isset($_SESSION['id_user'])): ?>
-<!--                        <li class="nav-item">-->
-<!--                            <a class="fw-semibold btn btn-outline-secondary me-4" href="/ajouterproduit">Ajouter un produit</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="fw-semibold btn btn-secondary" href="/deconnexion">Déconnexion</a>-->
-<!--                        </li>-->
-<!--                    --><?php //else: ?>
-<!--                        <li class="nav-item">-->
-<!--                            <a class="connexion nav-link fw-semibold btn btn-outline-secondary" href="/connexion">Connexion</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="inscription nav-link fw-semibold btn btn-secondary" href="/creationcompte">Créer un compte</a>-->
-<!--                        </li>-->
-<!--                    --><?php //endif; ?>
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </nav>-->
-<!--</header>-->
-
-<div class="layout">
-    <div class="sidebar" id="sidebar">
-        <button class="toggle-button" id="toggleButton">
-            <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m15 18-6-6 6-6"/>
+<body class="layout">
+<aside id="sidebar" class="sidebar">
+    <button id="toggleButton" class="toggle-button">
+        <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+            <path fill-rule="evenodd" d="M3 12a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1zM3 6a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1zM3 18a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+        </svg>
+    </button>
+    <div class="logo-section">
+        <a href="/" class="home-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
             </svg>
-        </button>
-
-        <!-- Logo/Home section -->
-        <div class="logo-section">
-            <a href="/" class="home-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-                <span class="link-text">Accueil</span>
-            </a>
-        </div>
-
-        <!-- Navigation Links -->
-        <nav class="nav-links">
-            <a href="/dashboard" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="3" height="7" x="4" y="14" rx="1"/>
-                    <rect width="3" height="12" x="12" y="9" rx="1"/>
-                    <rect width="3" height="17" x="20" y="4" rx="1"/>
-                </svg>
-                <span class="link-text">Tableau de bord</span>
-            </a>
-            <a href="/users" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                <span class="link-text">Utilisateurs</span>
-            </a>
-            <a href="/documents" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                </svg>
-                <span class="link-text">Documents</span>
-            </a>
-            <a href="/settings" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
-                <span class="link-text">Paramètres</span>
-            </a>
-        </nav>
-
-        <!-- Authentication section -->
-        <div class="auth-section">
-            <button class="login-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                    <polyline points="10 17 15 12 10 7"/>
-                    <line x1="15" x2="3" y1="12" y2="12"/>
-                </svg>
-                <span class="link-text">Connexion</span>
-            </button>
-        </div>
+            <span class="link-text">Home</span>
+        </a>
     </div>
+    <nav class="nav-links">
+        <?php if (isset($_SESSION['id_user'])): ?>
+            <a href="/ajouterproduit" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+                <span class="link-text">Ajouter un produit</span>
+            </a>
+        <?php endif; ?>
+    </nav>
+    <div class="auth-section">
+        <?php if (isset($_SESSION['id_user'])): ?>
+            <a href="/deconnexion" class="login-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M10 17l-1.41-1.41L14.17 10H3v-2h11.17l-5.58-5.59L10 3l7 7z" />
+                </svg>
+                <span class="link-text">Se déconnecter</span>
+            </a>
+        <?php else: ?>
+            <a href="/connexion" class="login-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M10 17l-1.41-1.41L14.17 10H3v-2h11.17l-5.58-5.59L10 3l7 7z" />
+                </svg>
+                <span class="link-text">Se connecter</span>
+            </a>
+        <?php endif; ?>
+    </div>
+</aside>
 
 <main class="main-content">
     <?php if (isset($_SESSION['id_user'])): ?>
@@ -135,15 +69,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <?= $content ?>
 </main>
 
-<footer id="footer" class="footer mt-auto py-3 d-flex flex-column align-items-center border-top">
-    <div class="text-center">
-        <span class="text-dark">&copy; test</span>
-    </div>
-</footer>
+<script src="/assets/js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="assets/js/script.js"></script>
-
 </html>
