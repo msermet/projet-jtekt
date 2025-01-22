@@ -53,7 +53,6 @@ $idLigne = $_GET['ligne'] ?? null;
                         <i class="bi bi-calendar-month fs-1 text-primary"></i>
                     </div>
                     <h5 class="card-title">Pattern Mois</h5>
-                    <p class="card-text text-muted">Configurez un pattern mensuel adapté à vos besoins.</p>
                 </div>
             </div>
         </div>
@@ -66,7 +65,6 @@ $idLigne = $_GET['ligne'] ?? null;
                         <i class="bi bi-calendar-day fs-1 text-success"></i>
                     </div>
                     <h5 class="card-title">Pattern Jour</h5>
-                    <p class="card-text text-muted">Créez un pattern quotidien pour une gestion précise.</p>
                 </div>
             </div>
         </div>
@@ -79,7 +77,6 @@ $idLigne = $_GET['ligne'] ?? null;
                         <i class="bi bi-pencil-square fs-1 text-warning"></i>
                     </div>
                     <h5 class="card-title">Modifier Pattern</h5>
-                    <p class="card-text text-muted">Ajustez ou personnalisez un pattern existant.</p>
                 </div>
             </a>
         </div>
@@ -150,8 +147,9 @@ $idLigne = $_GET['ligne'] ?? null;
 
             const baseUrl = selectedPattern === 'mois' ? '/pattern/mois' : '/pattern/jour';
             const ligneId = <?= json_encode($idLigne) ?>;
+            const usineId = <?= json_encode($idUsine) ?>;
 
-            window.location.href = `${baseUrl}?ligne=${ligneId}&date=${dateValue}`;
+            window.location.href = `${baseUrl}?usine=${usineId}&ligne=${ligneId}&date=${dateValue}`;
         });
     });
 

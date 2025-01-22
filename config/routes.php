@@ -6,5 +6,6 @@ return [
     '/connexion' => ['AuthentificationController', 'connexion'],
     '/deconnexion' => ['AuthentificationController', 'deconnexion'],
     '/ajouterproduit' => ['ProduitController', 'ajouter'],
-    '/pattern' => ['PatternController', 'choix']
+    '/pattern' => ['PatternController', 'choix'],
+    '/pattern/mois' => ['PatternMoisController', 'ajouter']
 ];
