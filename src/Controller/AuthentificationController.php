@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AbstractController;
+use App\Entity\Usine;
 use App\UserStory\CreateAccount;
 use App\UserStory\Login;
 use Doctrine\ORM\EntityManager;
@@ -27,6 +28,9 @@ class AuthentificationController extends AbstractController {
             exit;
         }
 
+        $usines = $this->entityManager->getRepository(Usine::class)->findAll();
+
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $createAccount = new CreateAccount($this->entityManager);
@@ -49,6 +53,7 @@ class AuthentificationController extends AbstractController {
         }
         $this->render('View_CreateAccount', [
             'error' => $error ?? null,
+            'usines' => $usines ?? []
         ]);
     }
 
@@ -82,6 +87,7 @@ class AuthentificationController extends AbstractController {
         }
         $this->render('View_Login', [
             'error' => $error ?? null,
+            'usines' => $usines ?? []
         ]);
     }
 
@@ -90,7 +96,9 @@ class AuthentificationController extends AbstractController {
         session_start();
         $_SESSION = [];
         session_destroy();
-        $this->render('View_Home');
+        $this->render('View_Home', [
+            'usines' => $usines ?? []
+        ]);
     }
 
 }

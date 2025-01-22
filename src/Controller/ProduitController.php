@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\AbstractController;
+use App\Entity\Usine;
 use App\UserStory\AjouterProduit;
 use Doctrine\ORM\EntityManager;
 
@@ -28,6 +29,8 @@ class ProduitController extends AbstractController
             exit;
         }
 
+        $usines = $this->entityManager->getRepository(Usine::class)->findAll();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $createAccount = new AjouterProduit($this->entityManager);
@@ -47,6 +50,7 @@ class ProduitController extends AbstractController
         }
         $this->render('View_Produit', [
             'error' => $error ?? null,
+            'usines' => $usines ?? []
         ]);
     }
 }
