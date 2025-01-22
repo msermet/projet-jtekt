@@ -27,3 +27,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Vérifier la taille initiale
     handleResize();
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleButton = document.querySelector(".usines-toggle");
+    const dropdownMenus = document.querySelectorAll(".dropdown");
+
+    if (toggleButton) {
+        toggleButton.addEventListener("click", () => {
+            dropdownMenus.forEach(menu => {
+                menu.classList.toggle("visible");
+            });
+        });
+    }
+});

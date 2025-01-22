@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'lignes')]
-class Ligne extends Usine
+class Ligne
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,7 +16,7 @@ class Ligne extends Usine
     #[ORM\Column(name: 'nom', type: 'string', length: 255)]
     private string $nom;
 
-    #[ORM\ManyToOne(targetEntity: Usine::class)]
+    #[ORM\ManyToOne(targetEntity: Usine::class, inversedBy: 'lignes')]
     #[ORM\JoinColumn(name: 'id_usine', referencedColumnName: 'id_usine', onDelete: 'CASCADE')]
     private Usine $usine;
 
@@ -49,6 +49,4 @@ class Ligne extends Usine
     {
         $this->usine = $usine;
     }
-
-
 }

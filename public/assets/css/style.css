@@ -177,11 +177,15 @@ body {
 
 /* Sous-menu spécifique aux usines */
 .nav-links .submenu {
-    margin-left: 10px; /* Légère indentation pour le sous-menu */
-    border-left: 2px solid #2d3748;
-    padding-left: 10px;
+    margin-left: 10px;
+    border-left: 3px solid #2d3748; /* Barre de délimitation */
+    padding-left: 15px;
+    transition: border-color 0.3s ease;
 }
 
+.nav-links .submenu:hover {
+    border-color: #4a5568; /* Changement de couleur au survol */
+}
 
 .nav-links .submenu-list {
     list-style: none;
@@ -207,7 +211,87 @@ body {
     color: white;
 }
 
-/* Responsive design pour le sous-menu */
+/* Conteneur Dropdown */
+/* Cacher les sous-menus par défaut */
+.dropdown {
+    display: none;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+}
+
+/* Afficher les sous-menus lorsqu'ils ont la classe 'visible' */
+.dropdown.visible {
+    display: block;
+    opacity: 1;
+    max-height: 500px; /* Ajustez en fonction du contenu */
+    overflow: visible;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+
+.dropdown:hover {
+    border-color: #4a5568; /* Barre change au survol */
+}
+
+/* Bouton de menu déroulant */
+.dropdown-toggle {
+    background-color: #1a1d23;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: left;
+    width: 100%;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-toggle:hover {
+    background-color: #2d3748;
+}
+
+/* Menu déroulant */
+.dropdown-menu {
+    display: none;
+    position: relative; /* Position relative pour éviter les décalages */
+    margin-top: 5px;
+    background-color: #2d3748;
+    color: white;
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+}
+
+/* Afficher le menu au survol */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Items dans le menu déroulant */
+.dropdown-menu li {
+    margin: 5px 0;
+}
+
+.dropdown-menu a {
+    text-decoration: none;
+    color: white;
+    padding: 5px;
+    display: block;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+    background-color: #4a5568;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
     .nav-links .submenu {
         border-left: none;
@@ -218,7 +302,9 @@ body {
         padding: 10px;
         font-size: 0.9rem;
     }
+
+    .dropdown {
+        border-left: none;
+    }
 }
-
-
 
