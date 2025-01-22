@@ -47,7 +47,7 @@ $idLigne = $_GET['ligne'] ?? null;
     <div class="row justify-content-center">
         <!-- Pattern Mois -->
         <div class="col-md-6">
-            <a href="/pattern/mois/usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-sm text-decoration-none pattern-card">
+            <div class="card shadow-sm text-decoration-none pattern-card" id="pattern-mois">
                 <div class="card-body text-center">
                     <div class="icon mb-3">
                         <i class="bi bi-calendar-month fs-1 text-primary"></i>
@@ -55,12 +55,12 @@ $idLigne = $_GET['ligne'] ?? null;
                     <h5 class="card-title">Pattern Mois</h5>
                     <p class="card-text text-muted">Configurez un pattern mensuel adapté à vos besoins.</p>
                 </div>
-            </a>
+            </div>
         </div>
 
         <!-- Pattern Jour -->
         <div class="col-md-6">
-            <a href="/pattern/jour/usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-sm text-decoration-none pattern-card">
+            <div class="card shadow-sm text-decoration-none pattern-card" id="pattern-jour">
                 <div class="card-body text-center">
                     <div class="icon mb-3">
                         <i class="bi bi-calendar-day fs-1 text-success"></i>
@@ -68,7 +68,7 @@ $idLigne = $_GET['ligne'] ?? null;
                     <h5 class="card-title">Pattern Jour</h5>
                     <p class="card-text text-muted">Créez un pattern quotidien pour une gestion précise.</p>
                 </div>
-            </a>
+            </div>
         </div>
 
         <!-- Modifier Pattern -->
@@ -85,4 +85,75 @@ $idLigne = $_GET['ligne'] ?? null;
         </div>
     </div>
 
+    <!-- Modale pour sélectionner le mois ou le jour -->
+    <div class="modal fade" id="patternModal" tabindex="-1" aria-labelledby="patternModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="patternModalLabel">Sélectionnez une date</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="patternDate" class="form-label">Choisir :</label>
+                    <input type="month" id="patternDate" class="form-control" placeholder="Sélectionnez une période">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="validatePattern">Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = new bootstrap.Modal(document.getElementById('patternModal'));
+        const patternDate = document.getElementById('patternDate');
+        const validateButton = document.getElementById('validatePattern');
+
+        let selectedPattern = null;
+
+        document.getElementById('pattern-mois').addEventListener('click', function () {
+            selectedPattern = 'mois';
+            document.getElementById('patternModalLabel').textContent = 'Sélectionnez un mois pour le pattern :';
+            patternDate.type = 'month';
+            modal.show();
+        });
+
+        document.getElementById('pattern-jour').addEventListener('click', function () {
+            selectedPattern = 'jour';
+            document.getElementById('patternModalLabel').textContent = 'Sélectionnez un jour pour le pattern :';
+            patternDate.type = 'date';
+            modal.show();
+        });
+
+        validateButton.addEventListener('click', function () {
+            const dateValue = patternDate.value;
+            if (!dateValue) {
+                alert('Veuillez sélectionner une date valide.');
+                return;
+            }
+
+            const today = new Date();
+            let selectedDate;
+
+            if (selectedPattern === 'mois') {
+                selectedDate = new Date(`${dateValue}-01`);
+            } else {
+                selectedDate = new Date(dateValue);
+            }
+
+            if (selectedDate < today) {
+                alert("La date ou le mois sélectionné est antérieur à aujourd'hui.");
+                return;
+            }
+
+            const baseUrl = selectedPattern === 'mois' ? '/pattern/mois' : '/pattern/jour';
+            const ligneId = <?= json_encode($idLigne) ?>;
+
+            window.location.href = `${baseUrl}?ligne=${ligneId}&date=${dateValue}`;
+        });
+    });
+
+</script>
+
