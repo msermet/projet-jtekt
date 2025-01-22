@@ -308,3 +308,22 @@ body {
     }
 }
 
+/* Cartes cliquables */
+.pattern-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none; /* Supprime les bordures par défaut */
+}
+
+.pattern-card:hover {
+    transform: translateY(-10px); /* Soulève légèrement la carte */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
+}
+
+/* Icônes dans les cartes */
+.icon {
+    font-size: 2.5rem; /* Taille des icônes */
+}
+
+main {
+    background-color: #38363d;
+}

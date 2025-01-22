@@ -5,5 +5,6 @@ return [
     '/creationcompte' => ['AuthentificationController', 'creationcompte'],
     '/connexion' => ['AuthentificationController', 'connexion'],
     '/deconnexion' => ['AuthentificationController', 'deconnexion'],
-    '/ajouterproduit' => ['ProduitController', 'ajouter']
+    '/ajouterproduit' => ['ProduitController', 'ajouter'],
+    '/pattern' => ['PatternController', 'choix']
 ];
