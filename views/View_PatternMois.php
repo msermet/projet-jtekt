@@ -5,6 +5,11 @@ $idLigne = $_GET['ligne'] ?? null;
 $annee = $_GET['annee'] ?? null;
 $mois = $_GET['mois'] ?? null;
 
+$ajoutReussi = '';
+if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
+    $ajoutReussi = 'Enregistrement validé.';
+}
+
 ?>
 
 <div class="container p-5">
@@ -45,6 +50,12 @@ $mois = $_GET['mois'] ?? null;
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?php echo htmlspecialchars($error); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+    <?php if (!empty($ajoutReussi)): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php echo htmlspecialchars($ajoutReussi); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
@@ -108,8 +119,11 @@ $mois = $_GET['mois'] ?? null;
                 'sebango' => $produit->getSebango(),
                 'reference' => $produit->getArticle(),
                 'designation' => $produit->getDesignation(),
+                'ligne' => $produit->getLigne(), // Ajout du champ ligne
             ];
         }, $produits)); ?>;
+
+        const idLigne = <?php echo json_encode($idLigne); ?>; // Ligne récupérée via le formulaire
 
         const addRowButton = document.getElementById('addRow');
         const saveButton = document.getElementById('saveButton');
@@ -120,7 +134,6 @@ $mois = $_GET['mois'] ?? null;
             const lastRow = tableBody.querySelector('tr:last-child');
             let allFilled = true;
 
-            // Si une dernière ligne existe, vérifier qu'elle est bien remplie
             if (lastRow) {
                 const sebangoInput = lastRow.querySelector('.sebango-input');
                 const referenceInput = lastRow.querySelector('.reference-input');
@@ -137,7 +150,7 @@ $mois = $_GET['mois'] ?? null;
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
                         alert("Le Sebango saisi est incorrect ou n'existe pas. Veuillez vérifier.");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("La quantité doit être un nombre strictement positif.");
+                        alert("La quantité doit être un nombre strictement positive.");
                     } else {
                         alert("Tous les champs doivent être remplis avant d'ajouter une nouvelle ligne.");
                     }
@@ -150,7 +163,7 @@ $mois = $_GET['mois'] ?? null;
             newRow.innerHTML = `
                 <td>
                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                           placeholder="Sebango" pattern=".{4}" title="Sebango doit contenir exactement 4 caractères" required>
+                           placeholder="ex : A350" pattern=".{4}" title="Sebango doit contenir exactement 4 caractères" required>
                 </td>
                 <td>
                     <input type="text" class="form-control reference-input" name="reference[]" placeholder="Référence" readonly>
@@ -159,7 +172,7 @@ $mois = $_GET['mois'] ?? null;
                     <input type="text" class="form-control designation-input" name="designation[]" placeholder="Désignation" readonly>
                 </td>
                 <td>
-                    <input type="number" class="form-control" name="quantite[]" placeholder="Quantité" required>
+                    <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row">
@@ -177,7 +190,9 @@ $mois = $_GET['mois'] ?? null;
                 const referenceInput = event.target.closest('tr').querySelector('.reference-input');
                 const designationInput = event.target.closest('tr').querySelector('.designation-input');
 
-                const produit = produits.find(p => p.sebango.toUpperCase() === sebangoValue);
+                const produit = produits.find(p =>
+                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne // Vérifie aussi la ligne
+                );
 
                 if (produit) {
                     referenceInput.value = produit.reference;
@@ -201,20 +216,17 @@ $mois = $_GET['mois'] ?? null;
             const rows = tableBody.querySelectorAll('tr');
             let valid = true;
 
-            // Vérifier si le tableau est vide
             if (rows.length === 0) {
                 event.preventDefault();
                 alert("Veuillez ajouter une ligne dans le tableau avant d'enregistrer.");
                 return;
             }
 
-            // Validation des champs de chaque ligne
             rows.forEach(row => {
                 const referenceInput = row.querySelector('.reference-input');
                 const designationInput = row.querySelector('.designation-input');
                 const quantiteInput = row.querySelector('input[name="quantite[]"]');
 
-                // Priorité 1 : Vérifier si tous les champs sont remplis
                 if (
                     referenceInput.value.trim() === '' ||
                     designationInput.value.trim() === '' ||
@@ -224,7 +236,7 @@ $mois = $_GET['mois'] ?? null;
                     valid = false;
 
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("Le Sebango saisi est incorrect ou n'existe pas.");
+                        alert("Le Sebango saisi est incorrect ou n'appartient pas à cette ligne.");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
                         alert("La quantité doit être un nombre strictement positif.");
                     } else {

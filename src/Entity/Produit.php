@@ -18,6 +18,9 @@ class Produit
     #[ORM\Column(name: 'designation', type: 'string', length: 50)]
     private string $designation;
 
+    #[ORM\Column(name: 'ligne', type: 'integer')]
+    private int $ligne;
+
     public function getSebango(): string
     {
         return $this->sebango;
@@ -46,5 +49,15 @@ class Produit
     public function setDesignation(string $designation): void
     {
         $this->designation = $designation;
+    }
+
+    public function getLigne(): int
+    {
+        return $this->ligne;
+    }
+
+    public function setLigne(string $ligne): void
+    {
+        $this->ligne = $ligne;
     }
 }

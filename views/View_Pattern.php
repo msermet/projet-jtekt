@@ -80,6 +80,20 @@ $idLigne = $_GET['ligne'] ?? null;
                 </div>
             </a>
         </div>
+
+        <!-- Add a product -->
+        <div class="col-md-4 mt-4"></div>
+        <div class="col-md-4 mt-4">
+            <a href="/pattern/ajouterproduit?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-sm text-decoration-none pattern-card">
+                <div class="card-body text-center">
+                    <div class="icon mb-3">
+                        <i class="bi bi-plus-circle fs-1 text-danger"></i>
+                    </div>
+                    <h5 class="card-title">Add a product</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 mt-4"></div>
     </div>
 
     <!-- Modale pour sélectionner le mois ou le jour -->
@@ -132,19 +146,25 @@ $idLigne = $_GET['ligne'] ?? null;
             }
 
             const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth() + 1; // Mois actuel (0-indexé)
+
             let selectedDate;
             let year, month;
 
             if (selectedPattern === 'mois') {
                 [year, month] = dateValue.split('-');
-                selectedDate = new Date(`${dateValue}-01`);
+                selectedDate = new Date(`${year}-${month}-01`);
             } else {
                 selectedDate = new Date(dateValue);
                 year = selectedDate.getFullYear();
                 month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
             }
 
-            if (selectedDate < today) {
+            if (
+                selectedDate < today &&
+                !(selectedPattern === 'mois' && parseInt(year) === currentYear && parseInt(month) === currentMonth)
+            ) {
                 alert("La date ou le mois sélectionné est antérieur à aujourd'hui.");
                 return;
             }

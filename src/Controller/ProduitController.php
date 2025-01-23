@@ -37,7 +37,8 @@ class ProduitController extends AbstractController
                 $createAccount->execute(
                     $_POST['sebango'],
                     $_POST['article'],
-                    $_POST['designation']
+                    $_POST['designation'],
+                    $_POST['ligne']
                 );
 
                 $this->redirect("/ajouterproduit?ajout=succeed");

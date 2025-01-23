@@ -44,9 +44,14 @@ class AjouterPatternMois
                 throw new \Exception("La Quantité à l'index $index doit être un nombre strictement positif.");
             }
 
-            $existingSebango = $this->entityManager->getRepository(Produit::class)->findOneBy(['sebango' => $sebango]);
-            if ($existingSebango === null) {
+            $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy(['sebango' => $sebango]);
+
+            if ($existingProduit === null) {
                 throw new \Exception("Le Sebango '$sebango' à l'index $index n'existe pas dans les produits.");
+            }
+
+            if ($existingProduit->getLigne() !== $ligne) {
+                throw new \Exception("Le Sebango '$sebango' à l'index $index n'est pas autorisé pour la ligne spécifiée.");
             }
 
             $patternMois = new PatternMois();
@@ -58,6 +63,7 @@ class AjouterPatternMois
 
             $this->entityManager->persist($patternMois);
         }
+
         $this->entityManager->flush();
     }
 }
