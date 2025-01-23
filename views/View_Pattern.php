@@ -50,7 +50,7 @@ $idLigne = $_GET['ligne'] ?? null;
                     <div class="icon mb-3">
                         <i class="bi bi-calendar-month fs-1 text-primary"></i>
                     </div>
-                    <h5 class="card-title">Pattern Mois</h5>
+                    <h5 class="card-title">Month Pattern</h5>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@ $idLigne = $_GET['ligne'] ?? null;
                     <div class="icon mb-3">
                         <i class="bi bi-calendar-day fs-1 text-success"></i>
                     </div>
-                    <h5 class="card-title">Pattern Jour</h5>
+                    <h5 class="card-title">Day Pattern</h5>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@ $idLigne = $_GET['ligne'] ?? null;
                     <div class="icon mb-3">
                         <i class="bi bi-pencil-square fs-1 text-warning"></i>
                     </div>
-                    <h5 class="card-title">Modifier Pattern</h5>
+                    <h5 class="card-title">Edit Pattern</h5>
                 </div>
             </a>
         </div>

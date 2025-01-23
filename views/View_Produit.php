@@ -17,7 +17,7 @@ $idLigne = $_GET['ligne'] ?? null;
                 <div class="card-body p-4">
                     <!-- Titre principal -->
                     <div class="text-center mb-4">
-                        <h2 class="fw-bold">Ajouter un produit</h2>
+                        <h2 class="fw-bold">Add a product</h2>
                         <h3 class="fw-bold">
                             <?php
                             $nomUsine = null;
@@ -51,7 +51,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             }
                             ?>
                         </h3>
-                        <p class="text-muted small">Complétez les informations ci-dessous.</p>
+                        <p class="text-muted small">Complete the information below.</p>
                     </div>
 
                     <!-- Messages d'erreur et de succès -->
@@ -83,40 +83,40 @@ $idLigne = $_GET['ligne'] ?? null;
                                 </span>
                                 <input type="text" name="sebango" id="sebango" class="form-control" placeholder="ex : A350" value="<?php echo isset($_POST['sebango']) ? htmlspecialchars($_POST['sebango']) : ''; ?>" required>
                             </div>
-                            <small class="text-muted">Le Sebango doit comporter exactement 4 caractères.</small>
+                            <small class="text-muted">The Sebango must contain exactly 4 characters.</small>
                         </div>
 
                         <!-- Article -->
                         <div class="mb-3">
-                            <label for="article" class="form-label fw-bold">Article</label>
+                            <label for="article" class="form-label fw-bold">Item</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-success text-white">
                                     <i class="bi bi-arrow-right-circle"></i>
                                 </span>
                                 <input type="text" name="article" id="article" class="form-control" placeholder="ex : 6900004792" value="<?php echo isset($_POST['article']) ? htmlspecialchars($_POST['article']) : ''; ?>" required>
                             </div>
-                            <small class="text-muted">Saisissez un numéro d'article valide.</small>
+                            <small class="text-muted">Enter a valid article reference.</small>
                         </div>
 
                         <!-- Désignation -->
                         <div class="mb-3">
-                            <label for="designation" class="form-label fw-bold">Désignation</label>
+                            <label for="designation" class="form-label fw-bold">Designation</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-warning text-dark">
                                     <i class="bi bi-arrow-right-circle"></i>
                                 </span>
                                 <input type="text" name="designation" id="designation" class="form-control" placeholder="ex : DAE G P84 DPLP D041 PHEV" value="<?php echo isset($_POST['designation']) ? htmlspecialchars($_POST['designation']) : ''; ?>" required>
                             </div>
-                            <small class="text-muted">Donnez une description au produit.</small>
+                            <small class="text-muted">Provide a description for the product.</small>
                         </div>
 
                         <!-- Boutons -->
                         <div class="d-flex justify-content-between pt-3">
                             <a href="/pattern?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
-                                <i class="bi bi-arrow-left"></i> Retour
+                                <i class="bi bi-arrow-left"></i> Back to the previous page
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-plus-circle"></i> Ajouter
+                                <i class="bi bi-plus-circle"></i> Add
                             </button>
                         </div>
                     </form>
@@ -126,5 +126,3 @@ $idLigne = $_GET['ligne'] ?? null;
     </div>
 </main>
 
-<!-- Import Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
