@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PatternMois;
+use App\Entity\Produit;
 use App\Entity\Usine;
 use Doctrine\ORM\EntityManager;
 
@@ -18,8 +19,11 @@ class PatternMoisController extends AbstractController
     {
 
         $usines = $this->entityManager->getRepository(Usine::class)->findAll();
+        $produits = $this->entityManager->getRepository(Produit::class)->findAll();
+
         $this->render('View_PatternMois', [
             'usines' => $usines,
+            'produits' => $produits
         ]);
     }
 }
