@@ -112,7 +112,7 @@ $idLigne = $_GET['ligne'] ?? null;
 
                         <!-- Boutons -->
                         <div class="d-flex justify-content-between pt-3">
-                            <a href="/pattern?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-secondary">
+                            <a href="/pattern?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
                                 <i class="bi bi-arrow-left"></i> Retour
                             </a>
                             <button type="submit" class="btn btn-primary">

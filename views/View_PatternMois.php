@@ -106,7 +106,11 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <i class="bi bi-plus"></i> Ajouter une ligne
                     </button>
                     <button type="submit" class="btn btn-primary" id="saveButton">Enregistrer</button>
+
                 </div>
+                <a href="/pattern?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
             </form>
         </div>
     </div>
