@@ -16,14 +16,17 @@ class PatternMois
     #[ORM\Column(name: 'ligne', type: 'integer')]
     private int $ligne;
 
-    #[ORM\Column(name: 'mois', type: 'datetime')]
-    private \DateTime $mois;
+    #[ORM\Column(name: 'mois', type: 'integer')]
+    private int $mois;
 
     #[ORM\Column(name: 'sebango', type: 'string', length: 4)]
     private string $sebango;
 
     #[ORM\Column(name: 'quantite', type: 'integer')]
     private int $quantite;
+
+    #[ORM\Column(name: 'annee', type: 'integer')]
+    private int $annee;
 
     // Getters et Setters
 
@@ -47,14 +50,24 @@ class PatternMois
         $this->ligne = $ligne;
     }
 
-    public function getMois(): \DateTime
+    public function getMois(): int
     {
         return $this->mois;
     }
 
-    public function setMois(\DateTime $mois): void
+    public function setMois(int $mois): void
     {
         $this->mois = $mois;
+    }
+
+    public function getAnnee(): int
+    {
+        return $this->annee;
+    }
+
+    public function setAnnee(int $annee): void
+    {
+        $this->annee = $annee;
     }
 
     public function getSebango(): string

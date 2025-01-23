@@ -133,11 +133,15 @@ $idLigne = $_GET['ligne'] ?? null;
 
             const today = new Date();
             let selectedDate;
+            let year, month;
 
             if (selectedPattern === 'mois') {
+                [year, month] = dateValue.split('-');
                 selectedDate = new Date(`${dateValue}-01`);
             } else {
                 selectedDate = new Date(dateValue);
+                year = selectedDate.getFullYear();
+                month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
             }
 
             if (selectedDate < today) {
@@ -149,9 +153,7 @@ $idLigne = $_GET['ligne'] ?? null;
             const ligneId = <?= json_encode($idLigne) ?>;
             const usineId = <?= json_encode($idUsine) ?>;
 
-            window.location.href = `${baseUrl}?usine=${usineId}&ligne=${ligneId}&date=${dateValue}`;
+            window.location.href = `${baseUrl}?usine=${usineId}&ligne=${ligneId}&annee=${year}&mois=${month}`;
         });
     });
-
 </script>
-

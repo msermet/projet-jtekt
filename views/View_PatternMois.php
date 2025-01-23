@@ -2,6 +2,8 @@
 
 $idUsine = $_GET['usine'] ?? null;
 $idLigne = $_GET['ligne'] ?? null;
+$annee = $_GET['annee'] ?? null;
+$mois = $_GET['mois'] ?? null;
 
 ?>
 
@@ -40,9 +42,18 @@ $idLigne = $_GET['ligne'] ?? null;
         }
         ?>
     </h3>
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?php echo htmlspecialchars($error); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
     <div class="card shadow">
         <div class="card-body">
-            <form method="POST" action="/enregistrer-pattern">
+            <form method="POST" action="">
+                <input type="hidden" name="ligne" value="<?php echo htmlspecialchars($idLigne); ?>">
+                <input type="hidden" name="annee" value="<?php echo htmlspecialchars($annee); ?>">
+                <input type="hidden" name="mois" value="<?php echo htmlspecialchars($mois); ?>">
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle" id="patternTable">
                         <thead class="table-dark">
@@ -106,33 +117,35 @@ $idLigne = $_GET['ligne'] ?? null;
 
         // Ajouter une nouvelle ligne
         addRowButton.addEventListener('click', () => {
-            const sebangos = Array.from(document.querySelectorAll('.sebango-input')).map(input => input.value.trim().toUpperCase());
-
             const lastRow = tableBody.querySelector('tr:last-child');
-            const sebangoInput = lastRow.querySelector('.sebango-input');
-            const referenceInput = lastRow.querySelector('.reference-input');
-            const designationInput = lastRow.querySelector('.designation-input');
-            const quantiteInput = lastRow.querySelector('input[name="quantite[]"]');
+            let allFilled = true;
 
-            const allFilled = sebangoInput.value.trim().length === 4 &&
-                referenceInput.value.trim() !== '' &&
-                designationInput.value.trim() !== '' &&
-                quantiteInput.value.trim() !== '';
+            // Si une dernière ligne existe, vérifier qu'elle est bien remplie
+            if (lastRow) {
+                const sebangoInput = lastRow.querySelector('.sebango-input');
+                const referenceInput = lastRow.querySelector('.reference-input');
+                const designationInput = lastRow.querySelector('.designation-input');
+                const quantiteInput = lastRow.querySelector('input[name="quantite[]"]');
 
-            if (!allFilled) {
-                if (!referenceInput.value.trim() === '' || designationInput.value.trim() === '') {
-                    alert("Le Sebango saisi est incorrect ou n'existe pas. Veuillez vérifier.");
-                } else {
-                    alert("Tous les champs doivent être remplis avant d'ajouter une nouvelle ligne.");
+                allFilled = sebangoInput.value.trim().length === 4 &&
+                    referenceInput.value.trim() !== '' &&
+                    designationInput.value.trim() !== '' &&
+                    quantiteInput.value.trim() !== '' &&
+                    parseInt(quantiteInput.value, 10) > 0;
+
+                if (!allFilled) {
+                    if (!referenceInput.value.trim() || !designationInput.value.trim()) {
+                        alert("Le Sebango saisi est incorrect ou n'existe pas. Veuillez vérifier.");
+                    } else if (parseInt(quantiteInput.value, 10) <= 0) {
+                        alert("La quantité doit être un nombre strictement positif.");
+                    } else {
+                        alert("Tous les champs doivent être remplis avant d'ajouter une nouvelle ligne.");
+                    }
+                    return;
                 }
-                return;
             }
 
-            if (sebangos.filter(sebango => sebango === sebangoInput.value.trim().toUpperCase()).length > 1) {
-                alert("Le Sebango saisi existe déjà dans le tableau. Veuillez en saisir un autre.");
-                return;
-            }
-
+            // Ajouter une nouvelle ligne
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
@@ -185,33 +198,44 @@ $idLigne = $_GET['ligne'] ?? null;
 
         // Validation avant d'enregistrer
         saveButton.addEventListener('click', (event) => {
-            const sebangos = Array.from(document.querySelectorAll('.sebango-input')).map(input => input.value.trim().toUpperCase());
             const rows = tableBody.querySelectorAll('tr');
             let valid = true;
 
-            // Vérifier les duplications de Sebango
-            if (new Set(sebangos).size !== sebangos.length) {
-                valid = false;
-                alert("Chaque Sebango dans le tableau doit être unique.");
+            // Vérifier si le tableau est vide
+            if (rows.length === 0) {
                 event.preventDefault();
+                alert("Veuillez ajouter une ligne dans le tableau avant d'enregistrer.");
                 return;
             }
 
+            // Validation des champs de chaque ligne
             rows.forEach(row => {
                 const referenceInput = row.querySelector('.reference-input');
                 const designationInput = row.querySelector('.designation-input');
                 const quantiteInput = row.querySelector('input[name="quantite[]"]');
 
-                if (referenceInput.value.trim() === '' || designationInput.value.trim() === '' || quantiteInput.value.trim() === '') {
+                // Priorité 1 : Vérifier si tous les champs sont remplis
+                if (
+                    referenceInput.value.trim() === '' ||
+                    designationInput.value.trim() === '' ||
+                    quantiteInput.value.trim() === '' ||
+                    parseInt(quantiteInput.value, 10) <= 0
+                ) {
                     valid = false;
+
+                    if (!referenceInput.value.trim() || !designationInput.value.trim()) {
+                        alert("Le Sebango saisi est incorrect ou n'existe pas.");
+                    } else if (parseInt(quantiteInput.value, 10) <= 0) {
+                        alert("La quantité doit être un nombre strictement positif.");
+                    } else {
+                        alert("Tous les champs doivent être remplis correctement avant l'enregistrement.");
+                    }
                 }
             });
 
             if (!valid) {
                 event.preventDefault();
-                alert("Tous les champs doivent être remplis correctement avant l'enregistrement.");
             }
         });
     });
 </script>
-
