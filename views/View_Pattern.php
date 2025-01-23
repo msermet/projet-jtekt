@@ -7,8 +7,6 @@ $idLigne = $_GET['ligne'] ?? null;
 
 <main class="container p-5">
     <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold text-light">Choisissez un Pattern</h1>
-
         <h1 class="display-5 fw-bold text-light">
             <?php
             $nomUsine = null;
