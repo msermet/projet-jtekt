@@ -99,15 +99,15 @@ $idLigne = $_GET['ligne'] ?? null;
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="patternModalLabel">Sélectionnez une date</h5>
+                    <h5 class="modal-title" id="patternModalLabel">Select a date</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label for="patternDate" class="form-label">Choisir :</label>
+                    <label for="patternDate" class="form-label">Choose :</label>
                     <input type="month" id="patternDate" class="form-control" placeholder="Sélectionnez une période">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="validatePattern">Valider</button>
+                    <button type="button" class="btn btn-primary" id="validatePattern">Validate</button>
                 </div>
             </div>
         </div>
@@ -124,14 +124,14 @@ $idLigne = $_GET['ligne'] ?? null;
 
         document.getElementById('pattern-mois').addEventListener('click', function () {
             selectedPattern = 'mois';
-            document.getElementById('patternModalLabel').textContent = 'Sélectionnez un mois pour le pattern :';
+            document.getElementById('patternModalLabel').textContent = 'Select a month for the pattern:';
             patternDate.type = 'month';
             modal.show();
         });
 
         document.getElementById('pattern-jour').addEventListener('click', function () {
             selectedPattern = 'jour';
-            document.getElementById('patternModalLabel').textContent = 'Sélectionnez un jour pour le pattern :';
+            document.getElementById('patternModalLabel').textContent = 'Select a day for the pattern:';
             patternDate.type = 'date';
             modal.show();
         });
@@ -139,7 +139,7 @@ $idLigne = $_GET['ligne'] ?? null;
         validateButton.addEventListener('click', function () {
             const dateValue = patternDate.value;
             if (!dateValue) {
-                alert('Veuillez sélectionner une date valide.');
+                alert('Please select a valid date.');
                 return;
             }
 
@@ -163,7 +163,7 @@ $idLigne = $_GET['ligne'] ?? null;
                 selectedDate < today &&
                 !(selectedPattern === 'mois' && parseInt(year) === currentYear && parseInt(month) === currentMonth)
             ) {
-                alert("La date ou le mois sélectionné est antérieur à aujourd'hui.");
+                alert("The selected date or month is earlier than today.");
                 return;
             }
 

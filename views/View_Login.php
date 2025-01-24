@@ -1,24 +1,24 @@
 <?php
 $inscriptionMessage = '';
 if (isset($_GET['inscription']) && $_GET['inscription'] === 'succeed') {
-    $inscriptionMessage = 'Inscription réussie.';
+    $inscriptionMessage = 'Registration successful.';
 }
 
 $connexionMessage = '';
 if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
-    $connexionMessage = 'Vous devez être connecté pour accéder à cette page.';
+    $connexionMessage = 'You must be logged in to access this page.';
 }
 ?>
 
 <main class="container my-auto">
     <div class="d-flex justify-content-center align-items-center vh-100">
-        <div class="form-container p-4" style="max-width: 400px; width: 100%;">
+        <div class="form-container p-4" style="max-width: 500px; width: 100%;">
             <div class="card shadow-lg border-0">
                 <div class="card-body p-4">
                     <!-- Titre principal -->
                     <div class="text-center mb-4">
-                        <h2 class="fw-bold">Connexion</h2>
-                        <p class="text-muted small">Entrez vos informations pour vous connecter.</p>
+                        <h2 class="fw-bold">Login</h2>
+                        <p class="text-muted small">Enter your information to log in.</p>
                     </div>
 
                     <!-- Messages d'erreur et de succès -->
@@ -61,22 +61,22 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
 
                         <!-- Mot de passe -->
                         <div class="mb-3">
-                            <label for="password" class="form-label fw-bold">Mot de passe</label>
+                            <label for="password" class="form-label fw-bold">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-secondary text-white">
                                     <i class="bi bi-lock-fill"></i>
                                 </span>
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe" required>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Your password" required>
                             </div>
                         </div>
 
                         <!-- Boutons -->
                         <div class="d-flex justify-content-between align-items-center pt-3">
                             <a href="/" class="btn btn-link text-decoration-none text-muted">
-                                <i class="bi bi-arrow-left"></i> Retour
+                                <i class="bi bi-arrow-left"></i> Back to the previous page
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                                <i class="bi bi-box-arrow-in-right"></i> Login
                             </button>
                         </div>
                     </form>
@@ -84,7 +84,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                     <!-- Lien d'inscription -->
                     <div class="pt-4 text-center">
                         <p class="small text-muted">
-                            Vous n'avez pas de compte ? <a href="/creationcompte" class="fw-semibold link-primary">Inscrivez-vous ici</a>.
+                            Don't have an account? <a href="/creationcompte" class="fw-semibold link-primary">Sign up here</a>.
                         </p>
                     </div>
                 </div>
@@ -92,6 +92,3 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
         </div>
     </div>
 </main>
-
-<!-- Import Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">

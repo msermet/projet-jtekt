@@ -80,7 +80,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
                     <path d="M10 17l-1.41-1.41L14.17 10H3v-2h11.17l-5.58-5.59L10 3l7 7z" />
                 </svg>
-                <span class="link-text">Log in</span>
+                <span class="link-text">Login</span>
             </a>
         <?php endif; ?>
     </div>

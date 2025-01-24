@@ -88,7 +88,7 @@ $idLigne = $_GET['ligne'] ?? null;
 
                         <!-- Article -->
                         <div class="mb-3">
-                            <label for="article" class="form-label fw-bold">Item</label>
+                            <label for="article" class="form-label fw-bold">Item (Article)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-success text-white">
                                     <i class="bi bi-arrow-right-circle"></i>

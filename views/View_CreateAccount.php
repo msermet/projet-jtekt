@@ -5,8 +5,8 @@
                 <div class="card-body p-4">
                     <!-- Titre principal -->
                     <div class="text-center mb-4">
-                        <h2 class="fw-bold">Créer un compte</h2>
-                        <p class="text-muted small">Complétez les informations pour créer un nouveau compte.</p>
+                        <h2 class="fw-bold">Create an Account</h2>
+                        <p class="text-muted small">Fill in the information to create a new account.</p>
                     </div>
 
                     <!-- Messages d'erreur -->
@@ -22,7 +22,7 @@
                     <form method="POST" action="">
                         <!-- Prénom -->
                         <div class="mb-3">
-                            <label for="prenom" class="form-label fw-bold">Prénom</label>
+                            <label for="prenom" class="form-label fw-bold">First Name</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-primary text-white">
                                     <i class="bi bi-person-fill"></i>
@@ -33,7 +33,7 @@
 
                         <!-- Nom -->
                         <div class="mb-3">
-                            <label for="nom" class="form-label fw-bold">Nom</label>
+                            <label for="nom" class="form-label fw-bold">Last Name</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-secondary text-white">
                                     <i class="bi bi-person-fill"></i>
@@ -55,15 +55,15 @@
 
                         <!-- Mot de passe -->
                         <div class="mb-3">
-                            <label for="password" class="form-label fw-bold">Mot de passe</label>
+                            <label for="password" class="form-label fw-bold">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-danger text-white">
                                     <i class="bi bi-lock-fill"></i>
                                 </span>
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Votre mot de passe" required>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Your password" required>
                             </div>
                             <small class="text-muted d-block mt-1">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#passwordInfo" class="text-decoration-none">Consultez les exigences du mot de passe</a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#passwordInfo" class="text-decoration-none">View password requirements</a>
                             </small>
                         </div>
 
@@ -72,15 +72,15 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="passwordInfoLabel">Exigences du mot de passe</h5>
+                                        <h5 class="modal-title" id="passwordInfoLabel">Password Requirements</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <ul>
-                                            <li>Minimum 8 caractères</li>
-                                            <li>Au moins une lettre majuscule et une lettre minuscule</li>
-                                            <li>Au moins un chiffre</li>
-                                            <li>Au moins un caractère spécial</li>
+                                            <li>Minimum 8 characters</li>
+                                            <li>At least one uppercase and one lowercase letter</li>
+                                            <li>At least one number</li>
+                                            <li>At least one special character</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -89,22 +89,22 @@
 
                         <!-- Confirmation du mot de passe -->
                         <div class="mb-3">
-                            <label for="passwordconf" class="form-label fw-bold">Confirmation du mot de passe</label>
+                            <label for="passwordconf" class="form-label fw-bold">Confirm Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-warning text-dark">
                                     <i class="bi bi-lock-fill"></i>
                                 </span>
-                                <input type="password" name="passwordconf" id="passwordconf" class="form-control" placeholder="Confirmez votre mot de passe" required>
+                                <input type="password" name="passwordconf" id="passwordconf" class="form-control" placeholder="Confirm your password" required>
                             </div>
                         </div>
 
                         <!-- Boutons -->
                         <div class="d-flex justify-content-between align-items-center pt-3">
                             <a href="/connexion" class="btn btn-link text-muted">
-                                <i class="bi bi-arrow-left"></i> Retour
+                                <i class="bi bi-arrow-left"></i> Back to the previous page
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-person-plus-fill"></i> S'inscrire
+                                <i class="bi bi-person-plus-fill"></i> Sign Up
                             </button>
                         </div>
                     </form>
@@ -112,7 +112,7 @@
                     <!-- Lien de connexion -->
                     <div class="pt-4 text-center">
                         <p class="small text-muted">
-                            Vous avez déjà un compte ? <a href="/connexion" class="fw-semibold link-primary">Connectez-vous ici</a>.
+                            Already have an account? <a href="/connexion" class="fw-semibold link-primary">Log in here</a>.
                         </p>
                     </div>
                 </div>
@@ -120,6 +120,3 @@
         </div>
     </div>
 </main>
-
-<!-- Import Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">

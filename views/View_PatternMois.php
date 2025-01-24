@@ -7,13 +7,13 @@ $mois = $_GET['mois'] ?? null;
 
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
-    $ajoutReussi = 'Enregistrement validé.';
+    $ajoutReussi = 'Save successful.';
 }
 
 ?>
 
 <div class="container p-5">
-    <h1 class="text-center mb-4 text-light">Ajouter des données au Pattern Mois</h1>
+    <h1 class="text-center mb-4 text-light">Add Data to Monthly Pattern</h1>
     <h3 class="fw-bold text-light">
         <?php
         $nomUsine = null;
@@ -70,9 +70,9 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <thead class="table-dark">
                         <tr>
                             <th>Sebango</th>
-                            <th>Référence</th>
-                            <th>Désignation</th>
-                            <th>Quantité</th>
+                            <th>Reference</th>
+                            <th>Designation</th>
+                            <th>Quantity</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -83,10 +83,10 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                                        placeholder="ex : A350" pattern=".{4}" title="Sebango doit contenir exactement 4 caractères" required>
                             </td>
                             <td>
-                                <input type="text" class="form-control reference-input" name="reference[]" placeholder="Référence" readonly>
+                                <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
                             </td>
                             <td>
-                                <input type="text" class="form-control designation-input" name="designation[]" placeholder="Désignation" readonly>
+                                <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
                             </td>
                             <td>
                                 <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
@@ -103,13 +103,13 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
                 <div class="d-flex justify-content-between mt-3">
                     <button type="button" class="btn btn-success" id="addRow">
-                        <i class="bi bi-plus"></i> Ajouter une ligne
+                        <i class="bi bi-plus"></i> Add a line
                     </button>
-                    <button type="submit" class="btn btn-primary" id="saveButton">Enregistrer</button>
+                    <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
 
                 </div>
                 <a href="/pattern?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
-                    <i class="bi bi-arrow-left"></i> Retour
+                    <i class="bi bi-arrow-left"></i> Back to the previous page
                 </a>
             </form>
         </div>
@@ -152,11 +152,11 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
                 if (!allFilled) {
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("Le Sebango saisi est incorrect ou n'existe pas. Veuillez vérifier.");
+                        alert("The entered Sebango is incorrect or does not exist. Please verify.");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("La quantité doit être un nombre strictement positive.");
+                        alert("Quantity must be a strictly positive number.");
                     } else {
-                        alert("Tous les champs doivent être remplis avant d'ajouter une nouvelle ligne.");
+                        alert("All fields must be filled before adding a new line.");
                     }
                     return;
                 }
@@ -167,13 +167,13 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             newRow.innerHTML = `
                 <td>
                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                           placeholder="ex : A350" pattern=".{4}" title="Sebango doit contenir exactement 4 caractères" required>
+                           placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="Référence" readonly>
+                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
                 </td>
                 <td>
-                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="Désignation" readonly>
+                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
                 </td>
                 <td>
                     <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
@@ -222,7 +222,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
             if (rows.length === 0) {
                 event.preventDefault();
-                alert("Veuillez ajouter une ligne dans le tableau avant d'enregistrer.");
+                alert("Please add a line to the table before saving.");
                 return;
             }
 
@@ -240,11 +240,11 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     valid = false;
 
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("Le Sebango saisi est incorrect ou n'appartient pas à cette ligne.");
+                        alert("The entered Sebango is incorrect or does not belong to this line.");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("La quantité doit être un nombre strictement positif.");
+                        alert("Quantity must be a strictly positive number.");
                     } else {
-                        alert("Tous les champs doivent être remplis correctement avant l'enregistrement.");
+                        alert("All fields must be filled out correctly before saving.");
                     }
                 }
             });
