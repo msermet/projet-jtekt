@@ -50,6 +50,14 @@ class AjouterPatternMois
                 throw new \Exception("Le Sebango '$sebango' à l'index $index n'existe pas dans les produits.");
             }
 
+//            $existingPatternMois = $this->entityManager->getRepository(PatternMois::class)->findAll();
+//
+//            foreach ($existingPatternMois as $patternMois) {
+//                if ($patternMois->getSebango() === $sebango && $patternMois->getMois() === $mois && $patternMois->getAnnee() === $annee) {
+//                    throw new \Exception("Le Sebango '$sebango' à l'index $index existe déjà pour le mois et l'année spécifiés.");
+//                }
+//            }
+
             if ($existingProduit->getLigne() !== $ligne) {
                 throw new \Exception("Le Sebango '$sebango' à l'index $index n'est pas autorisé pour la ligne spécifiée.");
             }
