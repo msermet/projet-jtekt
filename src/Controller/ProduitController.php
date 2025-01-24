@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\AbstractController;
+use App\Entity\Ligne;
 use App\Entity\Usine;
 use App\UserStory\AjouterProduit;
 use Doctrine\ORM\EntityManager;
@@ -41,7 +42,9 @@ class ProduitController extends AbstractController
                     $_POST['ligne']
                 );
 
-                $this->redirect("/ajouterproduit?ajout=succeed");
+                $idLigne = $_POST['ligne'];
+                $idUsine = $this->entityManager->getRepository(Ligne::class)->find($idLigne)->getUsine()->getId();
+                $this->redirect("/pattern/ajouterproduit?usine=$idUsine&ligne=$idLigne&ajout=succeed");
                 return;
             } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
                 $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
