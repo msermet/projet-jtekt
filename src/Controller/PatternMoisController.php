@@ -46,7 +46,10 @@ class PatternMoisController extends AbstractController
                 $idLigne = $_POST['ligne'];
                 $idUsine = $this->entityManager->getRepository(Ligne::class)->find($idLigne)->getUsine()->getId();
 
-                $this->redirect("/ligne/mois?usine=$idUsine&ligne=$idLigne&ajout=succeed");
+                $mois = $_POST['mois'];
+                $annee = $_POST['annee'];
+
+                $this->redirect("/ligne/mois?usine=$idUsine&ligne=$idLigne&annee=$annee&mois=$mois&ajout=succeed");
                 return;
             } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
                 $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
