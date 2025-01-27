@@ -51,7 +51,7 @@ if (session_status() === PHP_SESSION_NONE) {
                                 <?php if (!empty($usine->getLignes())): ?>
                                     <?php foreach ($usine->getLignes() as $ligne): ?>
                                         <li>
-                                            <a href="/pattern?usine=<?= htmlspecialchars($usine->getId()) ?>&ligne=<?= htmlspecialchars($ligne->getId()) ?>">
+                                            <a href="/ligne?usine=<?= htmlspecialchars($usine->getId()) ?>&ligne=<?= htmlspecialchars($ligne->getId()) ?>">
                                                 <?= htmlspecialchars($ligne->getNom()) ?>
                                             </a>
                                         </li>

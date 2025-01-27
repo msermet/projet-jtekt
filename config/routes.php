@@ -5,7 +5,8 @@ return [
     '/creationcompte' => ['AuthentificationController', 'creationcompte'],
     '/connexion' => ['AuthentificationController', 'connexion'],
     '/deconnexion' => ['AuthentificationController', 'deconnexion'],
-    '/pattern/ajouterproduit' => ['ProduitController', 'ajouter'],
-    '/pattern' => ['PatternController', 'choix'],
-    '/pattern/mois' => ['PatternMoisController', 'ajouter']
+    '/ligne/ajouterproduit' => ['ProduitController', 'ajouter'],
+    '/ligne' => ['LigneController', 'choix'],
+    '/ligne/mois' => ['PatternMoisController', 'ajouter'],
+    '/ligne/jour' => ['PatternJourController', 'ajouter']
 ];

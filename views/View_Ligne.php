@@ -82,7 +82,7 @@ $idLigne = $_GET['ligne'] ?? null;
         <!-- Add a product -->
         <div class="col-md-4 mt-4"></div>
         <div class="col-md-4 mt-4">
-            <a href="/pattern/ajouterproduit?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-sm text-decoration-none pattern-card">
+            <a href="/ligne/ajouterproduit?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-sm text-decoration-none pattern-card">
                 <div class="card-body text-center">
                     <div class="icon mb-3">
                         <i class="bi bi-plus-circle fs-1 text-danger"></i>
@@ -148,30 +148,35 @@ $idLigne = $_GET['ligne'] ?? null;
             const currentMonth = today.getMonth() + 1; // Mois actuel (0-indexé)
 
             let selectedDate;
-            let year, month;
+            let year, month, day;
 
             if (selectedPattern === 'mois') {
                 [year, month] = dateValue.split('-');
                 selectedDate = new Date(`${year}-${month}-01`);
             } else {
-                selectedDate = new Date(dateValue);
-                year = selectedDate.getFullYear();
-                month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+                const parts = dateValue.split('-');
+                year = parts[0];
+                month = parts[1];
+                day = parts[2];
+                selectedDate = new Date(`${year}-${month}-${day}`);
             }
 
             if (
-                selectedDate < today &&
+                selectedDate < new Date(today.getFullYear(), today.getMonth(), today.getDate()) &&
                 !(selectedPattern === 'mois' && parseInt(year) === currentYear && parseInt(month) === currentMonth)
             ) {
                 alert("The selected date or month is earlier than today.");
                 return;
             }
 
-            const baseUrl = selectedPattern === 'mois' ? '/pattern/mois' : '/pattern/jour';
-            const ligneId = <?= json_encode($idLigne) ?>;
-            const usineId = <?= json_encode($idUsine) ?>;
-
-            window.location.href = `${baseUrl}?usine=${usineId}&ligne=${ligneId}&annee=${year}&mois=${month}`;
+            let baseUrl;
+            if (selectedPattern === 'mois') {
+                baseUrl = '/ligne/mois';
+                window.location.href = `${baseUrl}?usine=${<?= json_encode($idUsine) ?>}&ligne=${<?= json_encode($idLigne) ?>}&annee=${year}&mois=${month}`;
+            } else if (selectedPattern === 'jour') {
+                baseUrl = '/ligne/jour';
+                window.location.href = `${baseUrl}?usine=${<?= json_encode($idUsine) ?>}&ligne=${<?= json_encode($idLigne) ?>}&annee=${year}&mois=${month}&jour=${day}`;
+            }
         });
     });
 </script>

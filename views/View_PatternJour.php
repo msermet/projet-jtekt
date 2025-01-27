@@ -4,6 +4,7 @@ $idUsine = $_GET['usine'] ?? null;
 $idLigne = $_GET['ligne'] ?? null;
 $annee = $_GET['annee'] ?? null;
 $mois = $_GET['mois'] ?? null;
+$jour = $_GET['jour'] ?? null;
 
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
@@ -13,7 +14,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 ?>
 
 <div class="container p-5">
-    <h1 class="text-center mb-4 text-light">Add Data to Monthly Pattern</h1>
+    <h1 class="text-center mb-4 text-light">Add Data to Daily Pattern</h1>
     <h3 class="fw-bold text-light">
         <?php
         $nomUsine = null;
@@ -72,7 +73,9 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                             <th>Sebango</th>
                             <th>Reference</th>
                             <th>Designation</th>
-                            <th>Quantity</th>
+                            <th>Need</th>
+                            <th>Relicat</th>
+                            <th>Remaining to Produce</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -89,7 +92,13 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                                 <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
                             </td>
                             <td>
-                                <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
+                                <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="Need - Relicat" readonly>
                             </td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-danger btn-sm remove-row">
@@ -123,11 +132,11 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 'sebango' => $produit->getSebango(),
                 'reference' => $produit->getArticle(),
                 'designation' => $produit->getDesignation(),
-                'ligne' => $produit->getLigne(), // Ajout du champ ligne
+                'ligne' => $produit->getLigne(),
             ];
         }, $produits)); ?>;
 
-        const idLigne = <?php echo json_encode($idLigne); ?>; // Ligne récupérée via le formulaire
+        const idLigne = <?php echo json_encode($idLigne); ?>;
 
         const addRowButton = document.getElementById('addRow');
         const saveButton = document.getElementById('saveButton');
@@ -142,19 +151,28 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 const sebangoInput = lastRow.querySelector('.sebango-input');
                 const referenceInput = lastRow.querySelector('.reference-input');
                 const designationInput = lastRow.querySelector('.designation-input');
-                const quantiteInput = lastRow.querySelector('input[name="quantite[]"]');
+                const besoinInput = lastRow.querySelector('input[name="besoin[]"]');
+                const relicatInput = lastRow.querySelector('input[name="relicat[]"]');
+                const resteAProduireInput = lastRow.querySelector('.resteAProduire-input');
 
                 allFilled = sebangoInput.value.trim().length === 4 &&
                     referenceInput.value.trim() !== '' &&
                     designationInput.value.trim() !== '' &&
-                    quantiteInput.value.trim() !== '' &&
-                    parseInt(quantiteInput.value, 10) > 0;
+                    besoinInput.value.trim() !== '' &&
+                    relicatInput.value.trim() !== '' &&
+                    resteAProduireInput.value.trim() !== '' &&
+                    parseInt(besoinInput.value, 10) > 0 &&
+                    parseInt(relicatInput.value, 10) >= 0;
 
                 if (!allFilled) {
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
                         alert("The entered Sebango is incorrect or does not exist. Please verify.");
-                    } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("Quantity must be a strictly positive number.");
+                    } else if (parseInt(besoinInput.value, 10) <= 0) {
+                        alert("Need must be a strictly positive number.");
+                    } else if (parseInt(relicatInput.value, 10) < 0) {
+                        alert("Relicat cannot be negative.");
+                    } else if (!resteAProduireInput.value.trim()) {
+                        alert("Remaining to produce cannot be empty.");
                     } else {
                         alert("All fields must be filled before adding a new line.");
                     }
@@ -176,7 +194,13 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
                 </td>
                 <td>
-                    <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
+                    <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="Need - Relicat" readonly>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row">
@@ -187,7 +211,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             tableBody.appendChild(newRow);
         });
 
-        // Gestion automatique des colonnes Référence et Désignation
+        // Gestion automatique des colonnes Référence, Désignation et calcul de Reste à Produire
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
@@ -195,7 +219,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 const designationInput = event.target.closest('tr').querySelector('.designation-input');
 
                 const produit = produits.find(p =>
-                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne // Vérifie aussi la ligne
+                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne
                 );
 
                 if (produit) {
@@ -204,6 +228,23 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 } else {
                     referenceInput.value = '';
                     designationInput.value = '';
+                }
+            }
+
+            if (event.target.name === 'besoin[]' || event.target.name === 'relicat[]') {
+                const row = event.target.closest('tr');
+                const besoinInput = row.querySelector('input[name="besoin[]"]');
+                const relicatInput = row.querySelector('input[name="relicat[]"]');
+                const resteAProduireInput = row.querySelector('.resteAProduire-input');
+
+                const besoin = parseInt(besoinInput.value, 10) || 0;
+                const relicat = parseInt(relicatInput.value, 10) || 0;
+
+                if (besoin < relicat) {
+                    alert("Need cannot be less than Relicat. Remaining to produce cannot be negative.");
+                    resteAProduireInput.value = '';
+                } else {
+                    resteAProduireInput.value = besoin - relicat;
                 }
             }
         });
@@ -229,20 +270,29 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             rows.forEach(row => {
                 const referenceInput = row.querySelector('.reference-input');
                 const designationInput = row.querySelector('.designation-input');
-                const quantiteInput = row.querySelector('input[name="quantite[]"]');
+                const besoinInput = row.querySelector('input[name="besoin[]"]');
+                const relicatInput = row.querySelector('input[name="relicat[]"]');
+                const resteAProduireInput = row.querySelector('.resteAProduire-input');
 
                 if (
                     referenceInput.value.trim() === '' ||
                     designationInput.value.trim() === '' ||
-                    quantiteInput.value.trim() === '' ||
-                    parseInt(quantiteInput.value, 10) <= 0
+                    besoinInput.value.trim() === '' ||
+                    relicatInput.value.trim() === '' ||
+                    resteAProduireInput.value.trim() === '' ||
+                    parseInt(besoinInput.value, 10) <= 0 ||
+                    parseInt(relicatInput.value, 10) < 0
                 ) {
                     valid = false;
 
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
                         alert("The entered Sebango is incorrect or does not belong to this line.");
-                    } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("Quantity must be a strictly positive number.");
+                    } else if (parseInt(besoinInput.value, 10) <= 0) {
+                        alert("Need must be a strictly positive number.");
+                    } else if (parseInt(relicatInput.value, 10) < 0) {
+                        alert("Relicat cannot be negative.");
+                    } else if (!resteAProduireInput.value.trim()) {
+                        alert("Remaining to produce cannot be empty.");
                     } else {
                         alert("All fields must be filled out correctly before saving.");
                     }

@@ -9,7 +9,7 @@ use App\Entity\Usine;
 use App\UserStory\AjouterPatternMois;
 use Doctrine\ORM\EntityManager;
 
-class PatternMoisController extends AbstractController
+class PatternJourController extends AbstractController
 {
     private EntityManager $entityManager;
 
@@ -55,7 +55,7 @@ class PatternMoisController extends AbstractController
             }
         }
 
-        $this->render('View_PatternMois', [
+        $this->render('View_PatternJour', [
             'error' => $error ?? null,
             'usines' => $usines,
             'produits' => $produits

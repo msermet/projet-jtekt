@@ -44,7 +44,7 @@ class ProduitController extends AbstractController
 
                 $idLigne = $_POST['ligne'];
                 $idUsine = $this->entityManager->getRepository(Ligne::class)->find($idLigne)->getUsine()->getId();
-                $this->redirect("/pattern/ajouterproduit?usine=$idUsine&ligne=$idLigne&ajout=succeed");
+                $this->redirect("/ligne/ajouterproduit?usine=$idUsine&ligne=$idLigne&ajout=succeed");
                 return;
             } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
                 $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";

@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Usine;
 use Doctrine\ORM\EntityManager;
 
-class PatternController extends AbstractController
+class LigneController extends AbstractController
 {
     private EntityManager $entityManager;
 
@@ -26,7 +26,7 @@ class PatternController extends AbstractController
         }
 
         $usines = $this->entityManager->getRepository(Usine::class)->findAll();
-        $this->render('View_Pattern', [
+        $this->render('View_Ligne', [
             'usines' => $usines,
         ]);
     }
