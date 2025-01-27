@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Ligne;
-use App\Entity\PatternMois;
+use App\Entity\PatternJour;
 use App\Entity\Produit;
 use App\Entity\Usine;
-use App\UserStory\AjouterPatternMois;
+use App\UserStory\AjouterPatternJour;
 use Doctrine\ORM\EntityManager;
 
 class PatternJourController extends AbstractController
@@ -33,20 +33,26 @@ class PatternJourController extends AbstractController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $ajoutPatternMois = new AjouterPatternMois($this->entityManager);
+                $ajoutPatternJour = new AjouterPatternJour($this->entityManager);
 
-                $ajoutPatternMois->execute(
+                $ajoutPatternJour->execute(
                     $_POST['ligne'],
+                    $_POST['jour'],
                     $_POST['mois'],
+                    $_POST['annee'],
                     $_POST['sebango'],
-                    $_POST['quantite'],
-                    $_POST['annee']
+                    $_POST['besoin'],
+                    $_POST['relicat']
                 );
 
                 $idLigne = $_POST['ligne'];
                 $idUsine = $this->entityManager->getRepository(Ligne::class)->find($idLigne)->getUsine()->getId();
 
-                $this->redirect("/ligne/mois?usine=$idUsine&ligne=$idLigne&ajout=succeed");
+                $jour = $_POST['jour'];
+                $mois = $_POST['mois'];
+                $annee = $_POST['annee'];
+
+                $this->redirect("/ligne/jour?usine=$idUsine&ligne=$idLigne&annee=$annee&mois=$mois&jour=$jour&ajout=succeed");
                 return;
             } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
                 $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
