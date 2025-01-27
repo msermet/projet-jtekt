@@ -48,6 +48,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         }
         ?>
     </h3>
+    <h4 class="text-light pb-2 fst-italic"><?php echo $jour."/".$mois."/".$annee; ?></h4>
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?php echo htmlspecialchars($error); ?>
@@ -66,15 +67,16 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 <input type="hidden" name="ligne" value="<?php echo htmlspecialchars($idLigne); ?>">
                 <input type="hidden" name="annee" value="<?php echo htmlspecialchars($annee); ?>">
                 <input type="hidden" name="mois" value="<?php echo htmlspecialchars($mois); ?>">
+                <input type="hidden" name="jour" value="<?php echo htmlspecialchars($jour); ?>">
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle" id="patternTable">
                         <thead class="table-dark">
                         <tr>
-                            <th>Sebango</th>
+                            <th>Sebango <span class="text-danger">*</span></th>
                             <th>Reference</th>
                             <th>Designation</th>
-                            <th>Need</th>
-                            <th>Relicat</th>
+                            <th>Need <span class="text-danger">*</span></th>
+                            <th>Relicat <span class="text-danger">*</span></th>
                             <th>Remaining to Produce</th>
                             <th>Action</th>
                         </tr>
@@ -83,7 +85,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <tr>
                             <td>
                                 <input type="text" class="form-control sebango-input" name="sebango[]"
-                                       placeholder="ex : A350" pattern=".{4}" title="Sebango doit contenir exactement 4 caractères" required>
+                                       placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
                             </td>
                             <td>
                                 <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
@@ -108,8 +110,8 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         </tr>
                         </tbody>
                     </table>
+                    <p class="text-muted mt-2"><span class="text-danger">*</span> Required fields</p>
                 </div>
-
                 <div class="d-flex justify-content-between mt-3">
                     <button type="button" class="btn btn-success" id="addRow">
                         <i class="bi bi-plus"></i> Add a line

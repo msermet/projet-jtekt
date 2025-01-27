@@ -47,6 +47,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         }
         ?>
     </h3>
+    <h4 class="text-light pb-2 fst-italic"><?php echo $mois."/".$annee; ?></h4>
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?php echo htmlspecialchars($error); ?>
@@ -69,10 +70,10 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <table class="table table-bordered align-middle" id="patternTable">
                         <thead class="table-dark">
                         <tr>
-                            <th>Sebango</th>
+                            <th>Sebango <span class="text-danger">*</span></th>
                             <th>Reference</th>
                             <th>Designation</th>
-                            <th>Quantity</th>
+                            <th>Quantity <span class="text-danger">*</span></th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -80,7 +81,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <tr>
                             <td>
                                 <input type="text" class="form-control sebango-input" name="sebango[]"
-                                       placeholder="ex : A350" pattern=".{4}" title="Sebango doit contenir exactement 4 caractères" required>
+                                       placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
                             </td>
                             <td>
                                 <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
@@ -99,6 +100,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         </tr>
                         </tbody>
                     </table>
+                    <p class="text-muted mt-2"><span class="text-danger">*</span> Required fields</p>
                 </div>
 
                 <div class="d-flex justify-content-between mt-3">
@@ -106,7 +108,6 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <i class="bi bi-plus"></i> Add a line
                     </button>
                     <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
-
                 </div>
                 <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
                     <i class="bi bi-arrow-left"></i> Back to the previous page
