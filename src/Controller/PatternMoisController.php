@@ -49,6 +49,7 @@ class PatternMoisController extends AbstractController
                 $mois = $_POST['mois'];
                 $annee = $_POST['annee'];
 
+
                 $this->redirect("/ligne/mois?usine=$idUsine&ligne=$idLigne&annee=$annee&mois=$mois&ajout=succeed");
                 return;
             } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {

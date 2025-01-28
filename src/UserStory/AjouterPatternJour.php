@@ -63,7 +63,6 @@ class AjouterPatternJour
             }
 
             $patternJour = new PatternJour();
-            $patternJour->setLigne($ligne);
             $patternJour->setJour($jour);
             $patternJour->setMois($mois);
             $patternJour->setAnnee($annee);

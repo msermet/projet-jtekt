@@ -13,9 +13,6 @@ class PatternMois
     #[ORM\GeneratedValue]
     private int $id;
 
-    #[ORM\Column(name: 'ligne', type: 'integer')]
-    private int $ligne;
-
     #[ORM\Column(name: 'mois', type: 'integer')]
     private int $mois;
 
@@ -38,16 +35,6 @@ class PatternMois
     public function setId(int $id): void
     {
         $this->id = $id;
-    }
-
-    public function getLigne(): int
-    {
-        return $this->ligne;
-    }
-
-    public function setLigne(int $ligne): void
-    {
-        $this->ligne = $ligne;
     }
 
     public function getMois(): int

@@ -8,5 +8,7 @@ return [
     '/ligne/ajouterproduit' => ['ProduitController', 'ajouter'],
     '/ligne' => ['LigneController', 'choix'],
     '/ligne/mois' => ['PatternMoisController', 'ajouter'],
-    '/ligne/jour' => ['PatternJourController', 'ajouter']
+    '/ligne/jour' => ['PatternJourController', 'ajouter'],
+    '/ligne/edit' => ['UpdatePatternController', 'choisir'],
+    '/ligne/edit/mois' => ['EditPatternMoisController', 'modifier']
 ];

@@ -63,7 +63,6 @@ class AjouterPatternMois
             }
 
             $patternMois = new PatternMois();
-            $patternMois->setLigne($ligne);
             $patternMois->setMois($mois);
             $patternMois->setSebango($sebango);
             $patternMois->setQuantite($quantite);
