@@ -10,5 +10,5 @@ return [
     '/ligne/mois' => ['PatternMoisController', 'ajouter'],
     '/ligne/jour' => ['PatternJourController', 'ajouter'],
     '/ligne/edit' => ['UpdatePatternController', 'choisir'],
-    '/ligne/edit/mois' => ['EditPatternMoisController', 'modifier']
+    '/ligne/edit/mois' => ['PatternMoisController', 'modifier']
 ];

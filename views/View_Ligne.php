@@ -7,7 +7,7 @@ $idLigne = $_GET['ligne'] ?? null;
 
 <main class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold text-light mb-3">Pattern Management</h1>
+        <h1 class="display-4 fw-bold text-light mb-3">Line Management</h1>
         <h2 class="fw-semibold text-secondary">
             <?php
             $nomUsine = null;
@@ -36,40 +36,43 @@ $idLigne = $_GET['ligne'] ?? null;
 
             if (!$nomUsine) {
                 header("Location: /usine-introuvable");
+                exit;
             } elseif (!$nomLigne) {
                 header("Location: /ligne-introuvable");
+                exit;
             }
             ?>
         </h2>
     </div>
 
-    <div class="row gy-4 ps-5 pe-5">
+    <div class="row gy-4">
         <!-- Add Pattern -->
         <div class="col-md-12">
-            <div class="card shadow-lg border-0 mb-4" style="background-color: #1c1c1c; color: #f8f9fa;border-radius: 1rem;">
+            <div class="card shadow-lg border-0 mb-4 toggle-card" data-toggle="addPatternOptions" style="background-color: #1c1c1c; color: #f8f9fa; border-radius: 1rem;">
                 <div class="card-body">
-                    <h5 class="card-title text-center fw-bold">Add Pattern</h5>
-                    <div class="row">
+                    <div class="card-title text-center fw-bold">
+                        <i class="bi bi-plus-circle fs-1 text-primary"></i>
+                        <h5>Add Pattern</h5>
+                    </div>
+                </div>
+                <div class="collapse" id="addPatternOptions">
+                    <div class="row mt-3 pb-3 ps-3 pe-3">
                         <!-- Month Pattern -->
                         <div class="col-md-6">
-                            <div class="card shadow-sm pattern-card" id="pattern-mois" style="cursor: pointer;">
+                            <div class="card shadow-sm pattern-card add-pattern" id="add-pattern-mois" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <div class="icon mb-3">
-                                        <i class="bi bi-calendar-month fs-1 text-primary"></i>
-                                    </div>
-                                    <h6 class="card-title fw-bold">Month Pattern</h6>
+                                    <i class="bi bi-calendar-month fs-1 text-primary"></i>
+                                    <h6 class="card-title fw-bold mt-2">Month Pattern</h6>
                                     <p class="text-muted">Define patterns for the whole month.</p>
                                 </div>
                             </div>
                         </div>
                         <!-- Day Pattern -->
                         <div class="col-md-6">
-                            <div class="card shadow-sm pattern-card" id="pattern-jour" style="cursor: pointer;">
+                            <div class="card shadow-sm pattern-card add-pattern" id="add-pattern-jour" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <div class="icon mb-3">
-                                        <i class="bi bi-calendar-day fs-1 text-success"></i>
-                                    </div>
-                                    <h6 class="card-title fw-bold">Day Pattern</h6>
+                                    <i class="bi bi-calendar-day fs-1 text-primary"></i>
+                                    <h6 class="card-title fw-bold mt-2">Day Pattern</h6>
                                     <p class="text-muted">Define patterns for specific days.</p>
                                 </div>
                             </div>
@@ -81,32 +84,31 @@ $idLigne = $_GET['ligne'] ?? null;
 
         <!-- Edit Pattern -->
         <div class="col-md-12">
-            <div class="card shadow-lg border-0 mb-4" style="background-color: #1c1c1c; color: #f8f9fa;border-radius: 1rem;">
+            <div class="card shadow-lg border-0 mb-4 toggle-card" data-toggle="editPatternOptions" style="background-color: #1c1c1c; color: #f8f9fa; border-radius: 1rem;">
                 <div class="card-body">
-
-                    <h5 class="card-title text-center fw-bold"><i class="bi bi-pencil-square fs-1 text-warning"></i></h5>
-                    <h5 class="card-title text-center fw-bold">Edit Pattern</h5>
-                    <div class="row pt-3">
+                    <div class="card-title text-center fw-bold">
+                        <i class="bi bi-pencil-square fs-1 text-warning"></i>
+                        <h5>Edit Pattern</h5>
+                    </div>
+                </div>
+                <div class="collapse" id="editPatternOptions">
+                    <div class="row mt-3 pb-3 ps-3 pe-3">
                         <!-- Month Pattern -->
                         <div class="col-md-6">
-                            <div class="card shadow-sm pattern-card" id="edit-pattern-mois" style="cursor: pointer;">
+                            <div class="card shadow-sm pattern-card edit-pattern" id="edit-pattern-mois" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <div class="icon mb-3">
-                                        <i class="bi bi-calendar-month fs-1 text-warning"></i>
-                                    </div>
-                                    <h6 class="card-title fw-bold">Month Pattern</h6>
+                                    <i class="bi bi-calendar-month fs-1 text-warning"></i>
+                                    <h6 class="card-title fw-bold mt-2">Month Pattern</h6>
                                     <p class="text-muted">Modify existing monthly patterns.</p>
                                 </div>
                             </div>
                         </div>
                         <!-- Day Pattern -->
                         <div class="col-md-6">
-                            <div class="card shadow-sm pattern-card" id="edit-pattern-jour" style="cursor: pointer;">
+                            <div class="card shadow-sm pattern-card edit-pattern" id="edit-pattern-jour" style="cursor: pointer;">
                                 <div class="card-body text-center">
-                                    <div class="icon mb-3">
-                                        <i class="bi bi-calendar-day fs-1 text-info"></i>
-                                    </div>
-                                    <h6 class="card-title fw-bold">Day Pattern</h6>
+                                    <i class="bi bi-calendar-day fs-1 text-warning"></i>
+                                    <h6 class="card-title fw-bold mt-2">Day Pattern</h6>
                                     <p class="text-muted">Modify existing daily patterns.</p>
                                 </div>
                             </div>
@@ -118,19 +120,16 @@ $idLigne = $_GET['ligne'] ?? null;
 
         <!-- Add a Product -->
         <div class="col-md-12">
-            <a href="/ligne/ajouterproduit?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-lg border-0 text-decoration-none" style="border-radius: 1rem; background-color: #1c1c1c; color: #f8f9fa;">
+            <a href="/ligne/ajouterproduit?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-lg border-0 text-decoration-none" style="background-color: #1c1c1c; color: #f8f9fa; border-radius: 1rem;">
                 <div class="card-body text-center">
-                    <div class="icon mb-3">
-                        <i class="bi bi-plus-circle fs-1 text-danger"></i>
-                    </div>
+                    <i class="bi bi-box-seam fs-1 text-danger"></i>
                     <h5 class="card-title fw-bold">Add a Product</h5>
-                    <p class="text-muted">Include new products in your patterns.</p>
                 </div>
             </a>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal pour sélectionner la date -->
     <div class="modal fade" id="patternModal" tabindex="-1" aria-labelledby="patternModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -140,7 +139,7 @@ $idLigne = $_GET['ligne'] ?? null;
                 </div>
                 <div class="modal-body">
                     <label for="patternDate" class="form-label">Choose a date or month:</label>
-                    <input type="month" id="patternDate" class="form-control">
+                    <input type="month" id="patternDate" class="form-control" placeholder="Select a period">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="validatePattern">Validate</button>
@@ -149,7 +148,6 @@ $idLigne = $_GET['ligne'] ?? null;
         </div>
     </div>
 </main>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -160,23 +158,38 @@ $idLigne = $_GET['ligne'] ?? null;
         let selectedPattern = null;
         let actionType = null;
 
-        function openModal(type, action) {
-            selectedPattern = type;
-            actionType = action;
-            document.getElementById('patternModalLabel').textContent =
-                type === 'mois' ? Select a month to ${action} a pattern: : Select a day to ${action} a pattern:;
-            patternDate.type = type === 'mois' ? 'month' : 'date';
-            modal.show();
-        }
+        // Gestion des cartes principales
+        document.querySelectorAll('.toggle-card').forEach(card => {
+            card.addEventListener('click', function () {
+                const toggleId = this.getAttribute('data-toggle');
+                const target = document.getElementById(toggleId);
 
-        document.getElementById('pattern-mois').addEventListener('click', () => openModal('mois', 'add'));
-        document.getElementById('pattern-jour').addEventListener('click', () => openModal('jour', 'add'));
-        document.getElementById('edit-pattern-mois').addEventListener('click', () => openModal('mois', 'edit'));
-        document.getElementById('edit-pattern-jour').addEventListener('click', () => openModal('jour', 'edit'));
+                document.querySelectorAll('.collapse').forEach(collapse => {
+                    if (collapse !== target) collapse.classList.remove('show');
+                });
 
+                target.classList.toggle('show');
+            });
+        });
+
+        // Gestion des sous-cartes
+        document.querySelectorAll('.pattern-card').forEach(card => {
+            card.addEventListener('click', function (event) {
+                event.stopPropagation();
+                selectedPattern = this.id.includes('mois') ? 'mois' : 'jour';
+                actionType = this.classList.contains('add-pattern') ? 'add' : 'edit';
+                document.getElementById('patternModalLabel').textContent =
+                    selectedPattern === 'mois'
+                        ? `Select a month to ${actionType} a pattern:`
+                        : `Select a day to ${actionType} a pattern:`;
+                patternDate.type = selectedPattern === 'mois' ? 'month' : 'date';
+                modal.show();
+            });
+        });
+
+        // Validation du modal
         validateButton.addEventListener('click', function () {
             const dateValue = patternDate.value;
-
             if (!dateValue) {
                 alert('Please select a valid date.');
                 return;
@@ -185,28 +198,21 @@ $idLigne = $_GET['ligne'] ?? null;
             const today = new Date();
             const selectedDate = new Date(dateValue + (patternDate.type === 'month' ? '-01' : ''));
 
-            // Comparaison des mois et années pour le type "month"
-            if (patternDate.type === 'month') {
-                const currentYear = today.getFullYear();
-                const currentMonth = today.getMonth() + 1; // Les mois sont indexés de 0 à 11
-                const [selectedYear, selectedMonth] = dateValue.split('-').map(Number);
-
-                if (selectedYear < currentYear || (selectedYear === currentYear && selectedMonth < currentMonth)) {
-                    alert('The selected month must be the current month or later.');
-                    return;
-                }
+            if (selectedPattern === 'mois' && selectedDate < new Date(today.getFullYear(), today.getMonth(), 1)) {
+                alert('The selected month must be today or later.');
+                return;
             }
 
-            // Comparaison pour le type "date"
-            if (patternDate.type === 'date' && selectedDate < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+            if (selectedPattern === 'jour' && selectedDate.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) {
                 alert('The selected date must be today or later.');
                 return;
             }
 
             const [year, month, day] = dateValue.split('-');
-            const baseUrl = actionType === 'add'
-                ? (selectedPattern === 'mois' ? '/ligne/mois' : '/ligne/jour')
-                : (selectedPattern === 'mois' ? '/ligne/edit/mois' : '/ligne/edit/jour');
+            const baseUrl =
+                actionType === 'add'
+                    ? (selectedPattern === 'mois' ? '/ligne/mois' : '/ligne/jour')
+                    : (selectedPattern === 'mois' ? '/ligne/edit/mois' : '/ligne/edit/jour');
             const params = new URLSearchParams({
                 usine: <?= json_encode($idUsine) ?>,
                 ligne: <?= json_encode($idLigne) ?>,
@@ -215,7 +221,7 @@ $idLigne = $_GET['ligne'] ?? null;
                 ...(selectedPattern === 'jour' && { jour: day }),
             });
 
-            window.location.href = ${baseUrl}?${params.toString()};
+            window.location.href = `${baseUrl}?${params}`;
         });
     });
 </script>
