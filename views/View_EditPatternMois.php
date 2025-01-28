@@ -66,10 +66,11 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                             <th>Reference</th>
                             <th>Designation</th>
                             <th>Quantity <span class="text-danger">*</span></th>
-                            <th>Action</th>
+                            <th>Delete</th>
+                            <th>Move</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="sortableTable">
                         <?php foreach ($filteredPatterns as $pattern): ?>
                             <tr>
                                 <td>
@@ -93,6 +94,9 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
+                                <td class="text-center handle">
+                                    <i class="bi bi-arrows-move"></i>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -100,14 +104,21 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                     <p class="text-muted mt-2"><span class="text-danger">*</span> Required fields</p>
                 </div>
 
-                <div class="d-flex justify-content-center mt-3">
-                    <button type="submit" class="btn btn-primary" id="saveButton">Update</button>
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="button" class="btn btn-success" id="addRow">
+                        <i class="bi bi-plus"></i> Add a line
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
                 </div>
+                <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
+                    <i class="bi bi-arrow-left"></i> Back to the previous page
+                </a>
             </form>
         </div>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const produits = <?php echo json_encode(array_map(function ($produit) {
@@ -118,7 +129,7 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             ];
         }, $produits)); ?>;
 
-        const tableBody = document.querySelector('#patternTable tbody');
+        const tableBody = document.querySelector('#sortableTable');
 
         // Automatiser les champs Référence et Désignation
         tableBody.querySelectorAll('.sebango-input').forEach(input => {
@@ -143,5 +154,58 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                 event.target.closest('tr').remove();
             }
         });
+
+        // Ajouter la fonctionnalité de tri avec SortableJS
+        new Sortable(tableBody, {
+            animation: 150,
+            handle: '.handle',
+            ghostClass: 'sortable-ghost',
+            onStart: (evt) => {
+                evt.item.classList.add('table-warning');
+            },
+            onEnd: (evt) => {
+                evt.item.classList.remove('table-warning');
+            }
+        });
+
+        // Ajouter une nouvelle ligne
+        const addRowButton = document.getElementById('addRow');
+        addRowButton.addEventListener('click', () => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <input type="text" class="form-control sebango-input" name="sebango[]"
+                           placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
+                </td>
+                <td>
+                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
+                </td>
+                <td>
+                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-row">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+                <td class="text-center handle">
+                    <i class="bi bi-arrows-move"></i>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+        });
     });
 </script>
+
+<style>
+    .sortable-ghost {
+        background-color: #f8d7da !important;
+        border: 2px dashed #f5c2c7 !important;
+    }
+    .handle {
+        cursor: move;
+    }
+</style>
