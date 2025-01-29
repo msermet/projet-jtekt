@@ -12,8 +12,9 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
 // Filtrer les enregistrements de PatternMois
 $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne, $annee, $mois) {
-    return $pattern->getAnnee() == $annee && $pattern->getMois() == $mois;
+    return $pattern->getAnnee() == $annee && $pattern->getMois() == $mois && $pattern->getProduit()->getLigne() == $idLigne;
 });
+
 
 ?>
 <div class="container p-5">
@@ -52,6 +53,18 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
         ?>
     </h3>
     <h4 class="text-light pb-2 fst-italic"><?php echo $mois . "/" . $annee; ?></h4>
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?php echo htmlspecialchars($error); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+    <?php if (!empty($ajoutReussi)): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php echo htmlspecialchars($ajoutReussi); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
     <div class="card shadow">
         <div class="card-body">
             <form method="POST" action="">
@@ -126,8 +139,14 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                 'sebango' => $produit->getSebango(),
                 'reference' => $produit->getArticle(),
                 'designation' => $produit->getDesignation(),
+                'ligne' => $produit->getLigne(), // Ajout du champ ligne
             ];
         }, $produits)); ?>;
+
+        const idLigne = <?php echo json_encode($idLigne); ?>; // Ligne récupérée via le formulaire
+
+        const saveButton = document.getElementById('saveButton');
+
 
         const tableBody = document.querySelector('#sortableTable');
 
@@ -147,6 +166,7 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                 designationInput.value = '';
             }
         });
+
 
         // Supprimer une ligne
         tableBody.addEventListener('click', (event) => {
@@ -171,6 +191,34 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
         // Ajouter une nouvelle ligne
         const addRowButton = document.getElementById('addRow');
         addRowButton.addEventListener('click', () => {
+            const lastRow = tableBody.querySelector('tr:last-child');
+            let allFilled = true;
+
+            if (lastRow) {
+                const sebangoInput = lastRow.querySelector('.sebango-input');
+                const referenceInput = lastRow.querySelector('.reference-input');
+                const designationInput = lastRow.querySelector('.designation-input');
+                const quantiteInput = lastRow.querySelector('input[name="quantite[]"]');
+
+                allFilled = sebangoInput.value.trim().length === 4 &&
+                    referenceInput.value.trim() !== '' &&
+                    designationInput.value.trim() !== '' &&
+                    quantiteInput.value.trim() !== '' &&
+                    parseInt(quantiteInput.value, 10) > 0;
+
+                if (!allFilled) {
+                    if (!referenceInput.value.trim() || !designationInput.value.trim()) {
+                        alert("The entered Sebango is incorrect or does not exist. Please verify.");
+                    } else if (parseInt(quantiteInput.value, 10) <= 0) {
+                        alert("Quantity must be a strictly positive number.");
+                    } else {
+                        alert("All fields must be filled before adding a new line.");
+                    }
+                    return;
+                }
+            }
+
+            // Ajouter une nouvelle ligne
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
@@ -197,7 +245,66 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             `;
             tableBody.appendChild(newRow);
         });
+        // Gestion automatique des colonnes Référence et Désignation
+        tableBody.addEventListener('input', (event) => {
+            if (event.target.classList.contains('sebango-input')) {
+                const sebangoValue = event.target.value.trim().toUpperCase();
+                const referenceInput = event.target.closest('tr').querySelector('.reference-input');
+                const designationInput = event.target.closest('tr').querySelector('.designation-input');
+
+                const produit = produits.find(p =>
+                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne // Vérifie aussi la ligne
+                );
+
+                if (produit) {
+                    referenceInput.value = produit.reference;
+                    designationInput.value = produit.designation;
+                } else {
+                    referenceInput.value = '';
+                    designationInput.value = '';
+                }
+            }
+        });
+        // Validation avant d'enregistrer
+        saveButton.addEventListener('click', (event) => {
+            const rows = tableBody.querySelectorAll('tr');
+            let valid = true;
+
+            // if (rows.length === 0) {
+            //     event.preventDefault();
+            //     alert("Please add a line to the table before saving.");
+            //     return;
+            // }
+
+            rows.forEach(row => {
+                const referenceInput = row.querySelector('.reference-input');
+                const designationInput = row.querySelector('.designation-input');
+                const quantiteInput = row.querySelector('input[name="quantite[]"]');
+
+                if (
+                    referenceInput.value.trim() === '' ||
+                    designationInput.value.trim() === '' ||
+                    quantiteInput.value.trim() === '' ||
+                    parseInt(quantiteInput.value, 10) <= 0
+                ) {
+                    valid = false;
+
+                    if (!referenceInput.value.trim() || !designationInput.value.trim()) {
+                        alert("The entered Sebango is incorrect or does not belong to this line.");
+                    } else if (parseInt(quantiteInput.value, 10) <= 0) {
+                        alert("Quantity must be a strictly positive number.");
+                    } else {
+                        alert("All fields must be filled out correctly before saving.");
+                    }
+                }
+            });
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
     });
+
 </script>
 
 <style>

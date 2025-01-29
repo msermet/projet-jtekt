@@ -25,7 +25,23 @@ class PatternMois
     #[ORM\Column(name: 'annee', type: 'integer')]
     private int $annee;
 
+    #[ORM\ManyToOne(targetEntity: Produit::class)]
+    #[ORM\JoinColumn(name: 'sebango', referencedColumnName: 'sebango')]
+    private ?Produit $produit = null;
+
+
     // Getters et Setters
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): void
+    {
+        $this->produit = $produit;
+    }
+
 
     public function getId(): int
     {

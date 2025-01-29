@@ -7,6 +7,7 @@ use App\Entity\PatternMois;
 use App\Entity\Produit;
 use App\Entity\Usine;
 use App\UserStory\AjouterPatternMois;
+use App\UserStory\EditPatternMois;
 use Doctrine\ORM\EntityManager;
 
 class PatternMoisController extends AbstractController
@@ -81,6 +82,33 @@ class PatternMoisController extends AbstractController
         $produits = $this->entityManager->getRepository(Produit::class)->findAll();
         $patternMois = $this->entityManager->getRepository(PatternMois::class)->findAll();
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $ajoutPatternMois = new EditPatternMois($this->entityManager);
+
+                $ajoutPatternMois->execute(
+                    $_POST['ligne'],
+                    $_POST['mois'],
+                    $_POST['sebango'] ?? [],
+                    $_POST['quantite'] ?? [],
+                    $_POST['annee']
+                );
+
+                $idLigne = $_POST['ligne'];
+                $idUsine = $this->entityManager->getRepository(Ligne::class)->find($idLigne)->getUsine()->getId();
+
+                $mois = $_POST['mois'];
+                $annee = $_POST['annee'];
+
+
+                $this->redirect("/ligne/edit/mois?usine=$idUsine&ligne=$idLigne&annee=$annee&mois=$mois&ajout=succeed");
+                return;
+            } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+                $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
+            } catch (\Exception $e) {
+                $error = $e->getMessage();
+            }
+        }
 
         $this->render('View_EditPatternMois', [
             'error' => $error ?? null,
