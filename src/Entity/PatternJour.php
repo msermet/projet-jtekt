@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PatternJour
 {
     #[ORM\Id]
-    #[ORM\Column(name: 'id_pattern_mois', type: 'integer')]
+    #[ORM\Column(name: 'id_pattern_jour', type: 'integer')]
     #[ORM\GeneratedValue]
     private int $id;
 
@@ -31,7 +31,22 @@ class PatternJour
     #[ORM\Column(name: 'relicat', type: 'integer')]
     private int $relicat;
 
+    #[ORM\ManyToOne(targetEntity: Produit::class)]
+    #[ORM\JoinColumn(name: 'sebango', referencedColumnName: 'sebango')]
+    private ?Produit $produit = null;
 
+
+    // Getters et Setters
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): void
+    {
+        $this->produit = $produit;
+    }
 
     public function getId(): int
     {
