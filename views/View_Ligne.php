@@ -167,8 +167,9 @@ if (!isset($t)) {
             validDate: "<?= $t['validDate'] ?>",
             monthLater: "<?= $t['monthLater'] ?>",
             dayLater: "<?= $t['dayLater'] ?>",
-            add: "<?= $t['addAction'] ?>",
-            edit: "<?= $t['editAction'] ?>"
+            add: "add",
+            edit: "edit",
+
         };
 
         // Gestion des cartes principales
