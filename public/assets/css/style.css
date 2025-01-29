@@ -31,32 +31,32 @@ body {
     width: 80px;
 }
 
-/* Toggle Button */
-.toggle-button {
-    position: absolute;
-    right: -16px;
-    top: 24px;
-    background-color: #1a1d23;
-    border: none;
-    color: white;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    transition: background-color 0.2s ease;
-}
+/*!* Toggle Button *!*/
+/*.toggle-button {*/
+/*    position: absolute;*/
+/*    right: -16px;*/
+/*    top: 24px;*/
+/*    background-color: #1a1d23;*/
+/*    border: none;*/
+/*    color: white;*/
+/*    width: 32px;*/
+/*    height: 32px;*/
+/*    border-radius: 50%;*/
+/*    cursor: pointer;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    z-index: 50;*/
+/*    transition: background-color 0.2s ease;*/
+/*}*/
 
-.toggle-button:hover {
-    background-color: #2d3748;
-}
+/*.toggle-button:hover {*/
+/*    background-color: #2d3748;*/
+/*}*/
 
-.sidebar.collapsed .toggle-button svg {
-    transform: rotate(180deg);
-}
+/*.sidebar.collapsed .toggle-button svg {*/
+/*    transform: rotate(180deg);*/
+/*}*/
 
 /* Logo Section */
 .logo-section {
@@ -327,3 +327,71 @@ body {
 main {
     background-color: #38363d;
 }
+
+/* Previous CSS styles remain unchanged */
+
+/* Updated Language Selector Styles */
+.language-selector {
+    padding: 15px;
+    border-bottom: 1px solid #2d3748;
+    background-color: #1a1d23;
+}
+
+.language-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.language-select-wrapper select {
+    width: 100%;
+    padding: 8px 8px 8px 40px; /* Extra padding on the left for the flag */
+    background-color: #2d3748;
+    color: white;
+    border: 1px solid #4a5568;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.selected-flag {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 15px;
+    pointer-events: none;
+}
+
+.language-select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid white;
+    pointer-events: none;
+}
+
+.language-select-wrapper select:hover,
+.language-select-wrapper select:focus {
+    background-color: #4a5568;
+    border-color: #5a67d8;
+    outline: none;
+}
+
+/* Style for the select options */
+.language-select-wrapper select option {
+    background-color: #2d3748;
+    color: white;
+    padding: 8px;
+}
+
+/* Rest of your CSS remains unchanged */

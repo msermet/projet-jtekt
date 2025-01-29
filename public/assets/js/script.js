@@ -1,42 +1,37 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const sidebar = document.getElementById('sidebar');
-    const toggleButton = document.getElementById('toggleButton');
-    const menuIcon = document.getElementById('menuIcon');
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const languageSelect = document.getElementById("language");
+    const selectedFlag = document.getElementById("selectedFlag");
 
-    toggleButton.addEventListener('click', function() {
-        sidebar.classList.toggle('collapsed');
+    // Update flag when language changes
+    if (languageSelect && selectedFlag) {
+        languageSelect.addEventListener("change", function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const flagUrl = selectedOption.getAttribute('data-flag');
+            selectedFlag.src = flagUrl;
 
-        // Ajuster la rotation de l'icône
-        if (sidebar.classList.contains('collapsed')) {
-            menuIcon.style.transform = 'rotate(180deg)';
-        } else {
-            menuIcon.style.transform = 'rotate(0deg)';
-        }
-    });
-
-    // Gestion responsive pour les appareils mobiles
-    function handleResize() {
-        if (window.innerWidth <= 768) {
-            sidebar.classList.add('collapsed');
-        }
+            // Update the URL with the new language
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set("lang", this.value);
+            window.location.search = urlParams.toString();
+        });
     }
 
-    // Écouter les changements de taille de fenêtre
-    window.addEventListener('resize', handleResize);
-
-    // Vérifier la taille initiale
+    // Gestion responsive pour mobile
+    function handleResize() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add("collapsed");
+        }
+    }
+    window.addEventListener("resize", handleResize);
     handleResize();
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-    const toggleButton = document.querySelector(".usines-toggle");
+    // Gestion du menu déroulant des usines
+    const toggleUsines = document.querySelector(".usines-toggle");
     const dropdownMenus = document.querySelectorAll(".dropdown");
-
-    if (toggleButton) {
-        toggleButton.addEventListener("click", () => {
-            dropdownMenus.forEach(menu => {
-                menu.classList.toggle("visible");
-            });
+    if (toggleUsines) {
+        toggleUsines.addEventListener("click", () => {
+            dropdownMenus.forEach(menu => menu.classList.toggle("visible"));
         });
     }
 });

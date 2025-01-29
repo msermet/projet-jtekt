@@ -3,11 +3,17 @@
 $idUsine = $_GET['usine'] ?? null;
 $idLigne = $_GET['ligne'] ?? null;
 
+if (!isset($t)) {
+    $translations = include 'lang.php';
+    $lang = $_SESSION['lang'] ?? 'fr';
+    $t = $translations[$lang];
+}
+
 ?>
 
 <main class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold text-light mb-3">Line Management</h1>
+        <h1 class="display-4 fw-bold text-light mb-3"><?= $t['lineManagement'] ?></h1>
         <h2 class="fw-semibold text-secondary">
             <?php
             $nomUsine = null;
@@ -52,7 +58,7 @@ $idLigne = $_GET['ligne'] ?? null;
                 <div class="card-body">
                     <div class="card-title text-center fw-bold">
                         <i class="bi bi-plus-circle fs-1 text-primary"></i>
-                        <h5>Add Pattern</h5>
+                        <h5><?= $t['addPattern'] ?></h5>
                     </div>
                 </div>
                 <div class="collapse" id="addPatternOptions">
@@ -62,8 +68,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             <div class="card shadow-sm pattern-card add-pattern" id="add-pattern-mois" style="cursor: pointer;">
                                 <div class="card-body text-center">
                                     <i class="bi bi-calendar-month fs-1 text-primary"></i>
-                                    <h6 class="card-title fw-bold mt-2">Month Pattern</h6>
-                                    <p class="text-muted">Define patterns for the whole month.</p>
+                                    <h6 class="card-title fw-bold mt-2"><?= $t['patternMois'] ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -72,8 +77,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             <div class="card shadow-sm pattern-card add-pattern" id="add-pattern-jour" style="cursor: pointer;">
                                 <div class="card-body text-center">
                                     <i class="bi bi-calendar-day fs-1 text-primary"></i>
-                                    <h6 class="card-title fw-bold mt-2">Day Pattern</h6>
-                                    <p class="text-muted">Define patterns for specific days.</p>
+                                    <h6 class="card-title fw-bold mt-2"><?= $t['patternJour'] ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +92,7 @@ $idLigne = $_GET['ligne'] ?? null;
                 <div class="card-body">
                     <div class="card-title text-center fw-bold">
                         <i class="bi bi-pencil-square fs-1 text-warning"></i>
-                        <h5>Edit Pattern</h5>
+                        <h5><?= $t['editPattern'] ?></h5>
                     </div>
                 </div>
                 <div class="collapse" id="editPatternOptions">
@@ -98,8 +102,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             <div class="card shadow-sm pattern-card edit-pattern" id="edit-pattern-mois" style="cursor: pointer;">
                                 <div class="card-body text-center">
                                     <i class="bi bi-calendar-month fs-1 text-warning"></i>
-                                    <h6 class="card-title fw-bold mt-2">Month Pattern</h6>
-                                    <p class="text-muted">Modify existing monthly patterns.</p>
+                                    <h6 class="card-title fw-bold mt-2"><?= $t['patternMois'] ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -108,8 +111,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             <div class="card shadow-sm pattern-card edit-pattern" id="edit-pattern-jour" style="cursor: pointer;">
                                 <div class="card-body text-center">
                                     <i class="bi bi-calendar-day fs-1 text-warning"></i>
-                                    <h6 class="card-title fw-bold mt-2">Day Pattern</h6>
-                                    <p class="text-muted">Modify existing daily patterns.</p>
+                                    <h6 class="card-title fw-bold mt-2"><?= $t['patternJour'] ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -123,26 +125,26 @@ $idLigne = $_GET['ligne'] ?? null;
             <a href="/ligne/ajouterproduit?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-lg border-0 text-decoration-none" style="background-color: #1c1c1c; color: #f8f9fa; border-radius: 1rem;">
                 <div class="card-body text-center">
                     <i class="bi bi-box-seam fs-1 text-danger"></i>
-                    <h5 class="card-title fw-bold">Add a Product</h5>
+                    <h5 class="card-title fw-bold"><?= $t['addProduct'] ?></h5>
                 </div>
             </a>
         </div>
     </div>
 
-    <!-- Modal pour sélectionner la date -->
+    <!-- Modal de sélection de la date -->
     <div class="modal fade" id="patternModal" tabindex="-1" aria-labelledby="patternModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="patternModalLabel">Select a date</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="patternModalLabel"><?= $t['selectDate'] ?></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= $t['close'] ?>"></button>
                 </div>
                 <div class="modal-body">
-                    <label for="patternDate" class="form-label">Choose a date or month:</label>
-                    <input type="month" id="patternDate" class="form-control" placeholder="Select a period">
+                    <label for="patternDate" class="form-label"><?= $t['chooseDate'] ?></label>
+                    <input type="month" id="patternDate" class="form-control" placeholder="<?= $t['selectPeriod'] ?>">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="validatePattern">Validate</button>
+                    <button type="button" class="btn btn-primary" id="validatePattern"><?= $t['valider'] ?></button>
                 </div>
             </div>
         </div>
@@ -157,6 +159,17 @@ $idLigne = $_GET['ligne'] ?? null;
 
         let selectedPattern = null;
         let actionType = null;
+
+        // Obtenir les traductions dynamiques depuis PHP
+        const translations = {
+            selectMonth: "<?= $t['selectMonth'] ?>",
+            selectDay: "<?= $t['selectDay'] ?>",
+            validDate: "<?= $t['validDate'] ?>",
+            monthLater: "<?= $t['monthLater'] ?>",
+            dayLater: "<?= $t['dayLater'] ?>",
+            add: "<?= $t['addAction'] ?>",
+            edit: "<?= $t['editAction'] ?>"
+        };
 
         // Gestion des cartes principales
         document.querySelectorAll('.toggle-card').forEach(card => {
@@ -177,11 +190,14 @@ $idLigne = $_GET['ligne'] ?? null;
             card.addEventListener('click', function (event) {
                 event.stopPropagation();
                 selectedPattern = this.id.includes('mois') ? 'mois' : 'jour';
-                actionType = this.classList.contains('add-pattern') ? 'add' : 'edit';
+                const isAdding = this.classList.contains('add-pattern');
+                actionType = isAdding ? translations.add : translations.edit;
+
                 document.getElementById('patternModalLabel').textContent =
                     selectedPattern === 'mois'
-                        ? `Select a month to ${actionType} a pattern:`
-                        : `Select a day to ${actionType} a pattern:`;
+                        ? translations.selectMonth.replace('{action}', actionType)
+                        : translations.selectDay.replace('{action}', actionType);
+
                 patternDate.type = selectedPattern === 'mois' ? 'month' : 'date';
                 modal.show();
             });
@@ -191,7 +207,7 @@ $idLigne = $_GET['ligne'] ?? null;
         validateButton.addEventListener('click', function () {
             const dateValue = patternDate.value;
             if (!dateValue) {
-                alert('Please select a valid date.');
+                alert(translations.validDate);
                 return;
             }
 
@@ -199,12 +215,12 @@ $idLigne = $_GET['ligne'] ?? null;
             const selectedDate = new Date(dateValue + (patternDate.type === 'month' ? '-01' : ''));
 
             if (selectedPattern === 'mois' && selectedDate < new Date(today.getFullYear(), today.getMonth(), 1)) {
-                alert('The selected month must be today or later.');
+                alert(translations.monthLater);
                 return;
             }
 
             if (selectedPattern === 'jour' && selectedDate.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) {
-                alert('The selected date must be today or later.');
+                alert(translations.dayLater);
                 return;
             }
 

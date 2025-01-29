@@ -6,9 +6,15 @@ $annee = $_GET['annee'] ?? null;
 $mois = $_GET['mois'] ?? null;
 $jour = $_GET['jour'] ?? null;
 
+if (!isset($t)) {
+    $translations = include 'lang.php';
+    $lang = $_SESSION['lang'] ?? 'fr';
+    $t = $translations[$lang];
+}
+
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
-    $ajoutReussi = 'Save successful.';
+    $ajoutReussi = $t['saveSuccess'];
 }
 
 // Filtrer les enregistrements de PatternJour
@@ -17,7 +23,7 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
 });
 ?>
 <div class="container p-5">
-    <h1 class="text-center mb-4 text-light">Edit Daily Pattern</h1>
+    <h1 class="text-center mb-4 text-light"><?= $t['editPatternJour'] ?></h1>
     <h3 class="fw-bold text-light">
         <?php
         $nomUsine = null;
@@ -43,38 +49,42 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
         }
         ?>
     </h3>
-    <h4 class="text-light pb-2 fst-italic"><?php echo $jour . "/" . $mois . "/" . $annee; ?></h4>
+    <h4 class="text-light pb-2 fst-italic"><?= htmlspecialchars($jour . "/" . $mois . "/" . $annee) ?></h4>
+
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?php echo htmlspecialchars($error); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <?= htmlspecialchars($error); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
         </div>
     <?php endif; ?>
+
     <?php if (!empty($ajoutReussi)): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?php echo htmlspecialchars($ajoutReussi); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <?= htmlspecialchars($ajoutReussi); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
         </div>
     <?php endif; ?>
+
     <div class="card shadow">
         <div class="card-body">
             <form method="POST" action="">
-                <input type="hidden" name="ligne" value="<?php echo htmlspecialchars($idLigne); ?>">
-                <input type="hidden" name="annee" value="<?php echo htmlspecialchars($annee); ?>">
-                <input type="hidden" name="mois" value="<?php echo htmlspecialchars($mois); ?>">
-                <input type="hidden" name="jour" value="<?php echo htmlspecialchars($jour); ?>">
+                <input type="hidden" name="ligne" value="<?= htmlspecialchars($idLigne) ?>">
+                <input type="hidden" name="annee" value="<?= htmlspecialchars($annee) ?>">
+                <input type="hidden" name="mois" value="<?= htmlspecialchars($mois) ?>">
+                <input type="hidden" name="jour" value="<?= htmlspecialchars($jour) ?>">
+
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle" id="patternTable">
                         <thead class="table-dark">
                         <tr>
-                            <th>Sebango <span class="text-danger">*</span></th>
-                            <th>Reference</th>
-                            <th>Designation</th>
-                            <th>Need <span class="text-danger">*</span></th>
-                            <th>Relicat <span class="text-danger">*</span></th>
-                            <th>Remaining to Produce</th>
-                            <th>Delete</th>
-                            <th>Move</th>
+                            <th><?= $t['sebango'] ?> <span class="text-danger">*</span></th>
+                            <th><?= $t['reference'] ?></th>
+                            <th><?= $t['designation'] ?></th>
+                            <th><?= $t['need'] ?> <span class="text-danger">*</span></th>
+                            <th><?= $t['relicat'] ?> <span class="text-danger">*</span></th>
+                            <th><?= $t['remainingToProduce'] ?></th>
+                            <th><?= $t['delete'] ?></th>
+                            <th><?= $t['move'] ?></th>
                         </tr>
                         </thead>
                         <tbody id="sortableTable">
@@ -82,7 +92,7 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                             <tr>
                                 <td>
                                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                                           value="<?php echo htmlspecialchars($pattern->getSebango()); ?>" readonly>
+                                           value="<?= htmlspecialchars($pattern->getSebango()) ?>" readonly>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control reference-input" name="reference[]" readonly>
@@ -92,15 +102,15 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" name="besoin[]"
-                                           value="<?php echo htmlspecialchars($pattern->getBesoin()); ?>" required>
+                                           value="<?= htmlspecialchars($pattern->getBesoin()) ?>" required>
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" name="relicat[]"
-                                           value="<?php echo htmlspecialchars($pattern->getRelicat()); ?>" required>
+                                           value="<?= htmlspecialchars($pattern->getRelicat()) ?>" required>
                                 </td>
                                 <td>
                                     <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]"
-                                           value="<?php echo htmlspecialchars($pattern->getBesoin() - $pattern->getRelicat()); ?>" readonly>
+                                           value="<?= htmlspecialchars($pattern->getBesoin() - $pattern->getRelicat()) ?>" readonly>
                                 </td>
                                 <td class="text-center">
                                     <button type="button" class="btn btn-danger btn-sm remove-row">
@@ -114,18 +124,23 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                         <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <p class="text-muted mt-2"><span class="text-danger">*</span> Required fields</p>
+                    <p class="text-muted mt-2"><span class="text-danger">*</span> <?= $t['requiredFields'] ?></p>
                 </div>
+
                 <div class="d-flex justify-content-between mt-3">
                     <button type="button" class="btn btn-success" id="addRow">
-                        <i class="bi bi-plus"></i> Add a line
+                        <i class="bi bi-plus"></i> <?= $t['addLine'] ?>
                     </button>
-                    <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
+                    <button type="submit" class="btn btn-primary" id="saveButton"><?= $t['save'] ?></button>
                 </div>
+                <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
+                    <i class="bi bi-arrow-left"></i> <?= $t['back'] ?>
+                </a>
             </form>
         </div>
     </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -139,11 +154,20 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
         }, $produits)); ?>;
 
         const idLigne = <?php echo json_encode($idLigne); ?>; // Ligne récupérée via le formulaire
-
         const saveButton = document.getElementById('saveButton');
-
-
         const tableBody = document.querySelector('#sortableTable');
+
+        // Traductions
+        const translations = {
+            sebangoIncorrect: "<?= $t['sebangoIncorrect'] ?>",
+            needPositive: "<?= $t['needPositive'] ?>",
+            relicatNonNegative: "<?= $t['relicatNonNegative'] ?>",
+            remainingNotEmpty: "<?= $t['remainingNotEmpty'] ?>",
+            allFieldsRequired: "<?= $t['allFieldsRequired'] ?>",
+            addLineBeforeSaving: "<?= $t['addLineBeforeSaving'] ?>",
+            quantityPositive: "<?= $t['quantityPositive'] ?>",
+            needGreaterThanRelicat: "<?= $t['needGreaterThanRelicat'] ?>"
+        };
 
         // Automatiser les champs Référence et Désignation
         tableBody.querySelectorAll('.sebango-input').forEach(input => {
@@ -161,7 +185,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                 designationInput.value = '';
             }
         });
-
 
         // Supprimer une ligne
         tableBody.addEventListener('click', (event) => {
@@ -208,15 +231,15 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
 
                 if (!allFilled) {
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("The entered Sebango is incorrect or does not exist. Please verify.");
+                        alert(translations.sebangoIncorrect);
                     } else if (parseInt(besoinInput.value, 10) <= 0) {
-                        alert("Need must be a strictly positive number.");
+                        alert(translations.needPositive);
                     } else if (parseInt(relicatInput.value, 10) < 0) {
-                        alert("Relicat cannot be negative.");
+                        alert(translations.relicatNonNegative);
                     } else if (!resteAProduireInput.value.trim()) {
-                        alert("Remaining to produce cannot be empty.");
+                        alert(translations.remainingNotEmpty);
                     } else {
-                        alert("All fields must be filled before adding a new line.");
+                        alert(translations.allFieldsRequired);
                     }
                     return;
                 }
@@ -225,36 +248,37 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             // Ajouter une nouvelle ligne
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
-                <td>
-                    <input type="text" class="form-control sebango-input" name="sebango[]"
-                           placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
-                </td>
-                <td>
-                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
-                </td>
-                <td>
-                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
-                </td>
-                <td>
-                    <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="Need - Relicat" readonly>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </td>
-                <td class="text-center handle">
-                    <i class="bi bi-arrows-move"></i>
-                </td>
-            `;
+            <td>
+                <input type="text" class="form-control sebango-input" name="sebango[]"
+                       placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
+            </td>
+            <td>
+                <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
+            </td>
+            <td>
+                <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
+            </td>
+            <td>
+                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="Need - Relicat" readonly>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-row">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+            <td class="text-center handle">
+                <i class="bi bi-arrows-move"></i>
+            </td>
+        `;
             tableBody.appendChild(newRow);
         });
+
         // Gestion automatique des colonnes Référence, Désignation et calcul de Reste à Produire
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
@@ -285,7 +309,7 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                 const relicat = parseInt(relicatInput.value, 10) || 0;
 
                 if (besoin < relicat) {
-                    alert("Need cannot be less than Relicat. Remaining to produce cannot be negative.");
+                    alert(translations.needGreaterThanRelicat);
                     resteAProduireInput.value = '';
                 } else {
                     resteAProduireInput.value = besoin - relicat;
@@ -297,12 +321,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
         saveButton.addEventListener('click', (event) => {
             const rows = tableBody.querySelectorAll('tr');
             let valid = true;
-
-            // if (rows.length === 0) {
-            //     event.preventDefault();
-            //     alert("Please add a line to the table before saving.");
-            //     return;
-            // }
 
             rows.forEach(row => {
                 const referenceInput = row.querySelector('.reference-input');
@@ -318,11 +336,11 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                     valid = false;
 
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("The entered Sebango is incorrect or does not belong to this line.");
+                        alert(translations.sebangoIncorrect);
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("Quantity must be a strictly positive number.");
+                        alert(translations.quantityPositive);
                     } else {
-                        alert("All fields must be filled out correctly before saving.");
+                        alert(translations.allFieldsRequired);
                     }
                 }
             });

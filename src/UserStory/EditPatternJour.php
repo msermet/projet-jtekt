@@ -54,6 +54,10 @@ class EditPatternJour
                 throw new \Exception("Le Besoin à l'index $index doit être un nombre strictement positif.");
             }
 
+            if ($besoin<$relicat) {
+                throw new \Exception("Le Besoin à l'index $index doit être supérieur au relicat.");
+            }
+
             if (!isset($relicat) || !is_numeric($relicat) || $relicat < 0) {
                 throw new \Exception("Le Relicat à l'index $index doit être un nombre positif ou nul.");
             }

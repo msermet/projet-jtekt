@@ -1,5 +1,11 @@
 <?php
 
+if (!isset($t)) {
+    $translations = include 'lang.php';
+    $lang = $_SESSION['lang'] ?? 'fr';
+    $t = $translations[$lang];
+}
+
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
     $ajoutReussi = 'Ajout du produit réussi.';
@@ -17,7 +23,7 @@ $idLigne = $_GET['ligne'] ?? null;
                 <div class="card-body p-4">
                     <!-- Titre principal -->
                     <div class="text-center mb-4">
-                        <h2 class="fw-bold">Add a product</h2>
+                        <h2 class="fw-bold"><?= $t['addProduct'] ?></h2>
                         <h3 class="fw-bold">
                             <?php
                             $nomUsine = null;
@@ -44,14 +50,14 @@ $idLigne = $_GET['ligne'] ?? null;
                                 }
                             }
 
-                            if (!$nomUsine) {
-                                header("Location: /usine-introuvable");
-                            } elseif (!$nomLigne) {
-                                header("Location: /ligne-introuvable");
-                            }
+//                            if (!$nomUsine) {
+//                                header("Location: /usine-introuvable");
+//                            } elseif (!$nomLigne) {
+//                                header("Location: /ligne-introuvable");
+//                            }
                             ?>
                         </h3>
-                        <p class="text-muted small">Complete the information below.</p>
+                        <p class="text-muted small"><?= $t['infProduct'] ?></p>
                     </div>
 
                     <!-- Messages d'erreur et de succès -->
@@ -83,40 +89,40 @@ $idLigne = $_GET['ligne'] ?? null;
                                 </span>
                                 <input type="text" name="sebango" id="sebango" class="form-control" placeholder="ex : A350" value="<?php echo isset($_POST['sebango']) ? htmlspecialchars($_POST['sebango']) : ''; ?>" required>
                             </div>
-                            <small class="text-muted">The Sebango must contain exactly 4 characters.</small>
+                            <small class="text-muted"><?= $t['sizeSebango'] ?></small>
                         </div>
 
                         <!-- Article -->
                         <div class="mb-3">
-                            <label for="article" class="form-label fw-bold">Item (Article)</label>
+                            <label for="article" class="form-label fw-bold"><?= $t['articleProd'] ?></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-success text-white">
                                     <i class="bi bi-arrow-right-circle"></i>
                                 </span>
                                 <input type="text" name="article" id="article" class="form-control" placeholder="ex : 6900004792" value="<?php echo isset($_POST['article']) ? htmlspecialchars($_POST['article']) : ''; ?>" required>
                             </div>
-                            <small class="text-muted">Enter a valid article reference.</small>
+                            <small class="text-muted"><?= $t['articleRef'] ?></small>
                         </div>
 
                         <!-- Désignation -->
                         <div class="mb-3">
-                            <label for="designation" class="form-label fw-bold">Designation</label>
+                            <label for="designation" class="form-label fw-bold"><?= $t['designation'] ?></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-warning text-dark">
                                     <i class="bi bi-arrow-right-circle"></i>
                                 </span>
                                 <input type="text" name="designation" id="designation" class="form-control" placeholder="ex : DAE G P84 DPLP D041 PHEV" value="<?php echo isset($_POST['designation']) ? htmlspecialchars($_POST['designation']) : ''; ?>" required>
                             </div>
-                            <small class="text-muted">Provide a description for the product.</small>
+                            <small class="text-muted"><?= $t['designationProd'] ?></small>
                         </div>
 
                         <!-- Boutons -->
                         <div class="d-flex justify-content-between pt-3">
                             <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
-                                <i class="bi bi-arrow-left"></i> Back to the previous page
+                                <i class="bi bi-arrow-left"></i> <?= $t['back'] ?>
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-plus-circle"></i> Add
+                                <i class="bi bi-plus-circle"></i> <?= $t['add'] ?>
                             </button>
                         </div>
                     </form>

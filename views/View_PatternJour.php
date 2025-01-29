@@ -6,9 +6,15 @@ $annee = $_GET['annee'] ?? null;
 $mois = $_GET['mois'] ?? null;
 $jour = $_GET['jour'] ?? null;
 
+if (!isset($t)) {
+    $translations = include 'lang.php';
+    $lang = $_SESSION['lang'] ?? 'fr';
+    $t = $translations[$lang];
+}
+
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
-    $ajoutReussi = 'Save successful.';
+    $ajoutReussi = $t['saveSuccess'];
 }
 
 ?>
@@ -129,7 +135,8 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const produits = <?php echo json_encode(array_map(function ($produit) {
+        const translations = <?= json_encode($t); ?>;
+        const produits = <?= json_encode(array_map(function ($produit) {
             return [
                 'sebango' => $produit->getSebango(),
                 'reference' => $produit->getArticle(),
@@ -138,7 +145,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             ];
         }, $produits)); ?>;
 
-        const idLigne = <?php echo json_encode($idLigne); ?>;
+        const idLigne = <?= json_encode($idLigne); ?>;
 
         const addRowButton = document.getElementById('addRow');
         const saveButton = document.getElementById('saveButton');
@@ -168,15 +175,15 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
                 if (!allFilled) {
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("The entered Sebango is incorrect or does not exist. Please verify.");
+                        alert(translations['errorSebango']);
                     } else if (parseInt(besoinInput.value, 10) <= 0) {
-                        alert("Need must be a strictly positive number.");
+                        alert(translations['errorNeedPositive']);
                     } else if (parseInt(relicatInput.value, 10) < 0) {
-                        alert("Relicat cannot be negative.");
+                        alert(translations['errorRelicatNegative']);
                     } else if (!resteAProduireInput.value.trim()) {
-                        alert("Remaining to produce cannot be empty.");
+                        alert(translations['errorRemainingEmpty']);
                     } else {
-                        alert("All fields must be filled before adding a new line.");
+                        alert(translations['errorFillAllFields']);
                     }
                     return;
                 }
@@ -187,13 +194,13 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             newRow.innerHTML = `
                 <td>
                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                           placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
+                           placeholder="ex : A350" pattern=".{4}" title="${translations['sebangoValidation']}" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
+                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="${translations['reference']}" readonly>
                 </td>
                 <td>
-                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
+                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="${translations['designation']}" readonly>
                 </td>
                 <td>
                     <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
@@ -202,7 +209,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
                 </td>
                 <td>
-                    <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="Need - Relicat" readonly>
+                    <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="${translations['remaining']}" readonly>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row">
@@ -243,7 +250,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 const relicat = parseInt(relicatInput.value, 10) || 0;
 
                 if (besoin < relicat) {
-                    alert("Need cannot be less than Relicat. Remaining to produce cannot be negative.");
+                    alert(translations['errorNeedLessThanRelicat']);
                     resteAProduireInput.value = '';
                 } else {
                     resteAProduireInput.value = besoin - relicat;
@@ -265,7 +272,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
             if (rows.length === 0) {
                 event.preventDefault();
-                alert("Please add a line to the table before saving.");
+                alert(translations['errorAddLineBeforeSave']);
                 return;
             }
 
@@ -288,15 +295,15 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     valid = false;
 
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("The entered Sebango is incorrect or does not belong to this line.");
+                        alert(translations['errorSebangoLine']);
                     } else if (parseInt(besoinInput.value, 10) <= 0) {
-                        alert("Need must be a strictly positive number.");
+                        alert(translations['errorNeedPositive']);
                     } else if (parseInt(relicatInput.value, 10) < 0) {
-                        alert("Relicat cannot be negative.");
+                        alert(translations['errorRelicatNegative']);
                     } else if (!resteAProduireInput.value.trim()) {
-                        alert("Remaining to produce cannot be empty.");
+                        alert(translations['errorRemainingEmpty']);
                     } else {
-                        alert("All fields must be filled out correctly before saving.");
+                        alert(translations['errorFillAllFields']);
                     }
                 }
             });

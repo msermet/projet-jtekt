@@ -5,15 +5,23 @@ $idLigne = $_GET['ligne'] ?? null;
 $annee = $_GET['annee'] ?? null;
 $mois = $_GET['mois'] ?? null;
 
+if (!isset($t)) {
+    $translations = include 'lang.php';
+    $lang = $_SESSION['lang'] ?? 'fr';
+    $t = $translations[$lang];
+}
+
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
-    $ajoutReussi = 'Save successful.';
+    $ajoutReussi = $t['saveSuccess'];
 }
+
+
 
 ?>
 
 <div class="container p-5">
-    <h1 class="text-center mb-4 text-light">Add Data to Monthly Pattern</h1>
+    <h1 class="text-center mb-4 text-light"><?= $t['addMonthlyPattern'] ?></h1>
     <h3 class="fw-bold text-light">
         <?php
         $nomUsine = null;
@@ -47,47 +55,47 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         }
         ?>
     </h3>
-    <h4 class="text-light pb-2 fst-italic"><?php echo $mois."/".$annee; ?></h4>
+    <h4 class="text-light pb-2 fst-italic"><?= $mois . "/" . $annee; ?></h4>
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?php echo htmlspecialchars($error); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <?= htmlspecialchars($error); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
         </div>
     <?php endif; ?>
     <?php if (!empty($ajoutReussi)): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?php echo htmlspecialchars($ajoutReussi); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <?= htmlspecialchars($ajoutReussi); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
         </div>
     <?php endif; ?>
     <div class="card shadow">
         <div class="card-body">
             <form method="POST" action="">
-                <input type="hidden" name="ligne" value="<?php echo htmlspecialchars($idLigne); ?>">
-                <input type="hidden" name="annee" value="<?php echo htmlspecialchars($annee); ?>">
-                <input type="hidden" name="mois" value="<?php echo htmlspecialchars($mois); ?>">
+                <input type="hidden" name="ligne" value="<?= htmlspecialchars($idLigne); ?>">
+                <input type="hidden" name="annee" value="<?= htmlspecialchars($annee); ?>">
+                <input type="hidden" name="mois" value="<?= htmlspecialchars($mois); ?>">
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle" id="patternTable">
                         <thead class="table-dark">
                         <tr>
-                            <th>Sebango <span class="text-danger">*</span></th>
-                            <th>Reference</th>
-                            <th>Designation</th>
-                            <th>Quantity <span class="text-danger">*</span></th>
-                            <th>Action</th>
+                            <th><?= $t['sebango'] ?> <span class="text-danger">*</span></th>
+                            <th><?= $t['reference'] ?></th>
+                            <th><?= $t['designation'] ?></th>
+                            <th><?= $t['quantity'] ?> <span class="text-danger">*</span></th>
+                            <th><?= $t['action'] ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td>
                                 <input type="text" class="form-control sebango-input" name="sebango[]"
-                                       placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
+                                       placeholder="ex : A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" required>
                             </td>
                             <td>
-                                <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
+                                <input type="text" class="form-control reference-input" name="reference[]" placeholder="<?= $t['reference'] ?>" readonly>
                             </td>
                             <td>
-                                <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
+                                <input type="text" class="form-control designation-input" name="designation[]" placeholder="<?= $t['designation'] ?>" readonly>
                             </td>
                             <td>
                                 <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
@@ -100,17 +108,17 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         </tr>
                         </tbody>
                     </table>
-                    <p class="text-muted mt-2"><span class="text-danger">*</span> Required fields</p>
+                    <p class="text-muted mt-2"><span class="text-danger">*</span> <?= $t['requiredFields'] ?></p>
                 </div>
 
                 <div class="d-flex justify-content-between mt-3">
                     <button type="button" class="btn btn-success" id="addRow">
-                        <i class="bi bi-plus"></i> Add a line
+                        <i class="bi bi-plus"></i> <?= $t['addLine'] ?>
                     </button>
-                    <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
+                    <button type="submit" class="btn btn-primary" id="saveButton"><?= $t['save'] ?></button>
                 </div>
                 <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
-                    <i class="bi bi-arrow-left"></i> Back to the previous page
+                    <i class="bi bi-arrow-left"></i> <?= $t['back'] ?>
                 </a>
             </form>
         </div>
@@ -153,11 +161,11 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
                 if (!allFilled) {
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("The entered Sebango is incorrect or does not exist. Please verify.");
+                        alert("<?= $t['errorSebangoIncorrect'] ?>");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("Quantity must be a strictly positive number.");
+                        alert("<?= $t['errorQuantityPositive'] ?>");
                     } else {
-                        alert("All fields must be filled before adding a new line.");
+                        alert("<?= $t['errorFieldsRequired'] ?>");
                     }
                     return;
                 }
@@ -168,13 +176,13 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             newRow.innerHTML = `
                 <td>
                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                           placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
+                           placeholder="ex : A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
+                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="<?= $t['reference'] ?>" readonly>
                 </td>
                 <td>
-                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
+                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="<?= $t['designation'] ?>" readonly>
                 </td>
                 <td>
                     <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
@@ -223,7 +231,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
             if (rows.length === 0) {
                 event.preventDefault();
-                alert("Please add a line to the table before saving.");
+                alert("<?= $t['errorAddLineBeforeSave'] ?>");
                 return;
             }
 
@@ -241,11 +249,11 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     valid = false;
 
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert("The entered Sebango is incorrect or does not belong to this line.");
+                        alert("<?= $t['errorSebangoIncorrect'] ?>");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert("Quantity must be a strictly positive number.");
+                        alert("<?= $t['errorQuantityPositive'] ?>");
                     } else {
-                        alert("All fields must be filled out correctly before saving.");
+                        alert("<?= $t['errorFieldsRequiredBeforeSave'] ?>");
                     }
                 }
             });
