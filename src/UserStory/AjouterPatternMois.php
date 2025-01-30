@@ -67,6 +67,7 @@ class AjouterPatternMois
             $patternMois->setSebango($sebango);
             $patternMois->setQuantite($quantite);
             $patternMois->setAnnee($annee);
+            $patternMois->setProduit($existingProduit);
 
             $this->entityManager->persist($patternMois);
         }

@@ -52,6 +52,10 @@ class AjouterPatternJour
                 throw new \Exception("Le besoin à l'index $index doit être un nombre strictement positif.");
             }
 
+            if ($besoin == $relicatArray[$index]) {
+                throw new \Exception("Le besoin et le relicat à l'index $index ne doivent pas être identiques.");
+            }
+
             $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy(['sebango' => $sebango]);
 
             if ($existingProduit === null) {
@@ -69,6 +73,7 @@ class AjouterPatternJour
             $patternJour->setSebango($sebango);
             $patternJour->setBesoin($besoin);
             $patternJour->setRelicat($relicatArray[$index]);
+            $patternJour->setProduit($existingProduit);
 
             $this->entityManager->persist($patternJour);
         }
