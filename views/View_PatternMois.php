@@ -15,9 +15,6 @@ $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
     $ajoutReussi = $t['saveSuccess'];
 }
-
-
-
 ?>
 
 <div class="container p-5">
@@ -32,7 +29,6 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 break;
             }
         }
-
         $nomLigne = null;
         if ($nomUsine) {
             foreach ($usines as $usine) {
@@ -47,7 +43,6 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 }
             }
         }
-
         if (!$nomUsine) {
             header("Location: /usine-introuvable");
         } elseif (!$nomLigne) {
@@ -110,7 +105,6 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     </table>
                     <p class="text-muted mt-2"><span class="text-danger">*</span> <?= $t['requiredFields'] ?></p>
                 </div>
-
                 <div class="d-flex justify-content-between mt-3">
                     <button type="button" class="btn btn-success" id="addRow">
                         <i class="bi bi-plus"></i> <?= $t['addLine'] ?>

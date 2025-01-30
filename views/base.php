@@ -6,7 +6,12 @@ if (session_status() === PHP_SESSION_NONE) {
 // Définition des langues disponibles
 $languages = [
     'fr' => ['name' => 'Français', 'flag' => 'assets/img/fr.svg'],
-    'en' => ['name' => 'English', 'flag' => 'assets/img/en.svg']
+    'en' => ['name' => 'English', 'flag' => 'assets/img/en.svg'],
+    'es' => ['name' => 'Español', 'flag' => 'assets/img/es.svg'],
+    'cs' => ['name' => 'Čeština', 'flag' => 'assets/img/cs.svg'],
+    'ja' => ['name' => '日本語', 'flag' => 'assets/img/ja.svg'],
+    'de' => ['name' => 'Deutsch', 'flag' => 'assets/img/de.svg'],
+    'ro' => ['name' => 'Română', 'flag' => 'assets/img/ro.svg']
 ];
 
 // Gestion du changement de langue
