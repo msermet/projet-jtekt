@@ -105,6 +105,8 @@ return [
         'signUp' => 'S\'inscrire',
         'alreadyHaveAccount' => 'Vous avez déjà un compte ?',
         'logInHere' => 'Connectez-vous ici',
+        'pageNotFound' => 'Page non trouvée',
+        'pageNotFoundMessage' => 'La page que vous recherchez n\'existe pas ou a été déplacée.',
     ],
     'en' => [
         'title' => 'Production - JTEKT',
