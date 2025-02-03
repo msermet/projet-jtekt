@@ -161,14 +161,14 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                             <th>Lieu</th>
                             <th>Ligne Prod</th>
                             <th>Date</th>
-                            <th>Po.</th>
+                            <th>Poste</th>
                             <th>N° Sebango</th>
                             <th>Article</th>
                             <th>Désignation article</th>
                             <th>Quantité</th>
                             <th>Unité</th>
-                            <th>Cpt pr...</th>
-                            <th>Qté ...</th>
+                            <th>Cpt prod</th>
+                            <th>Qté PL</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
