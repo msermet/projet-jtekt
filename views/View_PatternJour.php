@@ -49,12 +49,23 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
         if (!$nomUsine) {
             header("Location: /usine-introuvable");
+            exit;
         } elseif (!$nomLigne) {
             header("Location: /ligne-introuvable");
+            exit;
         }
         ?>
     </h3>
-    <h4 class="text-light pb-2 fst-italic"><?php echo $jour."/".$mois."/".$annee; ?></h4>
+
+    <h4 class="text-light pb-2 fst-italic"><?php echo $jour . "/" . $mois . "/" . $annee; ?></h4>
+
+    <!-- Bouton pour coller les données -->
+    <div class="d-flex justify-content-between mb-3">
+        <h4><span class="text-light text-decoration-underline">Importer un tableau depuis SAP :</span>
+            <button class="btn btn-warning" id="pasteTable"><i class="bi bi-clipboard"></i> Coller</button>
+        </h4>
+    </div>
+
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?php echo htmlspecialchars($error); ?>
@@ -67,6 +78,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
+
     <div class="card shadow">
         <div class="card-body">
             <form method="POST" action="">
@@ -123,12 +135,50 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <i class="bi bi-plus"></i> Add a line
                     </button>
                     <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
-
                 </div>
                 <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
                     <i class="bi bi-arrow-left"></i> Back to the previous page
                 </a>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Pop-up d'aperçu des données collées -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Aperçu des données à importer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="previewTable">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Division</th>
+                            <th>Lieu</th>
+                            <th>Ligne Prod</th>
+                            <th>Date</th>
+                            <th>Po.</th>
+                            <th>N° Sebango</th>
+                            <th>Article</th>
+                            <th>Désignation article</th>
+                            <th>Quantité</th>
+                            <th>Unité</th>
+                            <th>Cpt pr...</th>
+                            <th>Qté ...</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-success" id="importData">Importer</button>
+            </div>
         </div>
     </div>
 </div>
@@ -150,6 +200,109 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         const addRowButton = document.getElementById('addRow');
         const saveButton = document.getElementById('saveButton');
         const tableBody = document.querySelector('#patternTable tbody');
+
+        // Collage et importation des données
+        const pasteTableButton = document.getElementById('pasteTable');
+        const previewTableBody = document.querySelector('#previewTable tbody');
+        const importModal = new bootstrap.Modal(document.getElementById('importModal'));
+        const importButton = document.getElementById('importData');
+
+        // Fonction pour ajouter une ligne au tableau de saisie
+        function addRow(sebango, besoin) {
+            const produit = produits.find(p => p.sebango.toUpperCase() === sebango.toUpperCase() && p.ligne == idLigne);
+            const reference = produit ? produit.reference : '';
+            const designation = produit ? produit.designation : '';
+
+            console.log("Ajout d'une ligne:", { sebango, reference, designation, besoin });
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+            <td>
+                <input type="text" class="form-control sebango-input" name="sebango[]" value="${sebango}"
+                       pattern=".{4}" title="${translations['sebangoValidation']}" required>
+            </td>
+            <td>
+                <input type="text" class="form-control reference-input" name="reference[]" value="${reference}" readonly>
+            </td>
+            <td>
+                <input type="text" class="form-control designation-input" name="designation[]" value="${designation}" readonly>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="besoin[]" value="${besoin}" required>
+            </td>
+            <td>
+                <input type="number" class="form-control" name="relicat[]" value="0" required>
+            </td>
+            <td>
+                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" value="${besoin}" readonly>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-row">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        `;
+
+            tableBody.appendChild(newRow);
+        }
+
+        // Coller les données et afficher le pop-up
+        pasteTableButton.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                const rows = text.trim().split(/\r?\n/).map(row => row.split(/\t/));
+
+                if (rows.length < 1 || rows[0].length !== 12) {
+                    alert("Format incorrect. Assurez-vous de copier 12 colonnes.");
+                    return;
+                }
+
+                previewTableBody.innerHTML = '';
+
+                rows.forEach(row => {
+                    const newRow = document.createElement('tr');
+                    row.forEach(cell => {
+                        const newCell = document.createElement('td');
+                        newCell.textContent = cell;
+                        newRow.appendChild(newCell);
+                    });
+                    previewTableBody.appendChild(newRow);
+                });
+
+                importModal.show();
+            } catch (error) {
+                alert("Impossible d'accéder au presse-papiers.");
+            }
+        });
+
+        // Importer les données dans le tableau de saisie
+        importButton.addEventListener('click', () => {
+
+            // Supprimer la première ligne existante
+            const firstRow = tableBody.querySelector('tr');
+            if (firstRow) {
+                tableBody.removeChild(firstRow);
+            }
+
+            const rows = previewTableBody.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 9) return; // Vérification du format
+
+                const sebango = cells[5].textContent.trim(); // N° Sebango
+                const besoin = parseInt(cells[8].textContent.trim(), 10) || 0; // Quantité
+
+                if (sebango) {
+                    console.log("Données extraites:", { sebango, besoin }); // Debugging
+                    addRow(sebango, besoin);
+                }
+            });
+
+            importModal.hide();
+        });
+
+
 
         // Ajouter une nouvelle ligne
         addRowButton.addEventListener('click', () => {
@@ -264,6 +417,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 event.target.closest('tr').remove();
             }
         });
+
 
         // Validation avant d'enregistrer
         saveButton.addEventListener('click', (event) => {
