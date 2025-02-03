@@ -1,11 +1,16 @@
 <?php
 
+// Récupère les paramètres de l'URL ou définit à null s'ils ne sont pas présents
 $idUsine = $_GET['usine'] ?? null;
 $idLigne = $_GET['ligne'] ?? null;
 
+// Vérifie si la variable $t n'est pas définie
 if (!isset($t)) {
+    // Inclut le fichier de traduction
     $translations = include 'lang.php';
+    // Définit la langue par défaut à 'fr' si elle n'est pas définie dans la session
     $lang = $_SESSION['lang'] ?? 'fr';
+    // Récupère les traductions pour la langue sélectionnée
     $t = $translations[$lang];
 }
 
@@ -13,9 +18,11 @@ if (!isset($t)) {
 
 <main class="container py-5">
     <div class="text-center mb-5">
+        <!-- Titre principal de la page -->
         <h1 class="display-4 fw-bold text-light mb-3"><?= $t['lineManagement'] ?></h1>
         <h2 class="fw-semibold text-secondary">
             <?php
+            // Affiche le nom de l'usine sélectionnée
             $nomUsine = null;
             foreach ($usines as $usine) {
                 if ($usine->getId() == $idUsine) {
@@ -25,6 +32,7 @@ if (!isset($t)) {
                 }
             }
 
+            // Affiche le nom de la ligne sélectionnée
             $nomLigne = null;
             if ($nomUsine) {
                 foreach ($usines as $usine) {
@@ -40,6 +48,7 @@ if (!isset($t)) {
                 }
             }
 
+            // Redirige si l'usine ou la ligne n'est pas trouvée
             if (!$nomUsine) {
                 header("Location: /usine-introuvable");
                 exit;
@@ -52,7 +61,7 @@ if (!isset($t)) {
     </div>
 
     <div class="row gy-4">
-        <!-- Add Pattern -->
+        <!-- Ajouter un Pattern -->
         <div class="col-md-12">
             <div class="card shadow-lg border-0 mb-4 toggle-card" data-toggle="addPatternOptions" style="background-color: #1c1c1c; color: #f8f9fa; border-radius: 1rem;">
                 <div class="card-body">
@@ -63,7 +72,7 @@ if (!isset($t)) {
                 </div>
                 <div class="collapse" id="addPatternOptions">
                     <div class="row mt-3 pb-3 ps-3 pe-3">
-                        <!-- Month Pattern -->
+                        <!-- Pattern Mensuel -->
                         <div class="col-md-6">
                             <div class="card shadow-sm pattern-card add-pattern" id="add-pattern-mois" style="cursor: pointer;">
                                 <div class="card-body text-center">
@@ -72,7 +81,7 @@ if (!isset($t)) {
                                 </div>
                             </div>
                         </div>
-                        <!-- Day Pattern -->
+                        <!-- Pattern Journalier -->
                         <div class="col-md-6">
                             <div class="card shadow-sm pattern-card add-pattern" id="add-pattern-jour" style="cursor: pointer;">
                                 <div class="card-body text-center">
@@ -86,7 +95,7 @@ if (!isset($t)) {
             </div>
         </div>
 
-        <!-- Edit Pattern -->
+        <!-- Éditer un Pattern -->
         <div class="col-md-12">
             <div class="card shadow-lg border-0 mb-4 toggle-card" data-toggle="editPatternOptions" style="background-color: #1c1c1c; color: #f8f9fa; border-radius: 1rem;">
                 <div class="card-body">
@@ -97,7 +106,7 @@ if (!isset($t)) {
                 </div>
                 <div class="collapse" id="editPatternOptions">
                     <div class="row mt-3 pb-3 ps-3 pe-3">
-                        <!-- Month Pattern -->
+                        <!-- Pattern Mensuel -->
                         <div class="col-md-6">
                             <div class="card shadow-sm pattern-card edit-pattern" id="edit-pattern-mois" style="cursor: pointer;">
                                 <div class="card-body text-center">
@@ -106,7 +115,7 @@ if (!isset($t)) {
                                 </div>
                             </div>
                         </div>
-                        <!-- Day Pattern -->
+                        <!-- Pattern Journalier -->
                         <div class="col-md-6">
                             <div class="card shadow-sm pattern-card edit-pattern" id="edit-pattern-jour" style="cursor: pointer;">
                                 <div class="card-body text-center">
@@ -120,7 +129,7 @@ if (!isset($t)) {
             </div>
         </div>
 
-        <!-- Add a Product -->
+        <!-- Ajouter un Produit -->
         <div class="col-md-12">
             <a href="/ligne/ajouterproduit?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="card shadow-lg border-0 text-decoration-none" style="background-color: #1c1c1c; color: #f8f9fa; border-radius: 1rem;">
                 <div class="card-body text-center">
@@ -169,7 +178,6 @@ if (!isset($t)) {
             dayLater: "<?= $t['dayLater'] ?>",
             add: "add",
             edit: "edit",
-
         };
 
         // Gestion des cartes principales

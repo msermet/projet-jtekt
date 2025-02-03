@@ -1,9 +1,10 @@
 <?php
+// Vérifie si une session PHP est déjà démarrée, sinon démarre une nouvelle session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Définition des langues disponibles
+// Définition des langues disponibles avec leur nom et drapeau respectifs
 $languages = [
     'fr' => ['name' => 'Français', 'flag' => 'assets/img/fr.svg'],
     'en' => ['name' => 'English', 'flag' => 'assets/img/en.svg'],
@@ -16,18 +17,21 @@ $languages = [
 
 // Gestion du changement de langue
 if (isset($_GET['lang']) && array_key_exists($_GET['lang'], $languages)) {
+    // Met à jour la langue dans la session
     $_SESSION['lang'] = $_GET['lang'];
+    // Reconstruit l'URL sans le paramètre de langue
     $params = $_GET;
     unset($params['lang']);
     $queryString = http_build_query($params);
+    // Redirige vers la même page sans le paramètre de langue
     header("Location: " . strtok($_SERVER["REQUEST_URI"], '?') . ($queryString ? '?' . $queryString : ''));
     exit;
 }
 
-// Langue par défaut
+// Définit la langue par défaut si aucune langue n'est sélectionnée
 $lang = $_SESSION['lang'] ?? 'fr';
 
-// Charger les traductions
+// Charge les traductions pour la langue sélectionnée
 $translations = include 'lang.php';
 $t = $translations[$lang];
 ?>
@@ -38,6 +42,7 @@ $t = $translations[$lang];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Liens vers les fichiers CSS externes -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/css/style.css">
@@ -48,6 +53,7 @@ $t = $translations[$lang];
 <aside id="sidebar" class="sidebar">
     <div class="language-selector">
         <div class="language-select-wrapper">
+            <!-- Sélecteur de langue -->
             <select id="language" class="form-select">
                 <?php foreach ($languages as $code => $info): ?>
                     <option value="<?= $code ?>" <?= $code === $lang ? 'selected' : '' ?>
@@ -56,15 +62,12 @@ $t = $translations[$lang];
                     </option>
                 <?php endforeach; ?>
             </select>
+            <!-- Affiche le drapeau de la langue sélectionnée -->
             <img id="selectedFlag" src="<?= $languages[$lang]['flag'] ?>" alt="<?= $languages[$lang]['name'] ?>" class="selected-flag">
         </div>
     </div>
 
-<!--    <button id="toggleButton" class="toggle-button">-->
-<!--        <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">-->
-<!--            <path fill-rule="evenodd" d="M3 12a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1zM3 6a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1zM3 18a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />-->
-<!--        </svg>-->
-<!--    </button>-->
+    <!-- Section du logo et du lien vers la page d'accueil -->
     <div class="logo-section">
         <a href="/" class="home-link">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
@@ -73,8 +76,11 @@ $t = $translations[$lang];
             <span class="link-text"><?= $t['home'] ?></span>
         </a>
     </div>
+
+    <!-- Navigation principale -->
     <nav class="nav-links">
         <?php if (isset($_SESSION['id_user'])): ?>
+            <!-- Lien vers les usines et leurs lignes -->
             <a href="#" class="nav-link usines-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
                     <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
@@ -83,6 +89,7 @@ $t = $translations[$lang];
                 <span class="link-text"><?= $t['plants'] ?> <i class="bi bi-caret-down-fill"></i></span>
             </a>
 
+            <!-- Conteneur des usines et lignes -->
             <div class="usines-container hidden">
                 <?php if (!empty($usines)): ?>
                     <?php foreach ($usines as $usine): ?>
@@ -108,8 +115,10 @@ $t = $translations[$lang];
         <?php endif; ?>
     </nav>
 
+    <!-- Section d'authentification -->
     <div class="auth-section">
         <?php if (isset($_SESSION['id_user'])): ?>
+            <!-- Lien de déconnexion -->
             <a href="/deconnexion" class="login-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
@@ -117,6 +126,7 @@ $t = $translations[$lang];
                 <span class="link-text"><?= $t['logout'] ?></span>
             </a>
         <?php else: ?>
+            <!-- Lien de connexion -->
             <a href="/connexion" class="login-button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
                     <path d="M10 17l-1.41-1.41L14.17 10H3v-2h11.17l-5.58-5.59L10 3l7 7z" />
@@ -127,10 +137,12 @@ $t = $translations[$lang];
     </div>
 </aside>
 
+<!-- Contenu principal de la page -->
 <main class="main-content">
     <?= $content ?>
 </main>
 
+<!-- Liens vers les fichiers JavaScript externes -->
 <script src="/assets/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

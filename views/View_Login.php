@@ -1,16 +1,24 @@
 <?php
+// Vérifie si la variable de traduction $t n'est pas définie
 if (!isset($t)) {
+    // Inclut le fichier de traduction
     $translations = include 'lang.php';
+    // Définit la langue par défaut à 'fr' si elle n'est pas définie dans la session
     $lang = $_SESSION['lang'] ?? 'fr';
+    // Récupère les traductions pour la langue sélectionnée
     $t = $translations[$lang];
 }
 
+// Initialise le message d'inscription
 $inscriptionMessage = '';
+// Vérifie si l'inscription a réussi et définit le message approprié
 if (isset($_GET['inscription']) && $_GET['inscription'] === 'succeed') {
     $inscriptionMessage = $t['registrationSuccess'];
 }
 
+// Initialise le message de connexion
 $connexionMessage = '';
+// Vérifie s'il y a une erreur de connexion et définit le message approprié
 if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
     $connexionMessage = $t['mustBeLoggedIn'];
 }
@@ -52,9 +60,9 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                         </div>
                     <?php endif; ?>
 
-                    <!-- Formulaire -->
+                    <!-- Formulaire de connexion -->
                     <form method="POST" action="">
-                        <!-- Email -->
+                        <!-- Champ pour l'email -->
                         <div class="mb-3">
                             <label for="email" class="form-label fw-bold"><?= $t['email'] ?></label>
                             <div class="input-group">
@@ -65,7 +73,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                             </div>
                         </div>
 
-                        <!-- Mot de passe -->
+                        <!-- Champ pour le mot de passe -->
                         <div class="mb-3">
                             <label for="password" class="form-label fw-bold"><?= $t['password'] ?></label>
                             <div class="input-group">
@@ -76,7 +84,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                             </div>
                         </div>
 
-                        <!-- Boutons -->
+                        <!-- Boutons de soumission et de retour -->
                         <div class="d-flex justify-content-between align-items-center pt-3">
                             <a href="/" class="btn btn-link text-muted">
                                 <i class="bi bi-arrow-left"></i> <?= $t['backToPrevious'] ?>
@@ -87,7 +95,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                         </div>
                     </form>
 
-                    <!-- Lien d'inscription -->
+                    <!-- Lien pour s'inscrire -->
                     <div class="pt-4 text-center">
                         <p class="small text-muted">
                             <?= $t['noAccount'] ?> <a href="/creationcompte" class="fw-semibold link-primary"><?= $t['signUpHere'] ?></a>.

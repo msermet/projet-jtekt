@@ -1,16 +1,19 @@
 <?php
 
+// Vérifie si les traductions sont déjà chargées, sinon les charge
 if (!isset($t)) {
     $translations = include 'lang.php';
     $lang = $_SESSION['lang'] ?? 'fr';
     $t = $translations[$lang];
 }
 
+// Initialise le message de succès d'ajout
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
     $ajoutReussi = 'Ajout du produit réussi.';
 }
 
+// Récupère les paramètres d'usine et de ligne depuis l'URL
 $idUsine = $_GET['usine'] ?? null;
 $idLigne = $_GET['ligne'] ?? null;
 
@@ -26,6 +29,7 @@ $idLigne = $_GET['ligne'] ?? null;
                         <h2 class="fw-bold"><?= $t['addProduct'] ?></h2>
                         <h3 class="fw-bold">
                             <?php
+                            // Affiche le nom de l'usine et de la ligne
                             $nomUsine = null;
                             foreach ($usines as $usine) {
                                 if ($usine->getId() == $idUsine) {
@@ -50,11 +54,12 @@ $idLigne = $_GET['ligne'] ?? null;
                                 }
                             }
 
-//                            if (!$nomUsine) {
-//                                header("Location: /usine-introuvable");
-//                            } elseif (!$nomLigne) {
-//                                header("Location: /ligne-introuvable");
-//                            }
+                            // Redirection si l'usine ou la ligne est introuvable
+                             if (!$nomUsine) {
+                                 header("Location: /usine-introuvable");
+                             } elseif (!$nomLigne) {
+                                 header("Location: /ligne-introuvable");
+                             }
                             ?>
                         </h3>
                         <p class="text-muted small"><?= $t['infProduct'] ?></p>
@@ -77,10 +82,11 @@ $idLigne = $_GET['ligne'] ?? null;
                         </div>
                     <?php endif; ?>
 
-                    <!-- Formulaire -->
+                    <!-- Formulaire d'ajout de produit -->
                     <form method="POST" action="">
                         <input type="hidden" name="ligne" value="<?php echo htmlspecialchars($idLigne); ?>">
-                        <!-- Sebango -->
+
+                        <!-- Champ Sebango -->
                         <div class="mb-3">
                             <label for="sebango" class="form-label fw-bold">Sebango</label>
                             <div class="input-group">
@@ -92,7 +98,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             <small class="text-muted"><?= $t['sizeSebango'] ?></small>
                         </div>
 
-                        <!-- Article -->
+                        <!-- Champ Article -->
                         <div class="mb-3">
                             <label for="article" class="form-label fw-bold"><?= $t['articleProd'] ?></label>
                             <div class="input-group">
@@ -104,7 +110,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             <small class="text-muted"><?= $t['articleRef'] ?></small>
                         </div>
 
-                        <!-- Désignation -->
+                        <!-- Champ Désignation -->
                         <div class="mb-3">
                             <label for="designation" class="form-label fw-bold"><?= $t['designation'] ?></label>
                             <div class="input-group">
@@ -116,7 +122,7 @@ $idLigne = $_GET['ligne'] ?? null;
                             <small class="text-muted"><?= $t['designationProd'] ?></small>
                         </div>
 
-                        <!-- Boutons -->
+                        <!-- Boutons de navigation et de soumission -->
                         <div class="d-flex justify-content-between pt-3">
                             <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
                                 <i class="bi bi-arrow-left"></i> <?= $t['back'] ?>
@@ -131,4 +137,3 @@ $idLigne = $_GET['ligne'] ?? null;
         </div>
     </div>
 </main>
-
