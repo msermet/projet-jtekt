@@ -62,7 +62,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
     <!-- Bouton pour coller les données -->
     <div class="d-flex justify-content-between mb-3">
         <h4><span class="text-light text-decoration-underline">Importer un tableau depuis SAP :</span>
-            <button class="btn btn-warning" id="pasteTable"><i class="bi bi-clipboard"></i> Coller</button>
+            <button class="btn btn-warning ms-2 mb-1" id="pasteTable"><i class="bi bi-clipboard"></i> Coller</button>
         </h4>
     </div>
 
