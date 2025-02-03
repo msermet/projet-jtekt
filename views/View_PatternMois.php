@@ -84,7 +84,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <tr>
                             <td>
                                 <input type="text" class="form-control sebango-input" name="sebango[]"
-                                       placeholder="ex : A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" required>
+                                       placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" required>
                             </td>
                             <td>
                                 <input type="text" class="form-control reference-input" name="reference[]" placeholder="<?= $t['reference'] ?>" readonly>
@@ -93,7 +93,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                                 <input type="text" class="form-control designation-input" name="designation[]" placeholder="<?= $t['designation'] ?>" readonly>
                             </td>
                             <td>
-                                <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
+                                <input type="number" class="form-control" name="quantite[]" placeholder="<?= $t['example'] ?> 561" required>
                             </td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-danger btn-sm remove-row">
@@ -170,7 +170,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             newRow.innerHTML = `
                 <td>
                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                           placeholder="ex : A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" required>
+                           placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" required>
                 </td>
                 <td>
                     <input type="text" class="form-control reference-input" name="reference[]" placeholder="<?= $t['reference'] ?>" readonly>
@@ -179,7 +179,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <input type="text" class="form-control designation-input" name="designation[]" placeholder="<?= $t['designation'] ?>" readonly>
                 </td>
                 <td>
-                    <input type="number" class="form-control" name="quantite[]" placeholder="ex : 561" required>
+                    <input type="number" class="form-control" name="quantite[]" placeholder="<?= $t['example'] ?> 561" required>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row">

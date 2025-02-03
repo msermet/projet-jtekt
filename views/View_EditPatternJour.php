@@ -250,7 +250,7 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             newRow.innerHTML = `
             <td>
                 <input type="text" class="form-control sebango-input" name="sebango[]"
-                       placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
+                       placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
             </td>
             <td>
                 <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
@@ -259,13 +259,13 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                 <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
             </td>
             <td>
-                <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
+                <input type="number" class="form-control" name="besoin[]" placeholder="<?= $t['example'] ?> 600" required>
             </td>
             <td>
-                <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
+                <input type="number" class="form-control" name="relicat[]" placeholder="<?= $t['example'] ?> 27" required>
             </td>
             <td>
-                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="Need - Relicat" readonly>
+                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="<?= $t['designation'] ?> - <?= $t['relicat'] ?>" readonly>
             </td>
             <td class="text-center">
                 <button type="button" class="btn btn-danger btn-sm remove-row">

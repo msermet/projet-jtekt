@@ -20,7 +20,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 ?>
 
 <div class="container p-5">
-    <h1 class="text-center mb-4 text-light">Add Data to Daily Pattern</h1>
+    <h1 class="text-center mb-4 text-light"><?= $t['addPatternJour'] ?></h1>
     <h3 class="fw-bold text-light">
         <?php
         $nomUsine = null;
@@ -61,8 +61,8 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
     <!-- Bouton pour coller les données -->
     <div class="d-flex justify-content-between mb-3">
-        <h4><span class="text-light text-decoration-underline">Importer un tableau depuis SAP :</span>
-            <button class="btn btn-warning ms-2 mb-1" id="pasteTable"><i class="bi bi-clipboard"></i> Coller</button>
+        <h4><span class="text-light text-decoration-underline"><?= $t['importTable'] ?></span>
+            <button class="btn btn-warning ms-2 mb-1" id="pasteTable"><i class="bi bi-clipboard"></i> <?= $t['paste'] ?></button>
         </h4>
     </div>
 
@@ -91,34 +91,34 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         <thead class="table-dark">
                         <tr>
                             <th>Sebango <span class="text-danger">*</span></th>
-                            <th>Reference</th>
-                            <th>Designation</th>
-                            <th>Need <span class="text-danger">*</span></th>
-                            <th>Relicat <span class="text-danger">*</span></th>
-                            <th>Remaining to Produce</th>
-                            <th>Action</th>
+                            <th><?= $t['reference'] ?></th>
+                            <th><?= $t['designation'] ?></th>
+                            <th><?= $t['need'] ?> <span class="text-danger">*</span></th>
+                            <th><?= $t['relicat'] ?> <span class="text-danger">*</span></th>
+                            <th><?= $t['remainingToProduce'] ?></th>
+                            <th><?= $t['action'] ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td>
                                 <input type="text" class="form-control sebango-input" name="sebango[]"
-                                       placeholder="ex : A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
+                                       placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
                             </td>
                             <td>
-                                <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
+                                <input type="text" class="form-control reference-input" name="reference[]" placeholder="<?= $t['reference'] ?>" readonly>
                             </td>
                             <td>
-                                <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
+                                <input type="text" class="form-control designation-input" name="designation[]" placeholder="<?= $t['designation'] ?>" readonly>
                             </td>
                             <td>
-                                <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
+                                <input type="number" class="form-control" name="besoin[]" placeholder="<?= $t['example'] ?> 600" required>
                             </td>
                             <td>
-                                <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
+                                <input type="number" class="form-control" name="relicat[]" placeholder="<?= $t['example'] ?> 27" required>
                             </td>
                             <td>
-                                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="Need - Relicat" readonly>
+                                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="<?= $t['designation'] ?> - <?= $t['relicat'] ?>" readonly>
                             </td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-danger btn-sm remove-row">
@@ -128,16 +128,16 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         </tr>
                         </tbody>
                     </table>
-                    <p class="text-muted mt-2"><span class="text-danger">*</span> Required fields</p>
+                    <p class="text-muted mt-2"><span class="text-danger">*</span> <?= $t['requiredFields'] ?></p>
                 </div>
                 <div class="d-flex justify-content-between mt-3">
                     <button type="button" class="btn btn-success" id="addRow">
-                        <i class="bi bi-plus"></i> Add a line
+                        <i class="bi bi-plus"></i> <?= $t['addLine'] ?>
                     </button>
-                    <button type="submit" class="btn btn-primary" id="saveButton">Save</button>
+                    <button type="submit" class="btn btn-primary" id="saveButton"><?= $t['save'] ?></button>
                 </div>
                 <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
-                    <i class="bi bi-arrow-left"></i> Back to the previous page
+                    <i class="bi bi-arrow-left"></i> <?= $t['backToPrevious'] ?>
                 </a>
             </form>
         </div>
@@ -149,7 +149,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Aperçu des données à importer</h5>
+                <h5 class="modal-title"><?= $t['previewData'] ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -157,18 +157,18 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <table class="table table-bordered" id="previewTable">
                         <thead class="table-dark">
                         <tr>
-                            <th>Division</th>
-                            <th>Lieu</th>
-                            <th>Ligne Prod</th>
-                            <th>Date</th>
-                            <th>Poste</th>
-                            <th>N° Sebango</th>
-                            <th>Article</th>
-                            <th>Désignation article</th>
-                            <th>Quantité</th>
-                            <th>Unité</th>
-                            <th>Cpt prod</th>
-                            <th>Qté PL</th>
+                            <th><?= $t['division'] ?></th>
+                            <th><?= $t['location'] ?></th>
+                            <th><?= $t['prodLine'] ?></th>
+                            <th><?= $t['date'] ?></th>
+                            <th><?= $t['shift'] ?></th>
+                            <th><?= $t['articleDesignation'] ?></th>
+                            <th><?= $t['articleProd'] ?></th>
+                            <th><?= $t['sebangoNumber'] ?></th>
+                            <th><?= $t['quantity'] ?></th>
+                            <th><?= $t['unit'] ?></th>
+                            <th><?= $t['prodCounter'] ?></th>
+                            <th><?= $t['qtyPL'] ?></th>
                         </tr>
                         </thead>
                         <tbody></tbody>
@@ -176,8 +176,8 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-success" id="importData">Importer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $t['cancel'] ?></button>
+                <button type="button" class="btn btn-success" id="importData"><?= $t['import'] ?></button>
             </div>
         </div>
     </div>
@@ -253,7 +253,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 const rows = text.trim().split(/\r?\n/).map(row => row.split(/\t/));
 
                 if (rows.length < 1 || rows[0].length !== 12) {
-                    alert("Format incorrect. Assurez-vous de copier 12 colonnes.");
+                    alert("<?= $t['errorPasteFormat'] ?>");
                     return;
                 }
 
@@ -271,7 +271,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
                 importModal.show();
             } catch (error) {
-                alert("Impossible d'accéder au presse-papiers.");
+                alert("<?= $t['errorClipboard'] ?>");
             }
         });
 
@@ -301,7 +301,6 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
             importModal.hide();
         });
-
 
 
         // Ajouter une nouvelle ligne
@@ -347,7 +346,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             newRow.innerHTML = `
                 <td>
                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                           placeholder="ex : A350" pattern=".{4}" title="${translations['sebangoValidation']}" required>
+                           placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="${translations['sebangoValidation']}" required>
                 </td>
                 <td>
                     <input type="text" class="form-control reference-input" name="reference[]" placeholder="${translations['reference']}" readonly>
@@ -356,10 +355,10 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <input type="text" class="form-control designation-input" name="designation[]" placeholder="${translations['designation']}" readonly>
                 </td>
                 <td>
-                    <input type="number" class="form-control" name="besoin[]" placeholder="ex : 600" required>
+                    <input type="number" class="form-control" name="besoin[]" placeholder="<?= $t['example'] ?> 600" required>
                 </td>
                 <td>
-                    <input type="number" class="form-control" name="relicat[]" placeholder="ex : 27" required>
+                    <input type="number" class="form-control" name="relicat[]" placeholder="<?= $t['example'] ?> 27" required>
                 </td>
                 <td>
                     <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="${translations['remaining']}" readonly>
