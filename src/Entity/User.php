@@ -14,13 +14,9 @@ class User
     #[ORM\GeneratedValue]
     private int $id;
 
-    // Nom de l'utilisateur
-    #[ORM\Column(name: 'nom_user', type: 'string', length: 50)]
-    private string $nom;
-
-    // Prénom de l'utilisateur
-    #[ORM\Column(name: 'prenom_user', type: 'string', length: 50)]
-    private string $prenom;
+    // Identifiant de l'utilisateur
+    #[ORM\Column(name: 'identifiant_user', type: 'string', length: 50)]
+    private string $identifiant;
 
     // Adresse email de l'utilisateur
     #[ORM\Column(name: 'email_user', type: 'string', length: 100, unique: true)]
@@ -42,28 +38,16 @@ class User
         $this->id = $id;
     }
 
-    // Récupère le nom de l'utilisateur
-    public function getNom(): string
+    // Récupère l'identifiant de l'utilisateur
+    public function getIdentifiant(): string
     {
-        return $this->nom;
+        return $this->identifiant;
     }
 
-    // Définit le nom de l'utilisateur
-    public function setNom(string $nom): void
+    // Définit l'identifiant de l'utilisateur
+    public function setIdentifiant(string $identifiant): void
     {
-        $this->nom = $nom;
-    }
-
-    // Récupère le prénom de l'utilisateur
-    public function getPrenom(): string
-    {
-        return $this->prenom;
-    }
-
-    // Définit le prénom de l'utilisateur
-    public function setPrenom(string $prenom): void
-    {
-        $this->prenom = $prenom;
+        $this->identifiant = $identifiant;
     }
 
     // Récupère l'adresse email de l'utilisateur

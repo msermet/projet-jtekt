@@ -31,7 +31,7 @@ class AuthentificationController extends AbstractController {
         }
 
         // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
-        if (isset($_SESSION['prenom'])) {
+        if (isset($_SESSION['id'])) {
             header("Location: /error");
             exit;
         }
@@ -45,8 +45,7 @@ class AuthentificationController extends AbstractController {
                 // Crée un nouveau compte utilisateur
                 $createAccount = new CreateAccount($this->entityManager);
                 $createAccount->execute(
-                    $_POST['nom'],
-                    $_POST['prenom'],
+                    $_POST['identifiant'],
                     $_POST['email'],
                     $_POST['password'],
                     $_POST['passwordconf'],
@@ -82,7 +81,7 @@ class AuthentificationController extends AbstractController {
         }
 
         // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
-        if (isset($_SESSION['prenom'])) {
+        if (isset($_SESSION['id'])) {
             header("Location: /error");
             exit;
         }
@@ -93,7 +92,7 @@ class AuthentificationController extends AbstractController {
                 // Tente de connecter l'utilisateur
                 $createAccount = new Login($this->entityManager);
                 $createAccount->execute(
-                    $_POST['email'],
+                    $_POST['identifiant'],
                     $_POST['password'],
                 );
 

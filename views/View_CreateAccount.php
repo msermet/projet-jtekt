@@ -35,28 +35,20 @@ if (!isset($t)) {
 
                     <!-- Formulaire -->
                     <form method="POST" action="">
-                        <!-- Prénom -->
+                        <!-- Identifiant -->
                         <div class="mb-3">
-                            <label for="prenom" class="form-label fw-bold"><?= $t['firstName'] ?></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-primary text-white">
-                                    <i class="bi bi-person-fill"></i>
-                                </span>
-                                <!-- Champ de saisie pour le prénom -->
-                                <input type="text" name="prenom" id="prenom" class="form-control" placeholder="<?= $t['firstNamePlaceholder'] ?>" value="<?php echo isset($_POST['prenom']) ? htmlspecialchars($_POST['prenom']) : ''; ?>" required>
-                            </div>
-                        </div>
-
-                        <!-- Nom -->
-                        <div class="mb-3">
-                            <label for="nom" class="form-label fw-bold"><?= $t['lastName'] ?></label>
+                            <label for="identifiant" class="form-label fw-bold"><?= $t['identifiant'] ?></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-secondary text-white">
                                     <i class="bi bi-person-fill"></i>
                                 </span>
-                                <!-- Champ de saisie pour le nom -->
-                                <input type="text" name="nom" id="nom" class="form-control" placeholder="<?= $t['lastNamePlaceholder'] ?>" value="<?php echo isset($_POST['nom']) ? htmlspecialchars($_POST['nom']) : ''; ?>" required>
+                                <!-- Champ de saisie pour l'identifiant -->
+                                <input type="text" name="identifiant" id="identifiant" class="form-control" placeholder="<?= $t['identifiantPlaceholder'] ?>" value="<?php echo isset($_POST['identifiant']) ? htmlspecialchars($_POST['identifiant']) : ''; ?>" required>
                             </div>
+                            <small class="text-muted d-block mt-1">
+                                <!-- Lien pour afficher la convention de nommage pour un identifiant -->
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#identifiantInfo" class="text-decoration-none"><?= $t['conventionNommageID'] ?></a>
+                            </small>
                         </div>
 
                         <!-- Email -->
@@ -103,6 +95,21 @@ if (!isset($t)) {
                                             <li><?= $t['passwordNumber'] ?></li>
                                             <li><?= $t['passwordSpecialChar'] ?></li>
                                         </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal pour la convention de nommage d'un identifiant -->
+                        <div class="modal fade" id="identifiantInfo" tabindex="-1" aria-labelledby="identifiantInfoLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="passwordInfoLabel"><?= $t['conventionNommage'] ?></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= $t['close'] ?>"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><?= $t['conventionNommageTXT'] ?></p>
                                     </div>
                                 </div>
                             </div>

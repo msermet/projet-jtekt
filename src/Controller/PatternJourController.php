@@ -29,7 +29,7 @@ class PatternJourController extends AbstractController
         }
 
         // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-        if (!isset($_SESSION['prenom'])) {
+        if (!isset($_SESSION['id'])) {
             header("Location: /connexion?erreur=connexion");
             exit;
         }
@@ -93,7 +93,7 @@ class PatternJourController extends AbstractController
         }
 
         // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-        if (!isset($_SESSION['prenom'])) {
+        if (!isset($_SESSION['id'])) {
             header("Location: /connexion?erreur=connexion");
             exit;
         }

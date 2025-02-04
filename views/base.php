@@ -79,7 +79,7 @@ $t = $translations[$lang];
 
     <!-- Navigation principale -->
     <nav class="nav-links">
-        <?php if (isset($_SESSION['id_user'])): ?>
+        <?php if (isset($_SESSION['id'])): ?>
             <!-- Lien vers les usines et leurs lignes -->
             <a href="#" class="nav-link usines-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
@@ -117,7 +117,7 @@ $t = $translations[$lang];
 
     <!-- Section d'authentification -->
     <div class="auth-section">
-        <?php if (isset($_SESSION['id_user'])): ?>
+        <?php if (isset($_SESSION['id'])): ?>
             <!-- Lien de déconnexion -->
             <a href="/deconnexion" class="login-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">

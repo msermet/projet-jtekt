@@ -22,24 +22,18 @@ class CreateAccount
 
     /**
      * Exécute la création d'un compte utilisateur
-     * @param string $nom Nom de l'utilisateur
-     * @param string $prenom Prénom de l'utilisateur
+     * @param string $identifiant Identifiant de l'utilisateur
      * @param string $email Adresse email de l'utilisateur
      * @param string $password Mot de passe de l'utilisateur
      * @param string $passwordconf Confirmation du mot de passe
      * @return User L'utilisateur créé
      * @throws \Exception
      */
-    public function execute(string $nom, string $prenom, string $email, string $password, string $passwordconf): User
+    public function execute(string $identifiant, string $email, string $password, string $passwordconf): User
     {
-        // Vérifie que le nom est présent
-        if (!isset($nom)) {
-            throw new \Exception('Le nom est manquant.');
-        }
-
-        // Vérifie que le prénom est présent
-        if (!isset($prenom)) {
-            throw new \Exception('Le prénom est manquant.');
+        // Vérifie que l'identifiant est présent
+        if (!isset($identifiant)) {
+            throw new \Exception("L'identifiant est manquant.");
         }
 
         // Vérifie que l'email est présent
@@ -68,6 +62,12 @@ class CreateAccount
             throw new \Exception("L'email est déjà utilisé.");
         }
 
+        // Vérifie l'unicité de l'identifiant
+        $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['identifiant' => $identifiant]);
+        if ($existingUser !== null) {
+            throw new \Exception("L'identifiant est déjà utilisé.");
+        }
+
         // Vérifie si le mot de passe est sécurisé
         if (strlen($password) < 8) {
             throw new \Exception("Votre mot de passe doit contenir au minimum 8 caractères.");
@@ -86,8 +86,7 @@ class CreateAccount
 
         // Crée une instance de la classe User
         $user = new User();
-        $user->setNom($nom);
-        $user->setPrenom($prenom);
+        $user->setIdentifiant($identifiant);
         $user->setEmail($email);
         $user->setPassword($mdpHash);
 

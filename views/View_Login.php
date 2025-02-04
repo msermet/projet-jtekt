@@ -62,14 +62,14 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
 
                     <!-- Formulaire de connexion -->
                     <form method="POST" action="">
-                        <!-- Champ pour l'email -->
+                        <!-- Champ pour l'identifiant -->
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-bold"><?= $t['email'] ?></label>
+                            <label for="identifiant" class="form-label fw-bold"><?= $t['identifiant'] ?></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-primary text-white">
                                     <i class="bi bi-envelope-fill"></i>
                                 </span>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="ex : dupondjean@gmail.com" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
+                                <input type="text" name="identifiant" id="identifiant" class="form-control" placeholder="<?= $t['identifiantPlaceholder'] ?>" value="<?php echo isset($_POST['identifiant']) ? htmlspecialchars($_POST['identifiant']) : ''; ?>" required>
                             </div>
                         </div>
 
@@ -94,13 +94,6 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                             </button>
                         </div>
                     </form>
-
-                    <!-- Lien pour s'inscrire -->
-                    <div class="pt-4 text-center">
-                        <p class="small text-muted">
-                            <?= $t['noAccount'] ?> <a href="/creationcompte" class="fw-semibold link-primary"><?= $t['signUpHere'] ?></a>.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

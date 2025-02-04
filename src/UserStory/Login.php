@@ -27,19 +27,19 @@ class Login
      * @return User L'utilisateur connecté
      * @throws \Exception
      */
-    public function execute(string $email, string $password): User
+    public function execute(string $identifiant, string $password): User
     {
         // Vérifier que les champs ne sont pas vides
-        if (empty($email) || empty($password)) {
+        if (empty($identifiant) || empty($password)) {
             throw new \Exception('Tous les champs sont obligatoires.');
         }
 
-        // Récupérer l'utilisateur à partir de l'email
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+        // Récupérer l'utilisateur à partir de l'identifiant
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['identifiant' => $identifiant]);
 
         // Vérifier que l'utilisateur existe
         if (!$user) {
-            throw new \Exception("Aucun compte trouvé avec cet e-mail.");
+            throw new \Exception("Aucun compte trouvé avec cet identifiant.");
         }
 
         // Comparer le mot de passe donné avec le mot de passe hashé en base
@@ -49,8 +49,7 @@ class Login
 
         // Connexion réussie : démarrer une session PHP
         session_start();
-        $_SESSION['id_user'] = $user->getId();
-        $_SESSION['prenom'] = $user->getPrenom();
+        $_SESSION['id'] = $user->getId();
 
         // Retourner l'utilisateur connecté
         return $user;
