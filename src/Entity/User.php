@@ -26,6 +26,20 @@ class User
     #[ORM\Column(name: 'password_user', type: 'string')]
     private string $password;
 
+    // Statut administrateur (1 = admin, 0 = utilisateur normal)
+    #[ORM\Column(name: 'admin', type: 'boolean', options: ['default' => false])]
+    private bool $admin = false;
+
+    public function isAdmin(): bool
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(bool $admin): void
+    {
+        $this->admin = $admin;
+    }
+
     // Récupère l'identifiant de l'utilisateur
     public function getId(): int
     {

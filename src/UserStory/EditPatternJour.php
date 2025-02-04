@@ -39,15 +39,14 @@ class EditPatternJour
             throw new \Exception("Les tableaux Sebango, Besoin et Relicat doivent avoir la même taille.");
         }
 
-        // Vérifie que le jour et le mois sont valides
-        if ($mois < 1 || $mois > 12 || $jour < 1 || $jour > 31) {
-            throw new \Exception("Le jour doit être compris entre 1 et 31 et le mois entre 1 et 12.");
-        }
-
         // Vérifie que l'année est valide
         $anneeActuelle = new \DateTime;
         if ($annee < $anneeActuelle->format('Y')) {
             throw new \Exception("L'année doit être supérieure ou égale à l'année actuelle.");
+        }
+
+        if (!checkdate($mois, $jour, $annee)) {
+            throw new \Exception("La date fournie n'est pas valide.");
         }
 
         // Supprime les anciens enregistrements pour la ligne, le jour, le mois et l'année spécifiés

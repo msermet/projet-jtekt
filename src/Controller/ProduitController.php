@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Controller\AbstractController;
 use App\Entity\Ligne;
+use App\Entity\User;
 use App\Entity\Usine;
 use App\UserStory\AjouterProduit;
 use Doctrine\ORM\EntityManager;
@@ -32,8 +33,15 @@ class ProduitController extends AbstractController
             session_start();
         }
 
-        // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-        if (!isset($_SESSION['id'])) {
+        // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
+        if (isset($_SESSION['id'])) {
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
+            $idUser = $_SESSION['id'];
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
+            if (!$userLogged->isAdmin()) {
+                $userLogged = null;
+            }
+        } else {
             header("Location: /connexion?erreur=connexion");
             exit;
         }
@@ -72,7 +80,8 @@ class ProduitController extends AbstractController
         // Rend le template 'View_Produit' avec les données des usines et les éventuelles erreurs
         $this->render('View_Produit', [
             'error' => $error ?? null,
-            'usines' => $usines ?? []
+            'usines' => $usines ?? [],
+            'userLogged' => $userLogged ?? null,
         ]);
     }
 }

@@ -80,15 +80,16 @@ $t = $translations[$lang];
     <!-- Navigation principale -->
     <nav class="nav-links">
         <?php if (isset($_SESSION['id'])): ?>
-            <!-- Lien vers les usines et leurs lignes -->
-            <a href="#" class="nav-link usines-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
-                    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
-                    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
-                </svg>
-                <span class="link-text"><?= $t['plants'] ?> <i class="bi bi-caret-down-fill"></i></span>
-            </a>
-
+            <?php if (isset($usines) && !empty($usines)): ?>
+                <!-- Lien vers les usines et leurs lignes -->
+                <a href="#" class="nav-link usines-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
+                        <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+                        <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+                    </svg>
+                    <span class="link-text"><?= $t['plants'] ?> <i class="bi bi-caret-down-fill"></i></span>
+                </a>
+            <?php endif; ?>
             <!-- Conteneur des usines et lignes -->
             <div class="usines-container hidden">
                 <?php if (!empty($usines)): ?>
@@ -112,6 +113,19 @@ $t = $translations[$lang];
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
+            <!-- Ce menu s'affiche seulement si l'utilisateur est admin -->
+            <?php if (isset($userLogged) && !empty($userLogged)): ?>
+                <?php if ($userLogged->isAdmin()): ?>
+                <!-- Lien pour créer des utilisateurs -->
+                <a href="/creationcompte" class="nav-link usines-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                    </svg>
+                    <span class="link-text"><?= $t['creerCompte'] ?></span>
+                </a>
+                <?php endif; ?>
+            <?php endif; ?>
         <?php endif; ?>
     </nav>
 

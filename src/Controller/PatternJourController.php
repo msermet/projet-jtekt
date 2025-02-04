@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ligne;
 use App\Entity\PatternJour;
 use App\Entity\Produit;
+use App\Entity\User;
 use App\Entity\Usine;
 use App\UserStory\AjouterPatternJour;
 use App\UserStory\EditPatternJour;
@@ -28,8 +29,15 @@ class PatternJourController extends AbstractController
             session_start();
         }
 
-        // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-        if (!isset($_SESSION['id'])) {
+        // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
+        if (isset($_SESSION['id'])) {
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
+            $idUser = $_SESSION['id'];
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
+            if (!$userLogged->isAdmin()) {
+                $userLogged = null;
+            }
+        } else {
             header("Location: /connexion?erreur=connexion");
             exit;
         }
@@ -80,7 +88,8 @@ class PatternJourController extends AbstractController
         $this->render('View_PatternJour', [
             'error' => $error ?? null,
             'usines' => $usines,
-            'produits' => $produits
+            'produits' => $produits,
+            'userLogged' => $userLogged ?? null,
         ]);
     }
 
@@ -92,8 +101,15 @@ class PatternJourController extends AbstractController
             session_start();
         }
 
-        // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-        if (!isset($_SESSION['id'])) {
+        // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
+        if (isset($_SESSION['id'])) {
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
+            $idUser = $_SESSION['id'];
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
+            if (!$userLogged->isAdmin()) {
+                $userLogged = null;
+            }
+        } else {
             header("Location: /connexion?erreur=connexion");
             exit;
         }
@@ -146,7 +162,8 @@ class PatternJourController extends AbstractController
             'error' => $error ?? null,
             'usines' => $usines,
             'produits' => $produits,
-            'patternJour' => $patternJour
+            'patternJour' => $patternJour,
+            'userLogged' => $userLogged ?? null,
         ]);
     }
 }

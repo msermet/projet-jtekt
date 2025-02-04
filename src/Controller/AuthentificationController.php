@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AbstractController;
+use App\Entity\User;
 use App\Entity\Usine;
 use App\UserStory\CreateAccount;
 use App\UserStory\Login;
@@ -32,7 +33,15 @@ class AuthentificationController extends AbstractController {
 
         // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
         if (isset($_SESSION['id'])) {
-            header("Location: /error");
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
+            $idUser = $_SESSION['id'];
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
+            if (!$userLogged->isAdmin()) {
+                header("Location: /error");
+                exit;
+            }
+        } else {
+            header("Location: /connexion?erreur=connexion");
             exit;
         }
 
@@ -49,6 +58,7 @@ class AuthentificationController extends AbstractController {
                     $_POST['email'],
                     $_POST['password'],
                     $_POST['passwordconf'],
+                    $_POST['admin'],
                 );
 
                 // Redirige vers la page de connexion après l'inscription
@@ -66,7 +76,8 @@ class AuthentificationController extends AbstractController {
         // Rend le template 'View_CreateAccount' avec les données des usines et les éventuelles erreurs
         $this->render('View_CreateAccount', [
             'error' => $error ?? null,
-            'usines' => $usines ?? []
+            'usines' => $usines ?? [],
+            'userLogged' => $userLogged ?? null,
         ]);
     }
 

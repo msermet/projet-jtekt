@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Usine;
 use Doctrine\ORM\EntityManager;
 
@@ -23,18 +24,22 @@ class LigneController extends AbstractController
             session_start();
         }
 
-        // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
-        if (!isset($_SESSION['id'])) {
-            header("Location: /connexion?erreur=connexion");
-            exit;
+        // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
+        if (isset($_SESSION['id'])) {
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
+            $idUser = $_SESSION['id'];
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
+            if (!$userLogged->isAdmin()) {
+                $userLogged = null;
+            }
         }
-
         // Récupère toutes les usines depuis la base de données
         $usines = $this->entityManager->getRepository(Usine::class)->findAll();
 
         // Rend le template 'View_Ligne' avec les données des usines
         $this->render('View_Ligne', [
             'usines' => $usines,
+            'userLogged' => $userLogged ?? null,
         ]);
     }
 }

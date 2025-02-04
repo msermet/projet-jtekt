@@ -30,15 +30,15 @@ class AccueilController extends AbstractController
 
         // Vérification si un utilisateur est connecté
         if (isset($_SESSION['id'])) {
-            // Récupère l'identifiant de l'utilisateur connecté pour l'afficher dans la vue
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
             $idUser = $_SESSION['id'];
-            $identifiantUser = $this->entityManager->getRepository(User::class)->find($idUser)->getIdentifiant();
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
         }
 
         // Rend le template 'View_Home' avec les données des usines
         $this->render('View_Home', [
             'usines' => $usines,
-            'identifiantUser' => $identifiantUser ?? null,
+            'userLogged' => $userLogged ?? null,
         ]);
     }
 }

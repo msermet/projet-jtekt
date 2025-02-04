@@ -85,10 +85,7 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                         </div>
 
                         <!-- Boutons de soumission et de retour -->
-                        <div class="d-flex justify-content-between align-items-center pt-3">
-                            <a href="/" class="btn btn-link text-muted">
-                                <i class="bi bi-arrow-left"></i> <?= $t['backToPrevious'] ?>
-                            </a>
+                        <div class="d-flex justify-content-end align-items-center pt-3">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-box-arrow-in-right"></i> <?= $t['login'] ?>
                             </button>

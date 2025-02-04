@@ -29,7 +29,7 @@ class CreateAccount
      * @return User L'utilisateur créé
      * @throws \Exception
      */
-    public function execute(string $identifiant, string $email, string $password, string $passwordconf): User
+    public function execute(string $identifiant, string $email, string $password, string $passwordconf, string $admin): User
     {
         // Vérifie que l'identifiant est présent
         if (!isset($identifiant)) {
@@ -72,9 +72,9 @@ class CreateAccount
         if (strlen($password) < 8) {
             throw new \Exception("Votre mot de passe doit contenir au minimum 8 caractères.");
         }
-        if (!preg_match('#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)#', $password)) {
-            throw new \Exception("Votre mot de passe doit contenir un chiffre, une minuscule, une majuscule et un caractère spécial.");
-        }
+//        if (!preg_match('#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)#', $password)) {
+//            throw new \Exception("Votre mot de passe doit contenir un chiffre, une minuscule, une majuscule et un caractère spécial.");
+//        }
 
         // Hash le mot de passe
         $mdpHash = password_hash($password, PASSWORD_DEFAULT);
@@ -89,6 +89,7 @@ class CreateAccount
         $user->setIdentifiant($identifiant);
         $user->setEmail($email);
         $user->setPassword($mdpHash);
+        $user->setAdmin($admin);
 
         // Persiste l'instance en utilisant l'entityManager
         $this->entityManager->persist($user);

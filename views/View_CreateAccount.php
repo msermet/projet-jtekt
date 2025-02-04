@@ -91,9 +91,6 @@ if (!isset($t)) {
                                         <ul>
                                             <!-- Liste des exigences du mot de passe -->
                                             <li><?= $t['passwordMinLength'] ?></li>
-                                            <li><?= $t['passwordUpperLower'] ?></li>
-                                            <li><?= $t['passwordNumber'] ?></li>
-                                            <li><?= $t['passwordSpecialChar'] ?></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -127,26 +124,21 @@ if (!isset($t)) {
                             </div>
                         </div>
 
+                        <!-- Choix du statut administrateur -->
+                        <div class="mb-3 mt-4 form-check form-switch">
+                            <input type="hidden" name="admin" value="0">
+                            <input type="checkbox" name="admin" id="admin" class="form-check-input" value="1">
+                            <label for="admin" class="form-check-label fw-semibold text-primary"><?= $t['admin'] ?></label>
+                        </div>
+
                         <!-- Boutons -->
-                        <div class="d-flex justify-content-between align-items-center pt-3">
-                            <!-- Lien pour retourner à la page précédente -->
-                            <a href="/connexion" class="btn btn-link text-muted">
-                                <i class="bi bi-arrow-left"></i> <?= $t['backToPrevious'] ?>
-                            </a>
+                        <div class="d-flex justify-content-end align-items-center pt-2">
                             <!-- Bouton pour soumettre le formulaire -->
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-person-plus-fill"></i> <?= $t['signUp'] ?>
                             </button>
                         </div>
                     </form>
-
-                    <!-- Lien de connexion -->
-                    <div class="pt-4 text-center">
-                        <p class="small text-muted">
-                            <!-- Lien pour se connecter si l'utilisateur a déjà un compte -->
-                            <?= $t['alreadyHaveAccount'] ?> <a href="/connexion" class="fw-semibold link-primary"><?= $t['logInHere'] ?></a>.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
