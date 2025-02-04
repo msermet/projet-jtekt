@@ -8,6 +8,12 @@ if (!isset($t)) {
     // Récupère les traductions pour la langue sélectionnée
     $t = $translations[$lang];
 }
+
+// Message de succès d'ajout
+$ajoutReussi = '';
+if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
+    $ajoutReussi = $t['saveSuccess'];
+}
 ?>
 
 <main class="container my-auto">
@@ -29,6 +35,13 @@ if (!isset($t)) {
                             <i class="bi bi-exclamation-triangle-fill"></i>
                             <!-- Affiche le message d'erreur -->
                             <?php echo htmlspecialchars($error); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($ajoutReussi)): ?>
+                        <!-- Affichage des messages de succès -->
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?= htmlspecialchars($ajoutReussi); ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
                         </div>
                     <?php endif; ?>

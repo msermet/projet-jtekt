@@ -61,9 +61,9 @@ class AuthentificationController extends AbstractController {
                     $_POST['admin'],
                 );
 
-                // Redirige vers la page de connexion après l'inscription
-                header('Location: /connexion?inscription=succeed');
+                $this->redirect("/creationcompte?ajout=succeed");
                 exit();
+
             } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
                 // Gère les erreurs de connexion à la base de données
                 $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
