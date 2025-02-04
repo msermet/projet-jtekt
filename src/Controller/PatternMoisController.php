@@ -34,9 +34,6 @@ class PatternMoisController extends AbstractController
             // Récupère l'utilisateur connecté pour l'afficher dans la vue
             $idUser = $_SESSION['id'];
             $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
-            if (!$userLogged->isAdmin()) {
-                $userLogged = null;
-            }
         } else {
             header("Location: /connexion?erreur=connexion");
             exit;
@@ -103,9 +100,6 @@ class PatternMoisController extends AbstractController
             // Récupère l'utilisateur connecté pour l'afficher dans la vue
             $idUser = $_SESSION['id'];
             $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
-            if (!$userLogged->isAdmin()) {
-                $userLogged = null;
-            }
         } else {
             header("Location: /connexion?erreur=connexion");
             exit;

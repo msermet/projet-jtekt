@@ -105,6 +105,21 @@ $t = $translations[$lang];
                                             </a>
                                         </li>
                                     <?php endforeach; ?>
+                                    <!-- Ce menu s'affiche seulement si l'utilisateur est admin -->
+                                    <?php if (isset($userLogged) && !empty($userLogged)): ?>
+                                        <?php if ($userLogged->isAdmin()): ?>
+                                            <li>
+                                                <!-- Lien pour créer des lignes -->
+                                                <a href="/lign?usine=<?= $usine->getId() ?>" class="nav-link usines-toggle">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                                    </svg>
+                                                    <span class="link-text ms-1"><?= $t['creerLigne'] ?></span>
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                 <?php else: ?>
                                     <li><span class="submenu-link">Aucune ligne</span></li>
                                 <?php endif; ?>
@@ -116,14 +131,21 @@ $t = $translations[$lang];
             <!-- Ce menu s'affiche seulement si l'utilisateur est admin -->
             <?php if (isset($userLogged) && !empty($userLogged)): ?>
                 <?php if ($userLogged->isAdmin()): ?>
-                <!-- Lien pour créer des utilisateurs -->
-                <a href="/creationcompte" class="nav-link usines-toggle">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                    </svg>
-                    <span class="link-text"><?= $t['creerCompte'] ?></span>
-                </a>
+                    <!-- Lien pour créer des utilisateurs -->
+                    <a href="/creationcompte" class="nav-link usines-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                            <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                        </svg>
+                        <span class="link-text"><?= $t['creerCompte'] ?></span>
+                    </a>
+                    <!-- Lien pour éditer des utilisateurs -->
+                    <a href="/creationcompte" class="nav-link usines-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+                        </svg>
+                        <span class="link-text"><?= $t['editUsers'] ?></span>
+                    </a>
                 <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>

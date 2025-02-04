@@ -119,6 +119,8 @@ return [
         'conventionNommageTXT' => 'Nom en majuscules + première lettre du prénom en majuscules = NOMP',
         'creerCompte' => 'Créer un compte',
         'admin' => 'Administrateur',
+        'creerLigne' => 'Créer une ligne',
+        'editUsers' => 'Éditer les utilisateurs',
     ],
     'en' => [
         'title' => 'Production - JTEKT',

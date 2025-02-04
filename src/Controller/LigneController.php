@@ -32,7 +32,12 @@ class LigneController extends AbstractController
             if (!$userLogged->isAdmin()) {
                 $userLogged = null;
             }
+        }  else {
+            header("Location: /connexion?erreur=connexion");
+            exit;
         }
+
+
         // Récupère toutes les usines depuis la base de données
         $usines = $this->entityManager->getRepository(Usine::class)->findAll();
 
