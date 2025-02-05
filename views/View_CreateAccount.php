@@ -49,7 +49,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <!-- Formulaire -->
                     <form method="POST" action="">
                         <!-- Identifiant -->
-                        <div class="mb-3">
+                        <div class="mb-1">
                             <label for="identifiant" class="form-label fw-bold"><?= $t['identifiant'] ?></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-secondary text-white">
@@ -65,7 +65,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         </div>
 
                         <!-- Email -->
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label for="email" class="form-label fw-bold"><?= $t['email'] ?></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-info text-white">
@@ -77,7 +77,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         </div>
 
                         <!-- Mot de passe -->
-                        <div class="mb-3">
+                        <div class="mb-1">
                             <label for="password" class="form-label fw-bold"><?= $t['password'] ?></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-danger text-white">

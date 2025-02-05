@@ -18,46 +18,62 @@ if (!isset($t)) {
 
 <main class="container py-5">
     <div class="text-center mb-5">
-        <!-- Titre principal de la page -->
-        <h1 class="display-4 fw-bold text-light mb-3"><?= $t['lineManagement'] ?></h1>
-        <h2 class="fw-semibold text-secondary">
-            <?php
-            // Affiche le nom de l'usine sélectionnée
-            $nomUsine = null;
-            foreach ($usines as $usine) {
-                if ($usine->getId() == $idUsine) {
-                    $nomUsine = $usine->getNom();
-                    echo htmlspecialchars($nomUsine);
-                    break;
-                }
-            }
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <!-- Titre principal de la page -->
+                <h1 class="display-4 fw-bold text-light mb-3"><?= $t['lineManagement'] ?></h1>
+                <h2 class="fw-semibold text-secondary">
+                    <?php
+                    // Affiche le nom de l'usine sélectionnée
+                    $nomUsine = null;
+                    foreach ($usines as $usine) {
+                        if ($usine->getId() == $idUsine) {
+                            $nomUsine = $usine->getNom();
+                            echo htmlspecialchars($nomUsine);
+                            break;
+                        }
+                    }
 
-            // Affiche le nom de la ligne sélectionnée
-            $nomLigne = null;
-            if ($nomUsine) {
-                foreach ($usines as $usine) {
-                    if ($usine->getId() == $idUsine) {
-                        foreach ($usine->getLignes() as $ligne) {
-                            if ($ligne->getId() == $idLigne) {
-                                $nomLigne = $ligne->getNom();
-                                echo " - " . htmlspecialchars($nomLigne);
-                                break 2;
+                    // Affiche le nom de la ligne sélectionnée
+                    $nomLigne = null;
+                    if ($nomUsine) {
+                        foreach ($usines as $usine) {
+                            if ($usine->getId() == $idUsine) {
+                                foreach ($usine->getLignes() as $ligne) {
+                                    if ($ligne->getId() == $idLigne) {
+                                        $nomLigne = $ligne->getNom();
+                                        echo " - " . htmlspecialchars($nomLigne);
+                                        break 2;
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
 
-            // Redirige si l'usine ou la ligne n'est pas trouvée
-            if (!$nomUsine) {
-                header("Location: /usine-introuvable");
-                exit;
-            } elseif (!$nomLigne) {
-                header("Location: /ligne-introuvable");
-                exit;
-            }
-            ?>
-        </h2>
+                    // Redirige si l'usine ou la ligne n'est pas trouvée
+                    if (!$nomUsine) {
+                        header("Location: /usine-introuvable");
+                        exit;
+                    } elseif (!$nomLigne) {
+                        header("Location: /ligne-introuvable");
+                        exit;
+                    }
+                    ?>
+                </h2>
+            </div>
+            <div class="col-3">
+                <!-- Ce menu s'affiche seulement si l'utilisateur est admin -->
+                <?php if (isset($userLogged) && !empty($userLogged)): ?>
+                    <?php if ($userLogged->isAdmin()): ?>
+                        <!-- Bouton de suppression -->
+                        <a href="/ligne/supprimer?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> <?= $t['delete'] ?>
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <div class="row gy-4">

@@ -5,10 +5,11 @@ use App\Controller\AbstractController;
 use App\Entity\User;
 use App\Entity\Usine;
 use App\UserStory\CreateAccount;
+use App\UserStory\EditUser;
 use App\UserStory\Login;
 use Doctrine\ORM\EntityManager;
 
-class AuthentificationController extends AbstractController {
+class UserController extends AbstractController {
     // Propriété pour stocker l'instance de l'EntityManager
     private EntityManager $entityManager;
 
@@ -142,4 +143,66 @@ class AuthentificationController extends AbstractController {
             'usines' => $usines ?? []
         ]);
     }
+
+    /**
+     * Méthode pour gérer la modification de compte
+     */
+    public function editer(): void
+    {
+        // Démarre une session si aucune session n'est déjà démarrée
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Redirige vers une page d'erreur si l'utilisateur n'est pas connecté
+        if (isset($_SESSION['id'])) {
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
+            $idUser = $_SESSION['id'];
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
+            if (!$userLogged->isAdmin()) {
+                header("Location: /error");
+                exit;
+            }
+        } else {
+            header("Location: /connexion?erreur=connexion");
+            exit;
+        }
+
+        // Récupère toutes les usines depuis la base de données
+        $usines = $this->entityManager->getRepository(Usine::class)->findAll();
+
+        // Récupère tous les utilisateurs depuis la base de données
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+
+        // Vérifie si la requête est de type POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                // Récupère les données des utilisateurs
+                $idArray = $_POST['id'] ?? [];
+                $adminArray = array_map(fn($id) => isset($_POST['admin'][$id]) && $_POST['admin'][$id] == '1', $idArray);
+
+                // Crée un nouveau compte utilisateur
+                $editUser = new EditUser($this->entityManager);
+                $editUser->execute($idArray, $adminArray);
+
+                $this->redirect("/editusers?ajout=succeed");
+                exit();
+
+            } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+                // Gère les erreurs de connexion à la base de données
+                $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
+            } catch (\Exception $e) {
+                // Gère les autres exceptions
+                $error = $e->getMessage();
+            }
+        }
+
+        $this->render('View_EditUser', [
+            'error' => $error ?? null,
+            'usines' => $usines ?? [],
+            'userLogged' => $userLogged ?? null,
+            'users' => $users ?? null,
+        ]);
+    }
+
 }

@@ -107,4 +107,62 @@ class LigneController extends AbstractController
             'userLogged' => $userLogged ?? null,
         ]);
     }
+
+    public function supprimer(): void
+    {
+        // Démarre une session si aucune session n'est déjà démarrée
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Redirige vers une page d'erreur si l'utilisateur est déjà connecté
+        if (isset($_SESSION['id'])) {
+            // Récupère l'utilisateur connecté pour l'afficher dans la vue
+            $idUser = $_SESSION['id'];
+            $userLogged = $this->entityManager->getRepository(User::class)->find($idUser);
+            if (!$userLogged->isAdmin()) {
+                header("Location: /error");
+                exit;
+            }
+        } else {
+            header("Location: /connexion?erreur=connexion");
+            exit;
+        }
+
+        // Récupère toutes les usines depuis la base de données
+        $usines = $this->entityManager->getRepository(Usine::class)->findAll();
+
+        // Vérifie si la requête est de type POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $idUsine = $_POST['usine'];
+            $idLigne = $_POST['ligne'];
+            $confirm = $_POST['confirm'];
+
+            if ($confirm === 'yes') {
+                // Supprime la ligne de la base de données
+                $usine = $this->entityManager->getRepository(Usine::class)->find($idUsine);
+                $ligne = $usine->getLignes()->filter(function($ligne) use ($idLigne) {
+                    return $ligne->getId() == $idLigne;
+                })->first();
+
+                if ($ligne) {
+                    $this->entityManager->remove($ligne);
+                    $this->entityManager->flush();
+                    $this->redirect("/?deleteline=succeed");
+                    exit;
+                } else {
+                    $error = "Ligne introuvable.";
+                }
+            } else {
+                $this->redirect("/ligne?usine=$idUsine&ligne=$idLigne");
+                exit;
+            }
+        }
+
+        $this->render('View_DeleteLine', [
+            'error' => $error ?? null,
+            'usines' => $usines ?? [],
+            'userLogged' => $userLogged ?? null,
+        ]);
+    }
 }
