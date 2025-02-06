@@ -11,13 +11,13 @@ if (isset($_GET['deleteline']) && $_GET['deleteline'] === 'succeed') {
 
 // Définition des langues disponibles avec leur nom et drapeau respectifs
 $languages = [
-    'fr' => ['name' => 'Français', 'flag' => 'assets/img/fr.svg'],
-    'en' => ['name' => 'English', 'flag' => 'assets/img/en.svg'],
-    'es' => ['name' => 'Español', 'flag' => 'assets/img/es.svg'],
-    'cs' => ['name' => 'Čeština', 'flag' => 'assets/img/cs.svg'],
-    'ja' => ['name' => '日本語', 'flag' => 'assets/img/ja.svg'],
-    'de' => ['name' => 'Deutsch', 'flag' => 'assets/img/de.svg'],
-    'ro' => ['name' => 'Română', 'flag' => 'assets/img/ro.svg']
+    'fr' => ['name' => 'Français', 'flag' => '/assets/img/fr.svg'],
+    'en' => ['name' => 'English', 'flag' => '/assets/img/en.svg'],
+    'es' => ['name' => 'Español', 'flag' => '/assets/img/es.svg'],
+    'cs' => ['name' => 'Čeština', 'flag' => '/assets/img/cs.svg'],
+    'ja' => ['name' => '日本語', 'flag' => '/assets/img/ja.svg'],
+    'de' => ['name' => 'Deutsch', 'flag' => '/assets/img/de.svg'],
+    'ro' => ['name' => 'Română', 'flag' => '/assets/img/ro.svg']
 ];
 
 // Gestion du changement de langue
