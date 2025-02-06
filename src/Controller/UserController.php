@@ -7,6 +7,8 @@ use App\Entity\Usine;
 use App\UserStory\CreateAccount;
 use App\UserStory\EditUser;
 use App\UserStory\Login;
+use App\UserStory\MdpOublie;
+use App\UserStory\ReinitialiserMdp;
 use Doctrine\ORM\EntityManager;
 
 class UserController extends AbstractController {
@@ -20,6 +22,17 @@ class UserController extends AbstractController {
      */
     public function __construct(EntityManager $entityManager) {
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * Réinitialise le champ mdpOublie pour tous les utilisateurs
+     */
+    private function resetMdpOublie(): void {
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        foreach ($users as $user) {
+            $user->setMdpOublie(false);
+        }
+        $this->entityManager->flush();
     }
 
     /**
@@ -87,6 +100,8 @@ class UserController extends AbstractController {
      */
     public function connexion(): void
     {
+        $this->resetMdpOublie();
+
         // Démarre une session si aucune session n'est déjà démarrée
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -132,6 +147,7 @@ class UserController extends AbstractController {
      */
     public function deconnexion(): void
     {
+
         // Démarre une session
         session_start();
         // Vide le tableau $_SESSION
@@ -149,6 +165,7 @@ class UserController extends AbstractController {
      */
     public function editer(): void
     {
+
         // Démarre une session si aucune session n'est déjà démarrée
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -205,4 +222,102 @@ class UserController extends AbstractController {
         ]);
     }
 
+    public function oublieMdp(): void
+    {
+
+        // Démarre une session si aucune session n'est déjà démarrée
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Redirige vers une page d'erreur si l'utilisateur n'est pas connecté
+        if (isset($_SESSION['id'])) {
+            header("Location: /error");
+            exit;
+        }
+
+        $this->resetMdpOublie();
+
+        // Vérifie si la requête est de type POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                // Tente de connecter l'utilisateur
+                $mdpOublie = new MdpOublie($this->entityManager);
+                $mdpOublie->execute(
+                    $_POST['identifiant'],
+                    $_POST['email'],
+                );
+
+                $identifiant = $_POST['identifiant'];
+                $email = $_POST['email'];
+
+                $user = $this->entityManager->getRepository(User::class)->findOneBy([
+                    'identifiant' => $identifiant,
+                    'email' => $email,
+                ]);
+
+                // Redirige vers la page d'accueil après la connexion
+                header('Location: /reinitialisationMdp?id=' . $user->getId());
+                exit();
+            } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+                // Gère les erreurs de connexion à la base de données
+                $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
+            } catch (\Exception $e) {
+                // Gère les autres exceptions
+                $error = $e->getMessage();
+            }
+        }
+
+        $this->render('View_MdpOublie', [
+            'error' => $error ?? null,
+        ]);
+    }
+
+    public function reinitialiserMdp(): void
+    {
+        // Démarre une session si aucune session n'est déjà démarrée
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Redirige vers une page d'erreur si l'utilisateur n'est pas connecté
+        if (isset($_SESSION['id'])) {
+            header("Location: /error");
+            exit;
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($_GET['id']);
+
+        if ($user->isMdpOublie() === false) {
+            header("Location: /mdpOublie");
+            exit;
+        }
+
+        // Vérifie si la requête est de type POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                // Tente de connecter l'utilisateur
+                $mdpOublie = new ReinitialiserMdp($this->entityManager);
+                $mdpOublie->execute(
+                    $_POST['id'],
+                    $_POST['newPassword'],
+                    $_POST['confirmPassword'],
+                );
+
+                // Redirige vers la page d'accueil après la connexion
+                header('Location: /connexion?reset=succeed');
+                exit();
+            } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+                // Gère les erreurs de connexion à la base de données
+                $error = "Le serveur de base de données est actuellement indisponible. Veuillez réessayer plus tard.";
+            } catch (\Exception $e) {
+                // Gère les autres exceptions
+                $error = $e->getMessage();
+            }
+        }
+
+        $this->render('View_ReinitialisationMdp', [
+            'error' => $error ?? null,
+        ]);
+    }
 }

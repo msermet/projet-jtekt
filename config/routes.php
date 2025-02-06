@@ -15,4 +15,6 @@ return [
     '/creationligne' => ['LigneController', 'creer'],
     '/editusers' => ['UserController', 'editer'],
     '/ligne/supprimer' => ['LigneController', 'supprimer'],
+    '/mdpOublie' => ['UserController', 'oublieMdp'],
+    '/reinitialisationMdp' => ['UserController', 'reinitialiserMdp'],
 ];

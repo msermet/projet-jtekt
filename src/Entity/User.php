@@ -30,6 +30,22 @@ class User
     #[ORM\Column(name: 'admin', type: 'boolean', options: ['default' => false])]
     private bool $admin = false;
 
+    // Propriété pour le champ mdpOublie
+    #[ORM\Column(name: 'mdpOublie', type: 'boolean', options: ['default' => false])]
+    private bool $mdpOublie = false;
+
+    // Getter pour mdpOublie
+    public function isMdpOublie(): bool
+    {
+        return $this->mdpOublie;
+    }
+
+    // Setter pour mdpOublie
+    public function setMdpOublie(bool $mdpOublie): void
+    {
+        $this->mdpOublie = $mdpOublie;
+    }
+
     public function isAdmin(): bool
     {
         return $this->admin;

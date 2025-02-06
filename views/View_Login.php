@@ -1,4 +1,5 @@
 <?php
+
 // Vérifie si la variable de traduction $t n'est pas définie
 if (!isset($t)) {
     // Inclut le fichier de traduction
@@ -21,6 +22,12 @@ $connexionMessage = '';
 // Vérifie s'il y a une erreur de connexion et définit le message approprié
 if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
     $connexionMessage = $t['mustBeLoggedIn'];
+}
+
+// Message de succès de réinitialisation
+$resetSuccess = '';
+if (isset($_GET['reset']) && $_GET['reset'] === 'succeed') {
+    $resetSuccess = $t['resetSuccess'];
 }
 ?>
 
@@ -60,6 +67,14 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                         </div>
                     <?php endif; ?>
 
+                    <?php if (!empty($resetSuccess)): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <?php echo htmlspecialchars($resetSuccess); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- Formulaire de connexion -->
                     <form method="POST" action="">
                         <!-- Champ pour l'identifiant -->
@@ -85,7 +100,8 @@ if (isset($_GET['erreur']) && $_GET['erreur'] === 'connexion') {
                         </div>
 
                         <!-- Boutons de soumission et de retour -->
-                        <div class="d-flex justify-content-end align-items-center pt-3">
+                        <div class="d-flex justify-content-between align-items-center pt-3">
+                            <a href="/mdpOublie" class="text-muted"><?= $t['forgotPassword'] ?></a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-box-arrow-in-right"></i> <?= $t['login'] ?>
                             </button>
