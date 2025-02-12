@@ -177,7 +177,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Récupère les produits sous forme d'array JSON (avec les informations nécessaires)
         const produits = <?php echo json_encode(array_map(function ($produit) {
             return [
                 'sebango' => $produit->getSebango(),
@@ -202,7 +201,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             needGreaterThanRelicat: "<?= $t['needGreaterThanRelicat'] ?>",
         };
 
-        // Initialisation automatique des champs Référence et Désignation pour chaque ligne existante
         tableBody.querySelectorAll('.sebango-input').forEach(input => {
             const row = input.closest('tr');
             const referenceInput = row.querySelector('.reference-input');
@@ -221,14 +219,12 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             }
         });
 
-        // Suppression d'une ligne
         tableBody.addEventListener('click', (event) => {
             if (event.target.closest('.remove-row')) {
                 event.target.closest('tr').remove();
             }
         });
 
-        // Ajout de la fonctionnalité de tri avec SortableJS
         new Sortable(tableBody, {
             animation: 150,
             handle: '.handle',
@@ -241,7 +237,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             }
         });
 
-        // Ajouter une nouvelle ligne
         const addRowButton = document.getElementById('addRow');
         addRowButton.addEventListener('click', () => {
             const lastRow = tableBody.querySelector('tr:last-child');
@@ -311,10 +306,10 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             tableBody.appendChild(newRow);
         });
 
-        // Mise à jour automatique des champs Référence et Désignation quand on saisit un Sebango
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
+                event.target.value = sebangoValue;
                 const row = event.target.closest('tr');
                 const referenceInput = row.querySelector('.reference-input');
                 const designationInput = row.querySelector('.designation-input');
@@ -332,7 +327,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                 }
             }
 
-            // Calcul du reste à produire lors de la modification des champs besoin ou reliquat
             if (event.target.name === 'besoin[]' || event.target.name === 'relicat[]') {
                 const row = event.target.closest('tr');
                 const besoinInput = row.querySelector('input[name="besoin[]"]');
@@ -351,7 +345,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             }
         });
 
-        // Validation avant enregistrement
         saveButton.addEventListener('click', (event) => {
             const rows = tableBody.querySelectorAll('tr');
             let valid = true;
@@ -359,19 +352,29 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             rows.forEach(row => {
                 const referenceInput = row.querySelector('.reference-input');
                 const designationInput = row.querySelector('.designation-input');
-                const quantiteInput = row.querySelector('input[name="besoin[]"]');
+                const besoinInput = row.querySelector('input[name="besoin[]"]');
+                const relicatInput = row.querySelector('input[name="relicat[]"]');
+                const resteAProduireInput = row.querySelector('.resteAProduire-input');
 
                 if (
                     referenceInput.value.trim() === '' ||
                     designationInput.value.trim() === '' ||
-                    quantiteInput.value.trim() === '' ||
-                    parseInt(quantiteInput.value, 10) <= 0
+                    besoinInput.value.trim() === '' ||
+                    relicatInput.value.trim() === '' ||
+                    resteAProduireInput.value.trim() === '' ||
+                    parseInt(besoinInput.value, 10) <= 0 ||
+                    parseInt(relicatInput.value, 10) < 0
                 ) {
                     valid = false;
+
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
                         alert(translations.invalidSebango);
-                    } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert(translations.quantityPositive);
+                    } else if (parseInt(besoinInput.value, 10) <= 0) {
+                        alert(translations.invalidNeed);
+                    } else if (parseInt(relicatInput.value, 10) < 0) {
+                        alert(translations.invalidRelicat);
+                    } else if (!resteAProduireInput.value.trim()) {
+                        alert(translations.remainingNotEmpty);
                     } else {
                         alert(translations.allFieldsRequired);
                     }
