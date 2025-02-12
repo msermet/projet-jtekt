@@ -407,6 +407,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
+                event.target.value = sebangoValue;
                 const referenceInput = event.target.closest('tr').querySelector('.reference-input');
                 const designationInput = event.target.closest('tr').querySelector('.designation-input');
 

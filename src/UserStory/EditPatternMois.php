@@ -73,8 +73,11 @@ class EditPatternMois
                 throw new \Exception("La Quantité à l'index $index doit être un nombre strictement positif.");
             }
 
-            // Recherche le produit existant par son code sebango
-            $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy(['sebango' => $sebango]);
+            // Recherche le produit existant par son code sebango et sa ligne
+            $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy([
+                'sebango' => $sebango,
+                'ligne'   => $ligne,
+            ]);
 
             // Vérifie que le produit existe
             if ($existingProduit === null) {
@@ -89,7 +92,6 @@ class EditPatternMois
             // Crée un nouveau pattern mois
             $patternMois = new PatternMois();
             $patternMois->setMois($mois);
-            $patternMois->setSebango($sebango);
             $patternMois->setQuantite($quantite);
             $patternMois->setAnnee($annee);
             $patternMois->setProduit($existingProduit);

@@ -77,10 +77,17 @@ class AjouterProduit
             throw new \Exception("La ligne n'existe pas, veuillez en choisir une autre.");
         }
 
-        // Vérifie que le code sebango n'existe pas déjà
-        $existingSebango = $this->entityManager->getRepository(Produit::class)->findOneBy(['sebango' => $sebango]);
+        // Recherche le produit existant par son code sebango et sa ligne
+        $existingSebango = $this->entityManager->getRepository(Produit::class)->findOneBy([
+            'sebango' => $sebango,
+            'ligne'   => $ligne,
+        ]);
+
+
+
+
         if ($existingSebango !== null) {
-            throw new \Exception("Le sebango existe déjà, veuillez en choisir un autre.");
+            throw new \Exception("Le sebango existe déjà pour cette ligne, veuillez en choisir un autre.");
         }
 
         // Crée un nouveau produit

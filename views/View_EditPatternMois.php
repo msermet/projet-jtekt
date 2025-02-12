@@ -1,40 +1,35 @@
 <?php
 
-// Récupère les paramètres de l'URL ou définit à null s'ils ne sont pas présents
 $idUsine = $_GET['usine'] ?? null;
 $idLigne = $_GET['ligne'] ?? null;
 $annee = $_GET['annee'] ?? null;
 $mois = $_GET['mois'] ?? null;
 
-// Vérifie si la variable $t n'est pas définie
 if (!isset($t)) {
-    // Inclut le fichier de traduction
     $translations = include 'lang.php';
-    // Définit la langue par défaut à 'fr' si elle n'est pas définie dans la session
     $lang = $_SESSION['lang'] ?? 'fr';
-    // Récupère les traductions pour la langue sélectionnée
     $t = $translations[$lang];
 }
 
-// Message de succès pour l'ajout
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
     $ajoutReussi = $t['saveSuccess'];
 }
 
-// Filtrer les enregistrements de PatternMois en fonction des critères
 $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne, $annee, $mois) {
-    return $pattern->getAnnee() == $annee && $pattern->getMois() == $mois && $pattern->getProduit()->getLigne() == $idLigne;
+    $prod = $pattern->getProduit();
+    return ((int)$pattern->getAnnee() === (int)$annee)
+        && ((int)$pattern->getMois() === (int)$mois)
+        && ($prod !== null && (int)$prod->getLigne() === (int)$idLigne);
 });
+
 
 ?>
 
 <div class="container p-5">
-    <!-- Titre principal de la page -->
     <h1 class="text-center mb-4 text-light"><?= $t['editPatternMois'] ?></h1>
     <h3 class="fw-bold text-light">
         <?php
-        // Affiche le nom de l'usine sélectionnée
         $nomUsine = null;
         foreach ($usines as $usine) {
             if ($usine->getId() == $idUsine) {
@@ -44,7 +39,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             }
         }
 
-        // Affiche le nom de la ligne sélectionnée
         $nomLigne = null;
         if ($nomUsine) {
             foreach ($usines as $usine) {
@@ -60,7 +54,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             }
         }
 
-        // Redirige si l'usine ou la ligne n'est pas trouvée
         if (!$nomUsine) {
             header("Location: /usine-introuvable");
         } elseif (!$nomLigne) {
@@ -68,32 +61,26 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
         }
         ?>
     </h3>
-    <!-- Affiche la date sélectionnée -->
-    <h4 class="text-light pb-2 fst-italic"><?php echo $mois . "/" . $annee; ?></h4>
-    <!-- Affiche un message d'erreur s'il y en a un -->
+    <h4 class="text-light pb-2 fst-italic"><?= $mois . "/" . $annee; ?></h4>
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?php echo htmlspecialchars($error); ?>
+            <?= htmlspecialchars($error); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
         </div>
     <?php endif; ?>
-    <!-- Affiche un message de succès si l'ajout a réussi -->
     <?php if (!empty($ajoutReussi)): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?php echo htmlspecialchars($ajoutReussi); ?>
+            <?= htmlspecialchars($ajoutReussi); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= $t['close'] ?>"></button>
         </div>
     <?php endif; ?>
     <div class="card shadow">
         <div class="card-body">
-            <!-- Formulaire pour éditer les patterns du mois -->
             <form method="POST" action="">
-                <!-- Champs cachés pour conserver les informations de la ligne et de la date -->
                 <input type="hidden" name="ligne" value="<?= htmlspecialchars($idLigne); ?>">
                 <input type="hidden" name="annee" value="<?= htmlspecialchars($annee); ?>">
                 <input type="hidden" name="mois" value="<?= htmlspecialchars($mois); ?>">
                 <div class="table-responsive">
-                    <!-- Tableau pour afficher et éditer les patterns -->
                     <table class="table table-bordered align-middle" id="patternTable">
                         <thead class="table-dark">
                         <tr>
@@ -106,56 +93,45 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                         </tr>
                         </thead>
                         <tbody id="sortableTable">
-                        <!-- Boucle pour afficher chaque pattern filtré -->
                         <?php foreach ($filteredPatterns as $pattern): ?>
                             <tr>
                                 <td>
-                                    <!-- Champ de saisie pour le sebango, en lecture seule -->
                                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                                           value="<?= htmlspecialchars($pattern->getSebango()); ?>" readonly>
+                                           value="<?= htmlspecialchars($pattern->getProduit()->getSebango()); ?>" required>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour la référence, en lecture seule -->
                                     <input type="text" class="form-control reference-input" name="reference[]"
-                                           readonly>
+                                           value="<?= htmlspecialchars($pattern->getProduit()->getArticle()); ?>" readonly>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour la désignation, en lecture seule -->
                                     <input type="text" class="form-control designation-input" name="designation[]"
-                                           readonly>
+                                           value="<?= htmlspecialchars($pattern->getProduit()->getDesignation()); ?>" readonly>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour la quantité, modifiable -->
                                     <input type="number" class="form-control" name="quantite[]"
                                            value="<?= htmlspecialchars($pattern->getQuantite()); ?>" required>
                                 </td>
                                 <td class="text-center">
-                                    <!-- Bouton pour supprimer la ligne -->
                                     <button type="button" class="btn btn-danger btn-sm remove-row">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
                                 <td class="text-center handle">
-                                    <!-- Icône pour déplacer la ligne -->
                                     <i class="bi bi-arrows-move"></i>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <!-- Indication des champs obligatoires -->
                     <p class="text-muted mt-2"><span class="text-danger">*</span> <?= $t['requiredFields'] ?></p>
                 </div>
 
                 <div class="d-flex justify-content-between mt-3">
-                    <!-- Bouton pour ajouter une nouvelle ligne -->
                     <button type="button" class="btn btn-success" id="addRow">
                         <i class="bi bi-plus"></i> <?= $t['addLine'] ?>
                     </button>
-                    <!-- Bouton pour enregistrer les modifications -->
                     <button type="submit" class="btn btn-primary" id="saveButton"><?= $t['save'] ?></button>
                 </div>
-                <!-- Lien pour retourner à la page précédente -->
                 <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
                     <i class="bi bi-arrow-left"></i> <?= $t['back'] ?>
                 </a>
@@ -164,26 +140,22 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
     </div>
 </div>
 
-<!-- Inclusion de la bibliothèque SortableJS pour le tri des lignes -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Récupère les produits et les convertit en JSON pour utilisation dans le script
         const produits = <?php echo json_encode(array_map(function ($produit) {
             return [
                 'sebango' => $produit->getSebango(),
                 'reference' => $produit->getArticle(),
                 'designation' => $produit->getDesignation(),
-                'ligne' => $produit->getLigne(), // Ajout du champ ligne
+                'ligne' => $produit->getLigne(),
             ];
         }, $produits)); ?>;
 
-        // Récupère l'ID de la ligne
-        const idLigne = <?php echo json_encode($idLigne); ?>; // Ligne récupérée via le formulaire
+        const idLigne = <?php echo json_encode($idLigne); ?>;
         const saveButton = document.getElementById('saveButton');
         const tableBody = document.querySelector('#sortableTable');
 
-        // Traductions des messages d'erreur
         const translations = {
             invalidSebango: "<?= $t['invalidSebango'] ?>",
             invalidQuantity: "<?= $t['invalidQuantity'] ?>",
@@ -192,13 +164,15 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             addRowError: "<?= $t['addRowError'] ?>",
         };
 
-        // Automatiser les champs Référence et Désignation
         tableBody.querySelectorAll('.sebango-input').forEach(input => {
             const row = input.closest('tr');
             const referenceInput = row.querySelector('.reference-input');
             const designationInput = row.querySelector('.designation-input');
 
-            const produit = produits.find(p => p.sebango.toUpperCase() === input.value.toUpperCase());
+            // On filtre non seulement sur le code sebango mais aussi sur la ligne (idLigne)
+            const produit = produits.find(p =>
+                p.sebango.toUpperCase() === input.value.toUpperCase() && p.ligne == idLigne
+            );
 
             if (produit) {
                 referenceInput.value = produit.reference;
@@ -209,14 +183,13 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             }
         });
 
-        // Supprimer une ligne
+
         tableBody.addEventListener('click', (event) => {
             if (event.target.closest('.remove-row')) {
                 event.target.closest('tr').remove();
             }
         });
 
-        // Ajouter la fonctionnalité de tri avec SortableJS
         new Sortable(tableBody, {
             animation: 150,
             handle: '.handle',
@@ -229,7 +202,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             }
         });
 
-        // Ajouter une nouvelle ligne
         const addRowButton = document.getElementById('addRow');
         addRowButton.addEventListener('click', () => {
             const lastRow = tableBody.querySelector('tr:last-child');
@@ -259,7 +231,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                 }
             }
 
-            // Ajouter une nouvelle ligne
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
             <td>
@@ -287,7 +258,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             tableBody.appendChild(newRow);
         });
 
-        // Gestion automatique des colonnes Référence et Désignation
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
@@ -295,7 +265,7 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
                 const designationInput = event.target.closest('tr').querySelector('.designation-input');
 
                 const produit = produits.find(p =>
-                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne // Vérifie aussi la ligne
+                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne
                 );
 
                 if (produit) {
@@ -308,7 +278,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             }
         });
 
-        // Validation avant d'enregistrer
         saveButton.addEventListener('click', (event) => {
             const rows = tableBody.querySelectorAll('tr');
             let valid = true;
@@ -344,7 +313,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
 
 </script>
 
-<!-- Styles pour le tri des lignes -->
 <style>
     .sortable-ghost {
         background-color: #f8d7da !important;

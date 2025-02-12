@@ -18,10 +18,6 @@ class PatternMois
     #[ORM\Column(name: 'mois', type: 'integer')]
     private int $mois;
 
-    // Code sebango du produit
-    #[ORM\Column(name: 'sebango', type: 'string', length: 4)]
-    private string $sebango;
-
     // Quantité pour ce mois
     #[ORM\Column(name: 'quantite', type: 'integer')]
     private int $quantite;
@@ -31,81 +27,60 @@ class PatternMois
     private int $annee;
 
     // Produit associé au pattern mois
+    // La clé étrangère est désormais "id_produit" qui référence "id_produit" dans la table produits.
     #[ORM\ManyToOne(targetEntity: Produit::class)]
-    #[ORM\JoinColumn(name: 'sebango', referencedColumnName: 'sebango')]
+    #[ORM\JoinColumn(name: 'id_produit', referencedColumnName: 'id_produit', nullable: false)]
     private ?Produit $produit = null;
 
     // Getters et Setters
 
-    // Récupère le produit associé
-    public function getProduit(): ?Produit
-    {
-        return $this->produit;
-    }
-
-    // Définit le produit associé
-    public function setProduit(?Produit $produit): void
-    {
-        $this->produit = $produit;
-    }
-
-    // Récupère l'identifiant du pattern mois
     public function getId(): int
     {
         return $this->id;
     }
 
-    // Définit l'identifiant du pattern mois
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    // Récupère le mois du pattern
     public function getMois(): int
     {
         return $this->mois;
     }
 
-    // Définit le mois du pattern
     public function setMois(int $mois): void
     {
         $this->mois = $mois;
     }
 
-    // Récupère l'année du pattern
     public function getAnnee(): int
     {
         return $this->annee;
     }
 
-    // Définit l'année du pattern
     public function setAnnee(int $annee): void
     {
         $this->annee = $annee;
     }
 
-    // Récupère le code sebango du produit
-    public function getSebango(): string
-    {
-        return $this->sebango;
-    }
-
-    // Définit le code sebango du produit
-    public function setSebango(string $sebango): void
-    {
-        $this->sebango = $sebango;
-    }
-
-    // Récupère la quantité pour ce mois
     public function getQuantite(): int
     {
         return $this->quantite;
     }
 
-    // Définit la quantité pour ce mois
     public function setQuantite(int $quantite): void
     {
         $this->quantite = $quantite;
+    }
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): void
+    {
+        $this->produit = $produit;
     }
 }

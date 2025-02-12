@@ -86,8 +86,11 @@ class EditPatternJour
                 throw new \Exception("Le Relicat à l'index $index doit être un nombre positif ou nul.");
             }
 
-            // Recherche le produit existant par son code sebango
-            $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy(['sebango' => $sebango]);
+            // Recherche le produit existant par son code sebango et sa ligne
+            $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy([
+                'sebango' => $sebango,
+                'ligne'   => $ligne,
+            ]);
 
             // Vérifie que le produit existe
             if ($existingProduit === null) {
@@ -103,7 +106,6 @@ class EditPatternJour
             $patternJour = new PatternJour();
             $patternJour->setJour($jour);
             $patternJour->setMois($mois);
-            $patternJour->setSebango($sebango);
             $patternJour->setBesoin($besoin);
             $patternJour->setRelicat($relicat);
             $patternJour->setAnnee($annee);

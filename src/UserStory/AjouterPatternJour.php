@@ -56,7 +56,12 @@ class AjouterPatternJour
                 throw new \Exception("Le besoin et le relicat à l'index $index ne doivent pas être identiques.");
             }
 
-            $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy(['sebango' => $sebango]);
+            // Recherche le produit existant par son code sebango et sa ligne
+            $existingProduit = $this->entityManager->getRepository(Produit::class)->findOneBy([
+                'sebango' => $sebango,
+                'ligne'   => $ligne,
+            ]);
+
             if ($existingProduit === null) {
                 throw new \Exception("Le Sebango '$sebango' à l'index $index n'existe pas dans les produits.");
             }
@@ -69,7 +74,6 @@ class AjouterPatternJour
             $patternJour->setJour($jour);
             $patternJour->setMois($mois);
             $patternJour->setAnnee($annee);
-            $patternJour->setSebango($sebango);
             $patternJour->setBesoin($besoin);
             $patternJour->setRelicat($relicatArray[$index]);
             $patternJour->setProduit($existingProduit);

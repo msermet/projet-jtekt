@@ -9,23 +9,25 @@ $jour = $_GET['jour'] ?? null;
 
 // Vérifie si la variable $t n'est pas définie
 if (!isset($t)) {
-    // Inclut le fichier de traduction
     $translations = include 'lang.php';
-    // Définit la langue par défaut à 'fr' si elle n'est pas définie dans la session
     $lang = $_SESSION['lang'] ?? 'fr';
-    // Récupère les traductions pour la langue sélectionnée
     $t = $translations[$lang];
 }
 
-// Message de succès pour l'ajout
 $ajoutReussi = '';
 if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
     $ajoutReussi = $t['saveSuccess'];
 }
 
 // Filtrer les enregistrements de PatternJour en fonction des critères
+// On vérifie que le pattern correspond à l'année, au mois, au jour,
+// et que le produit associé existe et appartient à la ligne en cours.
 $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne, $annee, $mois, $jour) {
-    return $pattern->getAnnee() == $annee && $pattern->getMois() == $mois && $pattern->getJour() == $jour && $pattern->getProduit()->getLigne() == $idLigne;
+    $produit = $pattern->getProduit();
+    return ($pattern->getAnnee() == $annee)
+        && ($pattern->getMois() == $mois)
+        && ($pattern->getJour() == $jour)
+        && ($produit !== null && $produit->getLigne() == $idLigne);
 });
 ?>
 <div class="container p-5">
@@ -47,21 +49,28 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
         $nomLigne = null;
         if ($nomUsine) {
             foreach ($usines as $usine) {
-                foreach ($usine->getLignes() as $ligne) {
-                    if ($ligne->getId() == $idLigne) {
-                        $nomLigne = $ligne->getNom();
-                        echo " - " . htmlspecialchars($nomLigne);
-                        break 2;
+                if ($usine->getId() == $idUsine) {
+                    foreach ($usine->getLignes() as $ligne) {
+                        if ($ligne->getId() == $idLigne) {
+                            $nomLigne = $ligne->getNom();
+                            echo " - " . htmlspecialchars($nomLigne);
+                            break 2;
+                        }
                     }
                 }
             }
+        }
+
+        if (!$nomUsine) {
+            header("Location: /usine-introuvable");
+        } elseif (!$nomLigne) {
+            header("Location: /ligne-introuvable");
         }
         ?>
     </h3>
     <!-- Affiche la date sélectionnée -->
     <h4 class="text-light pb-2 fst-italic"><?= htmlspecialchars($jour . "/" . $mois . "/" . $annee) ?></h4>
 
-    <!-- Affiche un message d'erreur s'il y en a un -->
     <?php if (isset($error)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?= htmlspecialchars($error); ?>
@@ -69,7 +78,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
         </div>
     <?php endif; ?>
 
-    <!-- Affiche un message de succès si l'ajout a réussi -->
     <?php if (!empty($ajoutReussi)): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?= htmlspecialchars($ajoutReussi); ?>
@@ -107,60 +115,56 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                         <?php foreach ($filteredPatterns as $pattern): ?>
                             <tr>
                                 <td>
-                                    <!-- Champ de saisie pour le sebango, en lecture seule -->
+                                    <!-- Affichage du code produit via l'objet Produit associé -->
                                     <input type="text" class="form-control sebango-input" name="sebango[]"
-                                           value="<?= htmlspecialchars($pattern->getSebango()) ?>" readonly>
+                                           value="<?= htmlspecialchars($pattern->getProduit()->getSebango()); ?>" required>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour la référence, en lecture seule -->
-                                    <input type="text" class="form-control reference-input" name="reference[]" readonly>
+                                    <!-- Affichage de la référence via le produit associé -->
+                                    <input type="text" class="form-control reference-input" name="reference[]"
+                                           value="<?= htmlspecialchars($pattern->getProduit()->getArticle()); ?>" readonly>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour la désignation, en lecture seule -->
-                                    <input type="text" class="form-control designation-input" name="designation[]" readonly>
+                                    <!-- Affichage de la désignation via le produit associé -->
+                                    <input type="text" class="form-control designation-input" name="designation[]"
+                                           value="<?= htmlspecialchars($pattern->getProduit()->getDesignation()); ?>" readonly>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour le besoin, modifiable -->
+                                    <!-- Champ de saisie pour le besoin (modifiable) -->
                                     <input type="number" class="form-control" name="besoin[]"
-                                           value="<?= htmlspecialchars($pattern->getBesoin()) ?>" required>
+                                           value="<?= htmlspecialchars($pattern->getBesoin()); ?>" required>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour le reliquat, modifiable -->
+                                    <!-- Champ de saisie pour le reliquat (modifiable) -->
                                     <input type="number" class="form-control" name="relicat[]"
-                                           value="<?= htmlspecialchars($pattern->getRelicat()) ?>" required>
+                                           value="<?= htmlspecialchars($pattern->getRelicat()); ?>" required>
                                 </td>
                                 <td>
-                                    <!-- Champ de saisie pour le reste à produire, en lecture seule -->
+                                    <!-- Affichage du reste à produire (calculé) -->
                                     <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]"
-                                           value="<?= htmlspecialchars($pattern->getBesoin() - $pattern->getRelicat()) ?>" readonly>
+                                           value="<?= htmlspecialchars($pattern->getBesoin() - $pattern->getRelicat()); ?>" readonly>
                                 </td>
                                 <td class="text-center">
-                                    <!-- Bouton pour supprimer la ligne -->
                                     <button type="button" class="btn btn-danger btn-sm remove-row">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
                                 <td class="text-center handle">
-                                    <!-- Icône pour déplacer la ligne -->
                                     <i class="bi bi-arrows-move"></i>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <!-- Indication des champs obligatoires -->
                     <p class="text-muted mt-2"><span class="text-danger">*</span> <?= $t['requiredFields'] ?></p>
                 </div>
 
                 <div class="d-flex justify-content-between mt-3">
-                    <!-- Bouton pour ajouter une nouvelle ligne -->
                     <button type="button" class="btn btn-success" id="addRow">
                         <i class="bi bi-plus"></i> <?= $t['addLine'] ?>
                     </button>
-                    <!-- Bouton pour enregistrer les modifications -->
                     <button type="submit" class="btn btn-primary" id="saveButton"><?= $t['save'] ?></button>
                 </div>
-                <!-- Lien pour retourner à la page précédente -->
                 <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
                     <i class="bi bi-arrow-left"></i> <?= $t['back'] ?>
                 </a>
@@ -169,44 +173,44 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
     </div>
 </div>
 
-<!-- Inclusion de la bibliothèque SortableJS pour le tri des lignes -->
+<!-- Inclusion de SortableJS pour le tri des lignes -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Récupère les produits et les convertit en JSON pour utilisation dans le script
+        // Récupère les produits sous forme d'array JSON (avec les informations nécessaires)
         const produits = <?php echo json_encode(array_map(function ($produit) {
             return [
                 'sebango' => $produit->getSebango(),
                 'reference' => $produit->getArticle(),
                 'designation' => $produit->getDesignation(),
-                'ligne' => $produit->getLigne(), // Ajout du champ ligne
+                'ligne' => $produit->getLigne(),
             ];
         }, $produits)); ?>;
 
-        // Récupère l'ID de la ligne
         const idLigne = <?php echo json_encode($idLigne); ?>;
         const saveButton = document.getElementById('saveButton');
         const tableBody = document.querySelector('#sortableTable');
 
-        // Traductions des messages d'erreur
         const translations = {
-            sebangoIncorrect: "<?= $t['sebangoIncorrect'] ?>",
-            needPositive: "<?= $t['needPositive'] ?>",
-            relicatNonNegative: "<?= $t['relicatNonNegative'] ?>",
+            invalidSebango: "<?= $t['invalidSebango'] ?>",
+            invalidNeed: "<?= $t['needPositive'] ?>",
+            invalidRelicat: "<?= $t['relicatNonNegative'] ?>",
             remainingNotEmpty: "<?= $t['remainingNotEmpty'] ?>",
             allFieldsRequired: "<?= $t['allFieldsRequired'] ?>",
             addLineBeforeSaving: "<?= $t['addLineBeforeSaving'] ?>",
             quantityPositive: "<?= $t['quantityPositive'] ?>",
-            needGreaterThanRelicat: "<?= $t['needGreaterThanRelicat'] ?>"
+            needGreaterThanRelicat: "<?= $t['needGreaterThanRelicat'] ?>",
         };
 
-        // Automatiser les champs Référence et Désignation
+        // Initialisation automatique des champs Référence et Désignation pour chaque ligne existante
         tableBody.querySelectorAll('.sebango-input').forEach(input => {
             const row = input.closest('tr');
             const referenceInput = row.querySelector('.reference-input');
             const designationInput = row.querySelector('.designation-input');
 
-            const produit = produits.find(p => p.sebango.toUpperCase() === input.value.toUpperCase());
+            const produit = produits.find(p =>
+                p.sebango.toUpperCase() === input.value.toUpperCase() && p.ligne == idLigne
+            );
 
             if (produit) {
                 referenceInput.value = produit.reference;
@@ -217,14 +221,14 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             }
         });
 
-        // Supprimer une ligne
+        // Suppression d'une ligne
         tableBody.addEventListener('click', (event) => {
             if (event.target.closest('.remove-row')) {
                 event.target.closest('tr').remove();
             }
         });
 
-        // Ajouter la fonctionnalité de tri avec SortableJS
+        // Ajout de la fonctionnalité de tri avec SortableJS
         new Sortable(tableBody, {
             animation: 150,
             handle: '.handle',
@@ -262,13 +266,11 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
 
                 if (!allFilled) {
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert(translations.sebangoIncorrect);
+                        alert(translations.invalidSebango);
                     } else if (parseInt(besoinInput.value, 10) <= 0) {
-                        alert(translations.needPositive);
+                        alert(translations.invalidNeed);
                     } else if (parseInt(relicatInput.value, 10) < 0) {
-                        alert(translations.relicatNonNegative);
-                    } else if (!resteAProduireInput.value.trim()) {
-                        alert(translations.remainingNotEmpty);
+                        alert(translations.invalidRelicat);
                     } else {
                         alert(translations.allFieldsRequired);
                     }
@@ -276,46 +278,46 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                 }
             }
 
-            // Ajouter une nouvelle ligne
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
-            <td>
-                <input type="text" class="form-control sebango-input" name="sebango[]"
-                       placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="Sebango must contain exactly 4 characters" required>
-            </td>
-            <td>
-                <input type="text" class="form-control reference-input" name="reference[]" placeholder="Reference" readonly>
-            </td>
-            <td>
-                <input type="text" class="form-control designation-input" name="designation[]" placeholder="Designation" readonly>
-            </td>
-            <td>
-                <input type="number" class="form-control" name="besoin[]" placeholder="<?= $t['example'] ?> 600" required>
-            </td>
-            <td>
-                <input type="number" class="form-control" name="relicat[]" placeholder="<?= $t['example'] ?> 27" required>
-            </td>
-            <td>
-                <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="<?= $t['designation'] ?> - <?= $t['relicat'] ?>" readonly>
-            </td>
-            <td class="text-center">
-                <button type="button" class="btn btn-danger btn-sm remove-row">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-            <td class="text-center handle">
-                <i class="bi bi-arrows-move"></i>
-            </td>
-        `;
+                <td>
+                    <input type="text" class="form-control sebango-input" name="sebango[]"
+                           placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="<?= $t['sebangoTitle'] ?>" required>
+                </td>
+                <td>
+                    <input type="text" class="form-control reference-input" name="reference[]" placeholder="<?= $t['reference'] ?>" readonly>
+                </td>
+                <td>
+                    <input type="text" class="form-control designation-input" name="designation[]" placeholder="<?= $t['designation'] ?>" readonly>
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="besoin[]" placeholder="<?= $t['example'] ?> 600" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="relicat[]" placeholder="<?= $t['example'] ?> 27" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control resteAProduire-input" name="resteAProduire[]" placeholder="<?= $t['remainingToProduce'] ?>" readonly>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-row">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+                <td class="text-center handle">
+                    <i class="bi bi-arrows-move"></i>
+                </td>
+            `;
             tableBody.appendChild(newRow);
         });
 
-        // Gestion automatique des colonnes Référence, Désignation et calcul de Reste à Produire
+        // Mise à jour automatique des champs Référence et Désignation quand on saisit un Sebango
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
-                const referenceInput = event.target.closest('tr').querySelector('.reference-input');
-                const designationInput = event.target.closest('tr').querySelector('.designation-input');
+                const row = event.target.closest('tr');
+                const referenceInput = row.querySelector('.reference-input');
+                const designationInput = row.querySelector('.designation-input');
 
                 const produit = produits.find(p =>
                     p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne
@@ -330,6 +332,7 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                 }
             }
 
+            // Calcul du reste à produire lors de la modification des champs besoin ou reliquat
             if (event.target.name === 'besoin[]' || event.target.name === 'relicat[]') {
                 const row = event.target.closest('tr');
                 const besoinInput = row.querySelector('input[name="besoin[]"]');
@@ -348,7 +351,7 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             }
         });
 
-        // Validation avant d'enregistrer
+        // Validation avant enregistrement
         saveButton.addEventListener('click', (event) => {
             const rows = tableBody.querySelectorAll('tr');
             let valid = true;
@@ -356,7 +359,7 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             rows.forEach(row => {
                 const referenceInput = row.querySelector('.reference-input');
                 const designationInput = row.querySelector('.designation-input');
-                const quantiteInput = row.querySelector('input[name="quantite[]"]');
+                const quantiteInput = row.querySelector('input[name="besoin[]"]');
 
                 if (
                     referenceInput.value.trim() === '' ||
@@ -365,9 +368,8 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
                     parseInt(quantiteInput.value, 10) <= 0
                 ) {
                     valid = false;
-
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert(translations.sebangoIncorrect);
+                        alert(translations.invalidSebango);
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
                         alert(translations.quantityPositive);
                     } else {
@@ -381,7 +383,6 @@ $filteredPatterns = array_filter($patternJour, function ($pattern) use ($idLigne
             }
         });
     });
-
 </script>
 
 <!-- Styles pour le tri des lignes -->
