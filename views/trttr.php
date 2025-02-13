@@ -51,10 +51,8 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         // Redirection si l'usine ou la ligne est introuvable
         if (!$nomUsine) {
             header("Location: /usine-introuvable");
-            exit;
         } elseif (!$nomLigne) {
             header("Location: /ligne-introuvable");
-            exit;
         }
         ?>
     </h3>
@@ -92,7 +90,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <table class="table table-bordered align-middle" id="patternTable">
                         <thead class="table-dark">
                         <tr>
-                            <th>Sebango <span class="text-danger">*</span></th>
+                            <th><?= $t['sebango'] ?> <span class="text-danger">*</span></th>
                             <th><?= $t['reference'] ?></th>
                             <th><?= $t['designation'] ?></th>
                             <th><?= $t['quantity'] ?> <span class="text-danger">*</span></th>
@@ -101,6 +99,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                         </thead>
                         <tbody>
                         <tr>
+                            <!-- Ligne de saisie initiale -->
                             <td>
                                 <input type="text" class="form-control sebango-input" name="sebango[]"
                                        placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" required>
@@ -125,13 +124,15 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     <p class="text-muted mt-2"><span class="text-danger">*</span> <?= $t['requiredFields'] ?></p>
                 </div>
                 <div class="d-flex justify-content-between mt-3">
+                    <!-- Bouton pour ajouter une nouvelle ligne -->
                     <button type="button" class="btn btn-success" id="addRow">
                         <i class="bi bi-plus"></i> <?= $t['addLine'] ?>
                     </button>
+                    <!-- Bouton pour enregistrer le formulaire -->
                     <button type="submit" class="btn btn-primary" id="saveButton"><?= $t['save'] ?></button>
                 </div>
                 <a href="/ligne?usine=<?= $idUsine ?>&ligne=<?= $idLigne ?>" class="btn btn-link text-muted mt-3">
-                    <i class="bi bi-arrow-left"></i> <?= $t['backToPrevious'] ?>
+                    <i class="bi bi-arrow-left"></i> <?= $t['back'] ?>
                 </a>
             </form>
         </div>
@@ -148,6 +149,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
+                    <!-- Tableau d'aperçu des données collées -->
                     <table class="table table-bordered" id="previewTable">
                         <thead class="table-dark">
                         <tr>
@@ -166,6 +168,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 </div>
             </div>
             <div class="modal-footer">
+                <!-- Boutons du pop-up -->
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $t['cancel'] ?></button>
                 <button type="button" class="btn btn-success" id="importData"><?= $t['import'] ?></button>
             </div>
@@ -175,66 +178,84 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const translations = <?= json_encode($t); ?>;
-        const produits = <?= json_encode(array_map(function ($produit) {
+        // Chargement des produits depuis PHP
+        const produits = <?php echo json_encode(array_map(function ($produit) {
             return [
                 'sebango' => $produit->getSebango(),
                 'reference' => $produit->getArticle(),
                 'designation' => $produit->getDesignation(),
-                'ligne' => $produit->getLigne(),
+                'ligne' => $produit->getLigne(), // Ajout du champ ligne
             ];
         }, $produits)); ?>;
 
-        const idLigne = <?= json_encode($idLigne); ?>;
+        // ID de la ligne actuelle
+        const idLigne = <?php echo json_encode($idLigne); ?>;
 
+        // Références aux éléments du DOM
         const addRowButton = document.getElementById('addRow');
         const saveButton = document.getElementById('saveButton');
         const tableBody = document.querySelector('#patternTable tbody');
 
+        // Références pour le collage et l'importation des données
         const pasteTableButton = document.getElementById('pasteTable');
         const previewTableBody = document.querySelector('#previewTable tbody');
         const importModal = new bootstrap.Modal(document.getElementById('importModal'));
         const importButton = document.getElementById('importData');
 
+        // Fonction pour ajouter une ligne au tableau de saisie
         function addRow(sebango, quantite) {
+            // Recherche du produit correspondant au Sebango
             const produit = produits.find(p => p.sebango.toUpperCase() === sebango.toUpperCase() && p.ligne == idLigne);
             const reference = produit ? produit.reference : '';
             const designation = produit ? produit.designation : '';
 
+            // Création d'une nouvelle ligne de tableau
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
             <td>
-                <input type="text" class="form-control sebango-input" name="sebango[]" value="${sebango}"
-                       pattern=".{4}" title="${translations['sebangoValidation']}" required>
+                <input type="text" class="form-control sebango-input" name="sebango[]"
+                       placeholder="<?= $t['example'] ?> A350" pattern=".{4}" title="<?= $t['sebangoValidation'] ?>" value="${sebango}" required>
             </td>
             <td>
-                <input type="text" class="form-control reference-input" name="reference[]" value="${reference}" readonly>
+                <input type="text" class="form-control reference-input" name="reference[]" placeholder="<?= $t['reference'] ?>" value="${reference}" readonly>
             </td>
             <td>
-                <input type="text" class="form-control designation-input" name="designation[]" value="${designation}" readonly>
+                <input type="text" class="form-control designation-input" name="designation[]" placeholder="<?= $t['designation'] ?>" value="${designation}" readonly>
             </td>
             <td>
-                <input type="number" class="form-control" name="quantite[]" value="${quantite}" required>
+                <input type="number" class="form-control" name="quantite[]" placeholder="<?= $t['example'] ?> 561" value="${quantite}" required>
             </td>
             <td class="text-center">
                 <button type="button" class="btn btn-danger btn-sm remove-row">
                     <i class="bi bi-trash"></i>
                 </button>
             </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-row">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+
         `;
+
+            // Ajout de la nouvelle ligne au tableau
             tableBody.appendChild(newRow);
         }
 
+        // Gestion du clic sur le bouton de collage des données
         pasteTableButton.addEventListener('click', async () => {
             try {
+                // Lecture des données depuis le presse-papiers
                 const text = await navigator.clipboard.readText();
                 const rows = text.trim().split(/\r?\n/).map(row => row.split(/\t/));
 
+                // Vérification du format des données collées
                 if (rows.length < 1 || rows[0].length !== 8) {
                     alert("<?= $t['errorPasteFormat8'] ?>");
                     return;
                 }
 
+                // Affichage des données collées dans le tableau d'aperçu
                 previewTableBody.innerHTML = '';
                 rows.forEach(row => {
                     const newRow = document.createElement('tr');
@@ -246,31 +267,36 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     previewTableBody.appendChild(newRow);
                 });
 
+                // Affichage du modal d'importation
                 importModal.show();
             } catch (error) {
                 alert("<?= $t['errorClipboard'] ?>");
             }
         });
 
+        // Gestion du clic sur le bouton d'importation des données
         importButton.addEventListener('click', () => {
+            // Suppression de la première ligne existante
             const firstRow = tableBody.querySelector('tr');
             if (firstRow) {
                 tableBody.removeChild(firstRow);
             }
 
+            // Ajout des données collées au tableau de saisie
             const rows = previewTableBody.querySelectorAll('tr');
             rows.forEach(row => {
                 const cells = row.querySelectorAll('td');
-                if (cells.length < 8) return;
+                if (cells.length < 9) return; // Vérification du format
 
-                const sebango = cells[4].textContent.trim();
-                const quantite = parseInt(cells[7].textContent.trim(), 10) || 0;
+                const sebango = cells[4].textContent.trim(); // N° Sebango
+                const quantite = parseInt(cells[7].textContent.trim(), 10) || 0; // Quantité
 
                 if (sebango) {
                     addRow(sebango, quantite);
                 }
             });
 
+            // Fermeture du modal d'importation
             importModal.hide();
         });
 
@@ -291,10 +317,12 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             // Si aucun produit n'est trouvé, on laisse les champs tels quels pour permettre la correction.
         });
 
+        // Ajouter une nouvelle ligne
         addRowButton.addEventListener('click', () => {
             const lastRow = tableBody.querySelector('tr:last-child');
             let allFilled = true;
 
+            // Vérification que la dernière ligne est remplie correctement
             if (lastRow) {
                 const sebangoInput = lastRow.querySelector('.sebango-input');
                 const referenceInput = lastRow.querySelector('.reference-input');
@@ -309,16 +337,17 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
 
                 if (!allFilled) {
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert(translations['errorSebango']);
+                        alert("<?= $t['errorSebangoIncorrect'] ?>");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert(translations['errorQuantityPositive']);
+                        alert("<?= $t['errorQuantityPositive'] ?>");
                     } else {
-                        alert(translations['errorFillAllFields']);
+                        alert("<?= $t['errorFieldsRequired'] ?>");
                     }
                     return;
                 }
             }
 
+            // Création d'une nouvelle ligne de tableau
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
@@ -340,9 +369,11 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     </button>
                 </td>
             `;
+            // Ajout de la nouvelle ligne au tableau
             tableBody.appendChild(newRow);
         });
 
+        // Gestion automatique des colonnes Référence et Désignation
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
@@ -350,10 +381,12 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                 const referenceInput = event.target.closest('tr').querySelector('.reference-input');
                 const designationInput = event.target.closest('tr').querySelector('.designation-input');
 
+                // Recherche du produit correspondant au Sebango
                 const produit = produits.find(p =>
-                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne
+                    p.sebango.toUpperCase() === sebangoValue && p.ligne == idLigne // Vérifie aussi la ligne
                 );
 
+                // Mise à jour des champs Référence et Désignation
                 if (produit) {
                     referenceInput.value = produit.reference;
                     designationInput.value = produit.designation;
@@ -364,22 +397,26 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             }
         });
 
+        // Supprimer une ligne
         tableBody.addEventListener('click', (event) => {
             if (event.target.closest('.remove-row')) {
                 event.target.closest('tr').remove();
             }
         });
 
+        // Validation avant d'enregistrer
         saveButton.addEventListener('click', (event) => {
             const rows = tableBody.querySelectorAll('tr');
             let valid = true;
 
+            // Vérification qu'il y a au moins une ligne dans le tableau
             if (rows.length === 0) {
                 event.preventDefault();
-                alert(translations['errorAddLineBeforeSave']);
+                alert("<?= $t['errorAddLineBeforeSave'] ?>");
                 return;
             }
 
+            // Vérification que toutes les lignes sont correctement remplies
             rows.forEach(row => {
                 const referenceInput = row.querySelector('.reference-input');
                 const designationInput = row.querySelector('.designation-input');
@@ -394,20 +431,22 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                     valid = false;
 
                     if (!referenceInput.value.trim() || !designationInput.value.trim()) {
-                        alert(translations['errorSebangoLine']);
+                        alert("<?= $t['errorSebangoIncorrect'] ?>");
                     } else if (parseInt(quantiteInput.value, 10) <= 0) {
-                        alert(translations['errorQuantityPositive']);
+                        alert("<?= $t['errorQuantityPositive'] ?>");
                     } else {
-                        alert(translations['errorFillAllFields']);
+                        alert("<?= $t['errorFieldsRequiredBeforeSave'] ?>");
                     }
                 }
             });
 
+            // Empêcher l'envoi du formulaire si des erreurs sont détectées
             if (!valid) {
                 event.preventDefault();
             }
         });
 
+        // Forcer le texte en majuscules dans les inputs sebango lors de la saisie
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 event.target.value = event.target.value.toUpperCase();

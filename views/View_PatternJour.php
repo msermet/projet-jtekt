@@ -185,9 +185,9 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
                             <th><?= $t['prodLine'] ?></th>
                             <th><?= $t['date'] ?></th>
                             <th><?= $t['shift'] ?></th>
-                            <th><?= $t['articleDesignation'] ?></th>
-                            <th><?= $t['articleProd'] ?></th>
                             <th><?= $t['sebangoNumber'] ?></th>
+                            <th><?= $t['articleProd'] ?></th>
+                            <th><?= $t['articleDesignation'] ?></th>
                             <th><?= $t['quantity'] ?></th>
                             <th><?= $t['unit'] ?></th>
                             <th><?= $t['prodCounter'] ?></th>
