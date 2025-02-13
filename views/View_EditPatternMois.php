@@ -183,7 +183,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             }
         });
 
-
         tableBody.addEventListener('click', (event) => {
             if (event.target.closest('.remove-row')) {
                 event.target.closest('tr').remove();
@@ -261,6 +260,7 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
+                event.target.value = sebangoValue;
                 const referenceInput = event.target.closest('tr').querySelector('.reference-input');
                 const designationInput = event.target.closest('tr').querySelector('.designation-input');
 
@@ -310,7 +310,6 @@ $filteredPatterns = array_filter($patternMois, function ($pattern) use ($idLigne
             }
         });
     });
-
 </script>
 
 <style>

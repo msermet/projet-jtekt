@@ -151,6 +151,23 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         const saveButton = document.getElementById('saveButton');
         const tableBody = document.querySelector('#patternTable tbody');
 
+        // Lors du chargement, forcer le texte en majuscules dans les inputs sebango
+        tableBody.querySelectorAll('.sebango-input').forEach(input => {
+            const row = input.closest('tr');
+            const referenceInput = row.querySelector('.reference-input');
+            const designationInput = row.querySelector('.designation-input');
+            let val = input.value.trim().toUpperCase();
+            input.value = val;
+            const produit = produits.find(p =>
+                p.sebango.toUpperCase() === val && p.ligne == idLigne
+            );
+            if (produit) {
+                referenceInput.value = produit.reference;
+                designationInput.value = produit.designation;
+            }
+            // Si aucun produit n'est trouvé, on laisse les champs tels quels pour permettre la correction.
+        });
+
         // Ajouter une nouvelle ligne
         addRowButton.addEventListener('click', () => {
             const lastRow = tableBody.querySelector('tr:last-child');
@@ -211,6 +228,7 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
         tableBody.addEventListener('input', (event) => {
             if (event.target.classList.contains('sebango-input')) {
                 const sebangoValue = event.target.value.trim().toUpperCase();
+                event.target.value = sebangoValue;
                 const referenceInput = event.target.closest('tr').querySelector('.reference-input');
                 const designationInput = event.target.closest('tr').querySelector('.designation-input');
 
@@ -276,6 +294,13 @@ if (isset($_GET['ajout']) && $_GET['ajout'] === 'succeed') {
             // Empêcher l'envoi du formulaire si des erreurs sont détectées
             if (!valid) {
                 event.preventDefault();
+            }
+        });
+
+        // Forcer le texte en majuscules dans les inputs sebango lors de la saisie
+        tableBody.addEventListener('input', (event) => {
+            if (event.target.classList.contains('sebango-input')) {
+                event.target.value = event.target.value.toUpperCase();
             }
         });
     });
